@@ -1,0 +1,143 @@
+import React, { useEffect, useState } from 'react'
+import { CiCircleRemove } from 'react-icons/ci'
+import axiosInstance from '../../api/axios';
+import { useSelector } from 'react-redux';
+import { Toaster, toast } from 'react-hot-toast';
+
+function ClubAddImage() {
+
+  const [image, setImage] = useState('')
+  const [addImage, setAddImage] = useState(false)
+  const [images, setImages] = useState([])
+  const [reload, setReload] = useState(false)
+  const { clubToken } = useSelector((state) => state.ClubMember)
+
+  useEffect(() => {
+    axiosInstance.get('/clubAdmin/getImages', {
+      headers: {
+        authorization: `Bearer ${clubToken}`
+      }
+    }).then((res) => {
+      setImages(res.data.images)
+    }).catch((err) => {
+      if (err.response.data.message) {
+        toast.error(err.response.data.message)
+      }
+    })
+  }, [reload])
+
+  function isValidImage(logo) {
+    const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
+
+    return validExtensions.includes(extension);
+  }
+
+  const handleImageChange = (img) => {
+    if (isValidImage(img.target.files[0].name)) {
+      let reader = new FileReader()
+      reader.readAsDataURL(img.target.files[0])
+      reader.onload = () => {
+        setImage(reader.result)
+      }
+      reader.onerror = (err) => {
+        console.log(err);
+      }
+    } else {
+      toast.error('Please add valid image')
+    }
+  }
+
+  const postImage = async () => {
+    if (image.trim().length != 0) {
+      axiosInstance.post('/clubAdmin/addImage', { image }, {
+        headers: {
+          authorization: `Bearer ${clubToken}`
+        }
+      }).then((res) => {
+        toast.success(res.data.message)
+        setReload(!reload)
+        setAddImage(false)
+      }).catch((err) => {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message)
+        }
+      })
+    } else {
+      toast.error('Add any image')
+    }
+  }
+
+  const removeImage = async (imageId) => {
+    axiosInstance.patch('/clubAdmin/removeImage', { imageId }, {
+      headers: {
+        authorization: `Bearer ${clubToken}`
+      }
+    }).then((res) => {
+      toast.success(res.data.message)
+      setReload(!reload)
+    }).catch((err) => {
+      if (err.response.data.errMsg) {
+        toast.error(err.response.data.errMsg)
+      }
+    })
+  }
+
+  return (
+    <div className='bg-slate-800 relative'>
+      <Toaster toastOptions={3000} />
+      <div className={`absolute p-2 bg-white overflow-hidden rounded-md h-3/4 top-3 left-1/4 right-1/4 z-50 m-auto ${addImage ? 'block' : 'hidden'}`}>
+        <div>
+          <div className='flex justify-between'>
+            <button onClick={() => setAddImage(false)} className='bg-transparent border-2 hover:bg-red-600 border-red-700 text-black py-1 px-2 rounded-md'>Cancel</button>
+            <button onClick={() => postImage()} className='bg-black text-white py-1 px-2 rounded-md'>Confirm</button>
+          </div>
+          <div className="mb-3 flex  justify-center m-auto">
+            <div>
+              <label
+                htmlFor="formFileSm"
+                className="mb-2 inline-block text-neutral-700 dark:text-neutral-200">Add images</label>
+              <input onChange={handleImageChange}
+                className="relative m-0 block flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 text-xs font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                id="formFileSm"
+                type="file" />
+            </div>
+
+
+          </div>
+          <div className='flex justify-center'>
+            <img src={image} className='' alt="" />
+          </div>
+        </div>
+      </div>
+      <div className='flex m-auto pt-4 pe-3 justify-end'>
+        <button onClick={() => setAddImage(true)} className='bg-black text-white py-1 px-2 rounded-md'>Add Image</button>
+      </div>
+      <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-24 ">
+        <div className="-m-1 flex flex-wrap md:-m-2 ">
+          <div className="flex w-full flex-wrap">
+            {images && images.length != 0 ? images.map((img, i) => (
+
+              <div key={img._id} className={`w-1/2 p-1 md:p-2 relative`}>
+                <img
+                  alt="gallery"
+                  className="block h-full w-full rounded-lg object-cover object-center"
+                  src={img.image} />
+                <CiCircleRemove onClick={() => removeImage(img._id)} className='text-red-600 absolute top-3 right-3 text-2xl cursor-pointer' />
+              </div>
+            )) : <div className="w-1/2 p-1 md:p-2 relative">
+              <img
+                alt="gallery"
+                className="block h-full w-full rounded-lg object-cover object-center"
+                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
+              <CiCircleRemove className='text-red-600 absolute top-3 right-3 text-2xl cursor-pointer' />
+            </div>}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ClubAddImage
