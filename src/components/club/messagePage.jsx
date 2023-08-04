@@ -43,18 +43,18 @@ function MessagePage(props) {
                 authorization: `Bearer ${clubToken}`
             }
         }).then((res) => {
-            setMessages(res.data.messages)
-            setChat(res.data.chat)
-            if (res.data.chat.users[0]._id === userId) {
-                setProfile1(res.data.chat.users[0].profileImage)
-                setProfile2(res.data.chat.users[1].profileImage)
+            setMessages(res?.data?.messages)
+            setChat(res?.data?.chat)
+            if (res?.data?.chat.users[0]._id === userId) {
+                setProfile1(res?.data?.chat.users[0].profileImage)
+                setProfile2(res?.data?.chat.users[1].profileImage)
             } else {
-                setProfile2(res.data.chat.users[0].profileImage)
-                setProfile1(res.data.chat.users[1].profileImage)
+                setProfile2(res?.data?.chat.users[0].profileImage)
+                setProfile1(res?.data?.chat.users[1].profileImage)
             }
-            let id = res.data.chat._id;
-        console.log('joined chat');
-        socket.emit('joinChat', id)
+            let id = res?.data?.chat._id;
+            console.log('joined chat');
+            socket.emit('joinChat', id)
             setMessage('')
         }).catch((err) => {
             console.log(err);
@@ -67,7 +67,7 @@ function MessagePage(props) {
 
 
     const sendMessage = () => {
-        const chatId = chat._id
+        const chatId = chat?._id
         if (message.length !== 0) {
             axiosInstance.post('/chat/addMessage', { message, chatId }, {
                 headers: {
@@ -77,8 +77,8 @@ function MessagePage(props) {
                 let updMsg = [...messages, res?.data?.msg];
                 setMessages(updMsg)
                 setMessage('')
-        console.log('new message');
-        socket.emit('new message', res?.data?.msg,chatId)
+                console.log('new message');
+                socket.emit('new message', res?.data?.msg, chatId)
             }).catch((err) => {
                 if (err?.response?.data?.errMsg) {
                     toast.error(err.response.data.errMsg)
@@ -89,8 +89,13 @@ function MessagePage(props) {
     }
 
     useEffect(() => {
-        socket.on('messageResponse', (msg,room) => {
-            if(room==chat._id){
+        socket.on('messageResponse', (msg, room) => {
+            console.log(chat);
+            console.log(msg.sender,'hhhh');
+            console.log(msg?.sender?.toString()!==userId?.toString());
+            console.log(userId);
+            if (room == chat?._id&&msg?.sender?.toString()!==userId?.toString()) {
+                console.log('response in');
                 let updMsg = [...messages, msg];
                 setMessages(updMsg)
             }
