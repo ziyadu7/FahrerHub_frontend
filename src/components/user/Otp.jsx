@@ -33,25 +33,22 @@ function OtpPage() {
         if (res.status == 200) {
           setData(res.data.data)
           onCaptchaVerify()
+          const appVerifier = window.recaptchaVerifier
+          const phoneNo = '+91' + phone
+          signInWithPhoneNumber(auth, phoneNo, appVerifier)
+            .then((confirmationResult) => {
+              window.confirmationResult = confirmationResult;
+              setShowOTP(true)
+              toast.success('OTP send')
+            }).catch((error) => {
+              console.log(error);
+              if (error?.response?.data?.errMsg) {
+                toast.error(error?.response?.data?.errMsg)
+              }
+            });
         }
       })
     }
-  }
-
-  const login = ()=>{
-    const appVerifier = window.recaptchaVerifier
-    const phoneNo = '+91' + phone
-    signInWithPhoneNumber(auth, phoneNo, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        setShowOTP(true)
-        toast.success('OTP send')
-      }).catch((error) => {
-        console.log(error);
-        if (error?.response?.data?.errMsg) {
-          toast.error(error?.response?.data?.errMsg)
-        }
-      });
   }
 
   function onCaptchaVerify() {
@@ -60,7 +57,7 @@ function OtpPage() {
       window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
         size: 'invisible',
         callback: (response) => {
-          login()
+          checkMob()
         },
         'expired-callback': () => {
           console.log('expired callback');
