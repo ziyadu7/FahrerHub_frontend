@@ -43,7 +43,6 @@ function Login() {
   }
 
   const forgotPassword = ()=>{
-    console.log(email,'=====');
       axiosInstance.post('/user/forgottPassword',{email}).then((res)=>{
         toast.success(res.data.messasge)
       }).catch((error)=>{

@@ -32,25 +32,27 @@ function OtpPage() {
       axiosInstance.post('/user/otpLogin', { phone }).then((res) => {
         if (res.status == 200) {
           setData(res.data.data)
-          console.log('=======');
           onCaptchaVerify()
-          const appVerifier = window.recaptchaVerifier
-          const phoneNo = '+91' + phone
-          signInWithPhoneNumber(auth, phoneNo, appVerifier)
-            .then((confirmationResult) => {
-              console.log('asdfsdfsdfsdf');
-              window.confirmationResult = confirmationResult;
-              setShowOTP(true)
-              toast.success('OTP send')
-            }).catch((error) => {
-              console.log(error);
-              if (error?.response?.data?.errMsg) {
-                toast.error(error?.response?.data?.errMsg)
-              }
-            });
+          login()
         }
       })
     }
+  }
+
+  const login = ()=>{
+    const appVerifier = window.recaptchaVerifier
+    const phoneNo = '+91' + phone
+    signInWithPhoneNumber(auth, phoneNo, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        setShowOTP(true)
+        toast.success('OTP send')
+      }).catch((error) => {
+        console.log(error);
+        if (error?.response?.data?.errMsg) {
+          toast.error(error?.response?.data?.errMsg)
+        }
+      });
   }
 
   function onCaptchaVerify() {
