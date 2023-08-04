@@ -29,8 +29,8 @@ function MessagePage(props) {
 
     useEffect(() => {
         socket = io(END_POINT)
-
         socket.emit('setup', userId)
+        console.log('connecting');
         socket.on('connection')
         return () => {
             socket.disconnect()
@@ -53,7 +53,8 @@ function MessagePage(props) {
                 setProfile1(res.data.chat.users[1].profileImage)
             }
             let id = res.data.chat._id;
-            socket.emit('joinChat', id)
+        console.log('joined chat');
+        socket.emit('joinChat', id)
             setMessage('')
         }).catch((err) => {
             console.log(err);
@@ -76,7 +77,8 @@ function MessagePage(props) {
                 let updMsg = [...messages, res?.data?.msg];
                 setMessages(updMsg)
                 setMessage('')
-                socket.emit('new message', res?.data?.msg,chatId)
+        console.log('new message');
+        socket.emit('new message', res?.data?.msg,chatId)
             }).catch((err) => {
                 if (err?.response?.data?.errMsg) {
                     toast.error(err.response.data.errMsg)
@@ -88,7 +90,6 @@ function MessagePage(props) {
 
     useEffect(() => {
         socket.on('messageResponse', (msg,room) => {
-            console.log(room,'=====',chat?._id);
             if(room==chat._id){
                 let updMsg = [...messages, msg];
                 setMessages(updMsg)
