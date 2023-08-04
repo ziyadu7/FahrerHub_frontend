@@ -33,7 +33,6 @@ function OtpPage() {
         if (res.status == 200) {
           setData(res.data.data)
           onCaptchaVerify()
-          login()
         }
       })
     }
@@ -61,7 +60,7 @@ function OtpPage() {
       window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
         size: 'invisible',
         callback: (response) => {
-          checkMob()
+          login()
         },
         'expired-callback': () => {
           console.log('expired callback');
