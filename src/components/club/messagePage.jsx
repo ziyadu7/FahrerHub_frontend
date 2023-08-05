@@ -128,7 +128,7 @@ function MessagePage(props) {
 
                         {users.length !== 0 ? users.map((user) => (
                             <>
-                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() => loadChat(userId, user?.rider?._id)} className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
+                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() => loadChat(userId, user?.rider?._id)} className={`flex flex-col items-center ${chat?.users.some(friend=>friend._id==user?.rider?._id)?"bg-indigo-300":"bg-indigo-100"} border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg`}>
                                     <div className="h-20 w-20 rounded-full border overflow-hidden">
                                         <img
                                             src={user.rider?.profileImage ? user.rider?.profileImage : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}
