@@ -163,8 +163,8 @@ function MessagePage(props) {
                                                             className="h-full w-full rounded-full"
                                                         />
                                                     </div>
-                                                    <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                                                        <div>{message?.message}</div>
+                                                    <div className="relative mr-3 w-full text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                                                        <div className='break-words'>{message?.message}</div>
                                                         <small className="text-xs text-gray-400"> {new Date(message?.createdAt).toLocaleString('en-US', {
                                                             hour: 'numeric',
                                                             minute: 'numeric',
@@ -181,9 +181,9 @@ function MessagePage(props) {
                                                             className="h-full w-full rounded-full"
                                                         />
                                                     </div>
-                                                    <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                                                        <div>{message.message}</div>
-                                                        <small>{new Date(message?.createdAt).toLocaleString('en-US', {
+                                                    <div className="relative mr-3 w-full text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                                                        <div className='break-words'>{message?.message}</div>
+                                                        <small className="text-xs text-gray-400"> {new Date(message?.createdAt).toLocaleString('en-US', {
                                                             hour: 'numeric',
                                                             minute: 'numeric',
                                                             hour12: true
