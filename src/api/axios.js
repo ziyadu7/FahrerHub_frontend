@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-    baseURL:'https://fahrerhub.onrender.com',
+    baseURL:'https://fahrerhub.site',
     headers:{
         "Content-Type":'application/json'
     }

@@ -93,22 +93,34 @@ function ClubAddImage() {
             <button onClick={() => setAddImage(false)} className='bg-transparent border-2 hover:bg-red-600 border-red-700 text-black py-1 px-2 rounded-md'>Cancel</button>
             <button onClick={() => postImage()} className='bg-black text-white py-1 px-2 rounded-md'>Confirm</button>
           </div>
-          <div className="mb-3 flex  justify-center m-auto">
-            <div>
-              <label
-                htmlFor="formFileSm"
-                className="mb-2 inline-block text-neutral-700 dark:text-neutral-200">Add images</label>
-              <input onChange={handleImageChange}
-                className="relative m-0 block flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 text-xs font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                id="formFileSm"
-                type="file" />
-            </div>
+          <div className="mb-4 flex justify-center mx-auto">
+  <div>
+    <label
+      htmlFor="formFileSm"
+      className="mb-2 inline-block text-neutral-700 dark:text-neutral-200 font-medium"
+    >
+      Add Images
+    </label>
+    <input
+      onChange={handleImageChange}
+      className="relative m-0 block w-full h-10 cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding pl-3 pr-8 text-sm font-normal text-neutral-700 transition duration-300 ease-in-out overflow-hidden hover:bg-neutral-200 focus:border-primary focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:bg-neutral-700 dark:focus:border-primary"
+      id="formFileSm"
+      type="file"
+    />
+  </div>
+</div>
+<div className="flex justify-center">
+  {image && (
+    <div className="max-w-full h-auto overflow-x-auto">
+      <img
+        src={image}
+        className="block max-w-full h-auto"
+        alt="Uploaded Image"
+      />
+    </div>
+  )}
+</div>
 
-
-          </div>
-          <div className='flex justify-center'>
-            <img src={image} className='' alt="" />
-          </div>
         </div>
       </div>
       <div className='flex m-auto pt-4 pe-3 justify-end'>
