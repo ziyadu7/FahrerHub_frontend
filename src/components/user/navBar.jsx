@@ -17,7 +17,7 @@ function NavBar() {
   const [navbar, setNavbar] = useState(false);
 
   return (
-    <nav className={`w-full z-50  ${navbar ? "bg-slate-300" : "bg-slate-200"} md:bg-opacity-100 md:bg-slate-200 shadow sticky top-0`}>
+    <nav className={`w-full z-50  ${navbar ? "bg-slate-300" : "bg-slate-200"} md:bg-opacity-100 md:bg-slate-200 shadow sticky sm:text-sm text-xs top-0`}>
       <div className={`justify-between px-4 mx-auto  lg:max-w-7xl md:items-center md:flex md:px-8`}>
         <div className=''>
           <div className="flex items-center justify-between py-3 md:py-5 md:block">

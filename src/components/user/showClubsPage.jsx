@@ -40,7 +40,7 @@ function ShowClubsPage(props) {
             {modal ? <>
                 <CreateClub token={token} change={change} setChange={setChange} setModal={setModal} />
             </> : <>
-                <div className={`justify-between px-4 mx-auto lg:max-w-7xl pt-4 md:items-center md:flex md:px-8`}>
+                <div className={`justify-between sm:text-sm text-xs px-4 mx-auto lg:max-w-7xl pt-4 md:items-center md:flex md:px-8`}>
                     <div className=' flex justify-between sm:block'>
                         <button onClick={() => { setProtected(false) }} className={`p-2 ${isProtected?'bg-blue-600':'bg-blue-950'} rounded-md border-white text-white hover:text-black hover:border-black me-2 mt-2`} >Public Club</button> 
                         <button onClick={() => { setProtected(true) }} className={`p-2 ${isProtected?'bg-blue-900':'bg-blue-600'} rounded-md border-white text-white hover:text-black hover:border-black me-2 mt-2`} >PrivateClub</button>
