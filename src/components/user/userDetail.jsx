@@ -72,7 +72,7 @@ function UserDetail(props) {
                 </div>
                 <hr className="my-2" />
                 <div className="flex items-center">
-                  <p className="w-1/3 font-semibold">Email</p>
+                  <p className="w-1/3 lowercase font-semibold">Email</p>
                   <p className="text-black mb-0">{user.email}</p>
                 </div>
                 <hr className="my-2" />

@@ -6,6 +6,7 @@ import UserDetail from './userDetail'
 import UserBikeDetail from './userBikeDetail'
 import Loader from './loader'
 import '../../assets/css/club/upcomingRides.css'
+import { CgSpinner } from 'react-icons/cg'
 
 
 function ProfilePage() {
@@ -21,6 +22,7 @@ function ProfilePage() {
     const [rentHistory, setRentHistory] = useState()
     const [rides, setRides] = useState([])
     const [loader,setLoader] = useState(true)
+    const [subitLoad,setSubmitLoad] = useState(false)
     const [err, setErr] = useState('')
     const [showBike, setShowBike] = useState(false)
     const regex_mobile = /^\d{10}$/
@@ -64,12 +66,14 @@ function ProfilePage() {
             }).then((res) => {
                 toast.success(res.data.message)
                 setEdit(false)
+                setSubmitLoad(false)
                 setChange(!change)
             }).catch((error) => {
-                console.log(error);
                 if (error?.response?.data) {
                     toast.error(error.response.data.errMsg)
+                    setSubmitLoad(false)
                 } else {
+                    setSubmitLoad(false)
                     console.log(error.message);
                 }
             })
@@ -191,13 +195,15 @@ function ProfilePage() {
                                         Close
                                     </button>
                                     <button
-                                        className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        className={`bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                                         type="button"
                                         onClick={() => {
+                                            setSubmitLoad(true)
                                             submitEdits()
                                         }}
 
                                     >
+                                        {subitLoad?<CgSpinner size={20} className='animate-spin' /> :''}
                                         Submit
                                     </button>
                                 </div>
