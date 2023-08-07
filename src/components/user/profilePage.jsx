@@ -16,6 +16,7 @@ function ProfilePage() {
     const [edit, setEdit] = useState(false)
     const [name, setNewName] = useState('')
     const [phone, setPhone] = useState('')
+    const [newMob,setNewMob] = useState(null)
     const [adminClubs, setAdminClubs] = useState()
     const [memberClubs, setMemberClubs] = useState()
     const [profileImage, setNewProfile] = useState('')
@@ -54,12 +55,16 @@ function ProfilePage() {
 
     const submitEdits = async () => {
         setErr('')
+        let mobile = newMob||phone
         if (name.trim().length == 0) {
             setErr("Fill all the fields")
-        } else if (regex_mobile.test(phone) == false) {
+        }else if (regex_mobile.test(mobile) == false) {
             setErr("Enter valid mobile number")
         } else {
-            axiosInstance.patch('/user/editProfile', { name, profileImage, phone }, {
+            if(mobile===phone){
+                mobile = false
+            }
+            axiosInstance.patch('/user/editProfile', { name, profileImage, mobile }, {
                 headers: {
                     authorization: `Bearer ${token}`
                 }
@@ -74,7 +79,6 @@ function ProfilePage() {
                     setSubmitLoad(false)
                 } else {
                     setSubmitLoad(false)
-                    console.log(error.message);
                 }
             })
         }
@@ -149,7 +153,7 @@ function ProfilePage() {
                                                     <div className="sm:col-span-3">
                                                         <label className="block text-sm font-medium leading-6 text-gray-900">Phone</label>
                                                         <div className="mt-2">
-                                                            <input type="text" onChange={(e) => setPhone(e.target.value)} placeholder={phone} name="last-name" id="last-name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            <input type="text" onChange={(e) => setNewMob(e.target.value)} placeholder={phone} name="last-name" id="last-name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                                         </div>
                                                     </div>
                                                     <div className=''>
