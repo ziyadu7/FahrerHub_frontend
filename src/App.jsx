@@ -38,7 +38,7 @@ function App() {
         <Route path='/questions'  element = {user.token!==null ?<Questions/> :<Navigate to='/login'/>}/>
         <Route path="/emailVerify/:userId" element={<EmailVerify/>}/>
         <Route path="/resetPassword/:userId" element={<ResetPassword/>}/>
-        <Route path='/otpLogin' element={<OtpLogin/>}/>
+        {/* <Route path='/otpLogin' element={<OtpLogin/>}/> */}
 
         {/* ADMIN */}
 

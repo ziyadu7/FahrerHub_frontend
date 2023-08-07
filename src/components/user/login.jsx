@@ -129,10 +129,10 @@ function Login() {
               onClick={() => handleLogin()}
               className={`w-full text-center py-3 rounded ${reMail == true ? 'bg-amber-700' : 'bg-green-800'} text-white hover:bg-green-dark focus:outline-none my-1`}
             >{reMail == true ? 'Verify mail' : "Login Account"}</button>
-            <button
+            {/* <button
               onClick={()=>navigate('/otpLogin')}
               className={`w-full text-center py-3 rounded bg-blue-500 text-white hover:bg-green-dark focus:outline-none my-1`}
-            >Otp Login</button>
+            >Otp Login</button> */}
           </div>
 
           </div>

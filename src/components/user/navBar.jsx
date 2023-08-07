@@ -58,7 +58,7 @@ function NavBar() {
               </button>
             </div>
             <p>
-              <img src={logo} className='w-24 h-12' alt="" />
+              <img onClick={()=>navigate('/')} src={logo} className='w-24 h-12' alt="" />
             </p>
           </div>
         </div>
