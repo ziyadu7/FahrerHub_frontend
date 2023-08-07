@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import BikeCard from './bikeCard';
 import SearchBox from './search';
+import '../../assets/css/club/upcomingRides.css'
 import Loader from './loader';
 
 function ShowBikesPage() {
@@ -104,7 +105,7 @@ function ShowBikesPage() {
 
   return (
     <>{loader ? <Loader /> : bike ?
-      <div className="min-h-screen bg-[url(https://wallpaperaccess.com/full/497142.jpg)]">
+      <div className="min-h-screen bg-[url(https://wallpaperaccess.com/full/497142.jpg)] ">
         <Toaster toastOptions={3000} />
         <div className="flex justify-end p-4">
           <button

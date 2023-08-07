@@ -6,6 +6,7 @@ import ClubCard from './clubCard'
 import { toast } from 'react-hot-toast'
 import SearchBox from './search'
 import Loader from './loader'
+import '../../assets/css/club/upcomingRides.css'
 
 function YourClubPage() {
 
@@ -49,7 +50,7 @@ function YourClubPage() {
     return (
         <>
             {loader ? <Loader /> :
-                <div className='bg-[url(https://wallpapercave.com/wp/wp7610092.jpg)] bg-cover bg-center w-full min-h-screen bg-fixed'>
+                <div className='bg-[url(https://wallpapercave.com/wp/wp7610092.jpg)] bg-cover bg-center w-full min-h-screen  bg-fixed'>
                     <>
                         <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
                             <SearchBox search={search} setSearch={setSearch} />

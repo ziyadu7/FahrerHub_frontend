@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import '../../assets/css/club/upcomingRides.css'
 import RentHistory from './rentHistory'
 
 function UserDetail(props) {
@@ -15,7 +16,7 @@ function UserDetail(props) {
   const [showRent, setShowRent] = useState(false)
 
   return (
-    <div className='flex justify-center items-center backdrop-blur-sm w-full h-full'>
+    <div className='flex justify-center items-center disableBar backdrop-blur-sm w-full h-full'>
       <div className="container justify-center py-5">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="p-4 col-span-2">

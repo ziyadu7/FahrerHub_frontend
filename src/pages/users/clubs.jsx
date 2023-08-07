@@ -4,6 +4,7 @@ import ShowClubsPage from '../../components/user/showClubsPage'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../api/axios'
 import { Toaster, toast } from 'react-hot-toast'
+import '../../assets/css/club/upcomingRides.css'
 import Loader from '../../components/user/loader'
 
 function Clubs() {

@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 import axiosInstance from '../../api/axios'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { userLogin } from '../../store/slice/user'
-import { Mongoose } from 'mongoose'
 import ClubCard from './clubCard'
+import '../../assets/css/club/upcomingRides.css'
 import CreateClub from './createClub'
 import SearchBox from './search'
 

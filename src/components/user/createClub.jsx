@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axiosInstance from '../../api/axios'
 import { toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
+import { CgSpinner } from 'react-icons/cg'
 
 function CreateClub(props) {
 
@@ -11,6 +12,7 @@ function CreateClub(props) {
     const [logo, setLogo] = useState('')
     const [err, setErr] = useState('')
     const [isPrivate, setIsPrivate] = useState(true)
+    const [submited,setSubmited] = useState(false)
 
     const setModal = props.setModal
     const setChange = props.setChange
@@ -29,12 +31,14 @@ function CreateClub(props) {
                 }
             }).then((res) => {
                 if (res.status == 200) {
+                    setSubmited(false)
                     toast.success(res.data.message)
                     setChange(!change)
                 }
                 setModal(false)
             }).catch((err) => {
                 if (err.response.data.errMsg) {
+                    setSubmited(false)
                     toast.error(err.response.data.errMsg)
                 }
             })
@@ -188,11 +192,13 @@ function CreateClub(props) {
                             className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                             onClick={() => {
+                                setSubmited(true)
                                 handleSubmit()
                             }}
 
                         >
-                            Submit
+                                  {submited?<CgSpinner size={20} className='animate-spin' /> :''}
+                                        <span>Submit</span>
                         </button>
                     </div>
                 </div>

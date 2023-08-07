@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import axiosInstance from '../../api/axios'
+import '../../assets/css/club/upcomingRides.css'
 
 function UserBikeDetail(props) {
 
