@@ -13,7 +13,6 @@ function Login() {
   const [password, setPassword] = useState('')
   const [reMail, setRemail] = useState(false)
   const [forgott,setForgott] = useState(false)
-  const [rePassword,setRePassword] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -126,7 +125,7 @@ function Login() {
           <div className=''>
             
             <button
-              onClick={() => handleLogin()}
+              onClick={() => {handleLogin(),reMail?toast.success('Check your mail'):''}}
               className={`w-full text-center py-3 rounded ${reMail == true ? 'bg-amber-700' : 'bg-green-800'} text-white hover:bg-green-dark focus:outline-none my-1`}
             >{reMail == true ? 'Verify mail' : "Login Account"}</button>
             {/* <button
