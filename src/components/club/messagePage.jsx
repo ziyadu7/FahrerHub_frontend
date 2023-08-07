@@ -6,7 +6,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import io from 'socket.io-client'
 import '../../assets/css/club/upcomingRides.css'
 
-const END_POINT = 'https://fahrerhub.onrender.com';
+const END_POINT = 'https://fahrerhub.site';
 let socket;
 function MessagePage(props) {
 
