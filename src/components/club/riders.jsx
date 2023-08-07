@@ -36,8 +36,7 @@ function RidersBody() {
         <div className="text-center container py-5">
           <div className="grid sm:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {loader ? '' : <RidersCard admin={admin} />}
-            {riders.filter((rider) => rider.member.name.toLowerCase().includes(search)).map((rider) => (
-              
+            {riders.filter((rider) => admin.admin._id!==rider.member._id&&rider.member.name.toLowerCase().includes(search)).map((rider) => (   
                 <RidersCard key={rider._id} rider={rider} />
             ))}
           </div>

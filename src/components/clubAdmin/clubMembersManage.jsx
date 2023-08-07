@@ -8,7 +8,6 @@ function ClubMembersManage() {
   const [members, setMembers] = useState([])
   const [search, setSearch] = useState('')
   const [change, setChange] = useState(false)
-  const [status, setAccepted] = useState(false)
 
   useEffect(() => {
     axiosInstance.get('/clubAdmin/getMembers', { headers: { authorization: `Bearer ${clubToken}` } }).then((res) => {

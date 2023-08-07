@@ -163,8 +163,10 @@ function SingleRide() {
             <img src={ride?.image} className='w-full h-96 -z-0 rounded-lg object-cover' alt='' />
             <div className='bg-blue-500 absolute top-10 h-6 rounded-lg'>
               <div className='flex justify-between gap-1'>
-              <p className='text-white text-center'>{ride?.from + '-' + ride?.destination}</p>
-              <p className='text-white text-center'>End Date : {new Date(ride?.endDate).toLocaleDateString()}</p>
+              <p className='text-white text-center'>
+  {ride?.from.split(',')[0].trim() + '-' + ride?.destination.split(',')[0].trim()}
+</p>
+
               </div>
             </div>
             <div className='justify-between mt-4 lg:mt-0 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8'>

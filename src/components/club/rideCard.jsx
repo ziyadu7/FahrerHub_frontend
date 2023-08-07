@@ -19,7 +19,7 @@ function RideCard(props) {
       </div>
       <div className='flex justify-between mt-1'>
         <p className='text-white mt-1'>Max Riders : {ride.maxRiders}</p>
-        <h1 className='text-white'>Participants : {ride.riders.length}</h1>
+        <h1 className='text-white'> {new Date(ride.endDate).toLocaleDateString()}</h1>
       </div>
     </div>
   )
