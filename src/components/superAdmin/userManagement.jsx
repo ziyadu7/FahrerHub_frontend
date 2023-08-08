@@ -10,12 +10,14 @@ function UserManagement() {
     const [search,setSearch] = useState('')
     const [users,setUsers] = useState([])
     const [reload,setReload] = useState(false)
+    const [loader,setLoader] = useState(true)
 
     useEffect(()=>{
         axiosInstance.get('/admin/users',{  headers: {
             authorization: `Bearer ${token}`
           }}).then((res)=>{
             setUsers(res?.data?.users)
+            setLoader(false)
           }).then((err)=>{
             if(err?.response?.data?.errMsg){
                 toast.error(err?.response?.data?.errMsg)
@@ -40,8 +42,7 @@ function UserManagement() {
 
 
   return (
-    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>
-      <div className="flex justify-end m-2">
+    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>      <div className="flex justify-end m-2">
         <SearchBox search={search} setSearch={setSearch} />
 
       </div>
@@ -96,7 +97,8 @@ function UserManagement() {
           </div>
         </div>
       </div>
-    </div>
+      </>
+    }    </div>
   )
 }
 

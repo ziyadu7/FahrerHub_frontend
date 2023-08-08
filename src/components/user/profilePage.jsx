@@ -60,8 +60,10 @@ function ProfilePage() {
         let mobile = newMob||phone
         if (name.trim().length == 0) {
             setErr("Fill all the fields")
+            setSubmitLoad(false)
         }else if (regex_mobile.test(mobile) == false) {
             setErr("Enter valid mobile number")
+            setSubmitLoad(false)
         } else {
             if(mobile==phone){
                 mobile = false
@@ -97,7 +99,8 @@ function ProfilePage() {
         console.log(img?.target?.files[0],'profile image');
         if (isValidImage(img?.target?.files[0].name)) {
             if (img?.target?.files[0]?.size > 1 * 1024 * 1024) { 
-                toast.error('Image size should be less than 1 MB');
+                setErr('Image size should be less than 1 MB');
+                setSubmitLoad(false)
                 return;
             }
             let reader = new FileReader()
@@ -109,7 +112,8 @@ function ProfilePage() {
                 console.log(err);
             }
         } else {
-            toast.error('Add valid image')
+            setErr('Add valid image')
+            setSubmitLoad(false)
         }
     };
 
@@ -132,7 +136,7 @@ function ProfilePage() {
 
     return (
         <div className="capitalize bg-[url('https://www.ktm.com/language-masters/en/segment-pages/naked/79-DUKE-Hero-Image.jpg')] min-h-screen bg-cover bg-fixed">
-            <Toaster toastOptions={{ duration: 4000 }}/>{loader?<Loader/>: 
+            <Toaster toastOptions={{ duration: 4000 }}/>{loader?<Loader bg={'white'} colour={'black'}/>: 
             edit ?
                 <>
                     <div className="justify-center bg-transparent items-center flex overflow-x-hidden overflow-y-auto disableBar fixed inset-0 z-50 outline-none focus:outline-none">

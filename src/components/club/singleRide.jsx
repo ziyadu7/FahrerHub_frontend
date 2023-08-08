@@ -103,7 +103,7 @@ function SingleRide() {
     <>
       {loader ? (
         <div className='h-screen w-full bg-black'>
-          <Loader />
+          <Loader colour={'white'}/>
         </div>
       ) : (
         <div

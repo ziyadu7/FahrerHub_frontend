@@ -104,7 +104,7 @@ function ShowBikesPage() {
   }
 
   return (
-    <>{loader ? <Loader /> : bike ?
+    <>{loader ? <Loader bg={'white'} colour={'black'} /> : bike ?
       <div className="min-h-screen bg-[url(https://wallpaperaccess.com/full/497142.jpg)] ">
         <Toaster toastOptions={3000} />
         <div className="flex justify-end p-4">

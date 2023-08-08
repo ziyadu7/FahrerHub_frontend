@@ -3,6 +3,7 @@ import { CiCircleRemove } from 'react-icons/ci'
 import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
+import Loader from '../user/loader';
 
 function ClubAddImage() {
 
@@ -11,6 +12,7 @@ function ClubAddImage() {
   const [images, setImages] = useState([])
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((state) => state.ClubMember)
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get('/clubAdmin/getImages', {
@@ -19,6 +21,7 @@ function ClubAddImage() {
       }
     }).then((res) => {
       setImages(res.data.images)
+      setLoader(false)
     }).catch((err) => {
       if (err.response.data.message) {
         toast.error(err.response.data.message)
@@ -90,6 +93,7 @@ function ClubAddImage() {
 
   return (
     <div className='bg-slate-800 relative'>
+       {loader?<Loader colour={'white'} />: <>
       <Toaster toastOptions={3000} />
       <div className={`absolute p-2 bg-white overflow-hidden rounded-md h-3/4 top-3 left-1/4 right-1/4 z-50 m-auto ${addImage ? 'block' : 'hidden'}`}>
         <div>
@@ -152,6 +156,7 @@ function ClubAddImage() {
           </div>
         </div>
       </div>
+      </>}
     </div>
   )
 }

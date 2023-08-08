@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
+import Loader from '../user/loader'
 
 function RentsPage() {
 
@@ -10,6 +11,7 @@ function RentsPage() {
   const adminName = name
   const [rents, setRents] = useState()
   const [search, setSearch] = useState('')
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get('/admin/rents', {
@@ -18,6 +20,7 @@ function RentsPage() {
       }
     }).then((res) => {
       setRents(res.data.rents)
+      setLoader(false)
     }).catch((err) => {
       toast.error(err.response.data.errMsg)
     })
@@ -36,7 +39,7 @@ function RentsPage() {
   }
 
   return (
-    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>
+    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>
       <div className="flex justify-end m-2">
         <SearchBox search={search} setSearch={setSearch} />
 
@@ -101,6 +104,8 @@ function RentsPage() {
           </div>
         </div>
       </div>
+      </>
+}
     </div>
   )
 }

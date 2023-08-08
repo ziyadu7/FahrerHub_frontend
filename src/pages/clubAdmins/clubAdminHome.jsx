@@ -7,7 +7,7 @@ import ClubShowRides from '../../components/clubAdmin/clubShowRides'
 function ClubAdminHome(props) {
 
   const [page,setPage] = useState('addImage')
-  const club = props.club
+  const club = props.club 
   return (
     <div>
       <ClubAdminHead setPage = {setPage} page={page} club = {club}/>

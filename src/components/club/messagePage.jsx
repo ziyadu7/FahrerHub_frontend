@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
 import io from 'socket.io-client'
 import '../../assets/css/club/upcomingRides.css'
+import Loader from '../user/loader'
 
 const END_POINT = 'https://fahrerhub.site';
 let socket;
@@ -24,6 +25,7 @@ function MessagePage(props) {
     const [message, setMessage] = useState('')
     const [profile1, setProfile1] = useState(null)
     const [profile2, setProfile2] = useState(null)
+    const [loader,setLoader] = useState(true)
     const navigate = useNavigate()
 
 
@@ -56,6 +58,7 @@ function MessagePage(props) {
             console.log('joined chat');
             socket.emit('joinChat', id)
             setMessage('')
+            setLoader(false)
         }).catch((err) => {
             console.log(err);
             if (err?.response?.data?.errMsg) {
@@ -148,7 +151,7 @@ function MessagePage(props) {
                     <div className="flex flex-col flex-auto h-full p-6 ">
                         <button onClick={() => navigate(-1)} className='bg-black px-4 sm:hidden text-white hover:bg-white hover:text-black py-2 rounded-md'>Back</button>
 
-                        {chat ? <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+                        {chat ?loader?<Loader bg={'white'} colour={'black'} />: <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                             <div className="flex flex-col h-full overflow-x-auto mb-4">
 
                                 <div className="flex flex-col h-full">

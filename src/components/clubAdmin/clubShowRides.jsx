@@ -12,8 +12,7 @@ function ClubShowRides() {
   const [blockRideId, setBlockRideId] = useState('')
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((store) => store.ClubMember)
-
-  const navigate = useNavigate()
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get(`/club/getRides?admin=${clubToken}`, {
@@ -21,6 +20,7 @@ function ClubShowRides() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
+      setLoader(false)
       setRides(res.data.rides)
     }).catch((err) => {
       if (err.response.data.errMsg) {
@@ -99,6 +99,7 @@ function ClubShowRides() {
 
   return (
     <div className='bg-slate-800'>
+      {loader?<Loader colour={'white'} />: <>
       <Toaster toastOptions={3000} />
       <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
         <form method="dialog" className="modal-box">
@@ -158,7 +159,8 @@ function ClubShowRides() {
         )) : <div className='text-white '>
           <h1 className='font-semibold text-center text-3xl'>Currently no rides available!!</h1>
         </div>}
-      </div></div>
+      </div>
+      </>}</div>
   )
 }
 

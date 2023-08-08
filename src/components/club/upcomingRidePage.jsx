@@ -37,6 +37,7 @@ function UpcomingRides() {
   return (
     <div className='bg-[url(https://wallpapercave.com/wp/wp3647900.jpg)] capitalize bg-fixed min-h-screen'>
       <Toaster toastOptions={3000} />
+      {loader ? <Loader colour={'white'} /> :<>
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
        <CreateRideFrom refresh={refresh} setRefresh={setRefresh} />
       </dialog>
@@ -48,9 +49,9 @@ function UpcomingRides() {
         {rides.length != 0 ? rides.map((ride) => (
           <RideCard key={ride._id} ride={ride} isUpcoming={true} navigate={navigate} />
         )) : <div className='text-white flex justify-center items-center w-screen'>
+          Currently no rides available
         </div>}
-      </div>
-      {loader ? <Loader /> : ''}
+      </div></>}
     </div>
   )
 }

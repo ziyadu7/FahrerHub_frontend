@@ -49,7 +49,7 @@ function QAsession() {
 
   return (
     <>
-    {loader?<Loader/>:<div className='capitalize bg-[url(https://wallpaperaccess.com/full/1433024.jpg)] bg-cover bg-fixed min-h-screen'>
+    {loader?<Loader bg={'white'} colour={'black'}/>:<div className='capitalize bg-[url(https://wallpaperaccess.com/full/1433024.jpg)] bg-cover bg-fixed min-h-screen'>
     <div className={`justify-end px-4 mx-auto lg:max-w-7xl pt-4 md:items-center flex md:px-8`}>
       <SearchBox search={search} setSearch={setSearch} />
     </div>

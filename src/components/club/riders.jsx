@@ -29,6 +29,7 @@ function RidersBody() {
 
   return (
     <div className='bg-[url(https://wallpapercave.com/wp/wp3647900.jpg)] bg-fixed min-h-screen'>
+        {loader ? <Loader colour={'white'} /> :<>
       <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
         <SearchBox search={search} setSearch={setSearch} />
       </div>
@@ -42,7 +43,7 @@ function RidersBody() {
           </div>
         </div>
       </div>
-      {loader ? <Loader /> : ''}
+      </>}
     </div>
   )
 }

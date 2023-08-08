@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import { Toaster, toast } from 'react-hot-toast'
+import Loader from '../user/loader'
 
 function ClubMembersManage() {
   const { clubToken } = useSelector((store) => store.ClubMember)
   const [members, setMembers] = useState([])
   const [search, setSearch] = useState('')
   const [change, setChange] = useState(false)
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get('/clubAdmin/getMembers', { headers: { authorization: `Bearer ${clubToken}` } }).then((res) => {
       setMembers(res.data.members)
+      setLoader(false)
     }).catch((err) => {
       if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
@@ -41,7 +44,7 @@ function ClubMembersManage() {
 
   return (
     <div className='bg-gradient-to-b from-cyan-950'><Toaster toastOptions={3000} />
-      <div className='grid grid-cols-1 pt-8 sm:p-5'>
+    {loader?<Loader colour={'white'} />: <div className='grid grid-cols-1 pt-8 sm:p-5'>
         <div className="flex justify-end m-2">
           <div className='flex'>
             <label className="sr-only">Search</label>
@@ -104,7 +107,8 @@ function ClubMembersManage() {
             </table>
           </div>
         </div>
-      </div>
+      </div>}
+     
     </div>
   )
 }

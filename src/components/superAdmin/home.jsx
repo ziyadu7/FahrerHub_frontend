@@ -5,6 +5,7 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import DashCard from './dashCard';
+import Loader from '../user/loader';
 
 function Home() {
   const [rentDetails, setRentDetails] = useState([])
@@ -13,6 +14,7 @@ function Home() {
   const [userCount, setUserCount] = useState(0)
   const [rentGrap, setRentGraph] = useState([])
   const { token } = useSelector((store) => store.SuperAdmin)
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get('/admin/getDashbord', {
@@ -25,6 +27,7 @@ function Home() {
       setClubCount(res?.data?.clubCount)
       setUserCount(res?.data?.userCount)
       setRentGraph(res?.data?.rentGrap)
+      setLoader(false)
     }).catch((err) => {
       toast.error(err?.response?.data?.errMsg)
     })
@@ -81,7 +84,7 @@ function Home() {
     },
   };
   return (
-    
+    <>{loader?<Loader bg={'white'} colour={'black'}/>:
     <div className="min-h-screen w-full ">
       <Toaster toastOptions={3000} />
       <header className="bg-white ps-5 shadow">
@@ -117,6 +120,7 @@ function Home() {
         </div>
       </main>
     </div>
+}</>
   )
 }
 

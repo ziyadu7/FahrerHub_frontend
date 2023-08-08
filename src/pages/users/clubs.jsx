@@ -34,7 +34,7 @@ function Clubs() {
   return (
     <div>
         <NavBar/><Toaster toastOptions={3000}/>
-        {loader?<Loader/>:isProtected?<ShowClubsPage isProtected={isProtected} setProtected={setProtected} change={change} setChange={setChange} token={token} clubs={protClubs} />:<ShowClubsPage isProtected={isProtected} setProtected={setProtected} change={change} setChange={setChange} token={token} clubs={clubs} />}
+        {loader?<Loader bg={'white'} colour={'black'} />:isProtected?<ShowClubsPage isProtected={isProtected} setProtected={setProtected} change={change} setChange={setChange} token={token} clubs={protClubs} />:<ShowClubsPage isProtected={isProtected} setProtected={setProtected} change={change} setChange={setChange} token={token} clubs={clubs} />}
     </div>
   )
 }

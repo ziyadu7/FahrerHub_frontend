@@ -3,12 +3,15 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import { Toaster, toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
+import Loader from '../user/loader'
 
 function ClubListPage() {
   const { token } = useSelector((state) => state.SuperAdmin)
   const [clubs, setClubs] = useState()
   const [search, setSearch] = useState('')
   const [reload, setReload] = useState(false)
+  const [loader,setLoader] = useState(true)
+
 
   const blockClub = (clubId, isBlock) => {
     axiosInstance.patch('/admin/blockClub', { clubId, isBlock }, {
@@ -30,6 +33,7 @@ function ClubListPage() {
       }
     }).then((res) => {
       setClubs(res.data.clubs)
+      setLoader(false)
     }).catch((err) => {
       if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
@@ -37,7 +41,7 @@ function ClubListPage() {
     })
   }, [reload])
   return (
-    <div style={{ width: '95%' }} className=''><Toaster />
+    <div style={{ width: '95%' }} className=''><Toaster toastOptions={4000}/>{loader?<Loader bg={'white'} colour={'black'}/>:<>
       <div className="flex justify-end m-2">
         <SearchBox search={search} setSearch={setSearch} />
       </div>
@@ -85,7 +89,8 @@ function ClubListPage() {
             </table>
           </div>
         </div>
-      </div>
+      </div></>
+}
     </div>
   )
 }

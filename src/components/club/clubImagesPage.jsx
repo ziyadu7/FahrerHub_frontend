@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
+import Loader from '../user/loader';
 
 
 function ClubImagesPage() {
 
   const [images, setImages] = useState([])
   const { clubToken } = useSelector((state) => state.ClubMember)
+  const [loader,setLoader] = useState(true)
 
   useEffect(() => {
     axiosInstance.get('/club/getImages', {
@@ -16,6 +18,7 @@ function ClubImagesPage() {
       }
     }).then((res) => {
       setImages(res.data.images)
+      setLoader(false)
     }).catch((err) => {
       if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
@@ -26,6 +29,7 @@ function ClubImagesPage() {
   return (
     <div className='bg-[url(https://wallpapercave.com/wp/wp3647900.jpg)] bg-fixed min-h-screen'>
       <Toaster toastOptions={3000} />
+      {loader?<Loader colour={'white'} />: 
       <div className="container m-auto px-5 py-2 lg:px-32 lg:pt-24 ">
         <div className="-m-1 flex flex-wrap md:-m-2">
           <div className="container">
@@ -49,7 +53,7 @@ function ClubImagesPage() {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

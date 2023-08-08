@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast';
 import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
-import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from '../user/search';
 import AddBikeForm from './addBikeForm';
+import Loader from '../user/loader'
+
 
 function BikesPage({ setEditBike }) {
 
@@ -15,11 +16,13 @@ function BikesPage({ setEditBike }) {
     const [bikeUpdation, setBikeUpdation] = useState(false)
     const [search, setSearch] = useState('')
     const { token } = useSelector((state) => state.SuperAdmin)
+    const [loader,setLoader] = useState(true)
     const navigate = useNavigate()
 
     useEffect(() => {
         axiosInstance.get('/admin/showBikes', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
             setBikes(res.data.bikes)
+            setLoader(false)
         }).catch((error) => {
             toast.error(error?.response?.data?.errMsg)
         })
@@ -57,7 +60,7 @@ function BikesPage({ setEditBike }) {
     }
 
     return (
-        <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>
+        <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>
             <div className="flex justify-end m-2">
                 <SearchBox search={search} setSearch={setSearch} />
 
@@ -119,6 +122,8 @@ function BikesPage({ setEditBike }) {
                         </div>
                     </div>
                 </div>}
+                </>
+}
 
         </div>
     )

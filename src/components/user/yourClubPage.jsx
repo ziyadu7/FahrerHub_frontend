@@ -49,7 +49,7 @@ function YourClubPage() {
 
     return (
         <>
-            {loader ? <Loader /> :
+            {loader ? <Loader  bg={'white'} colour={'black'}/> :
                 <div className='bg-[url(https://wallpapercave.com/wp/wp7610092.jpg)] bg-cover bg-center w-full min-h-screen  bg-fixed'>
                     <>
                         <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
