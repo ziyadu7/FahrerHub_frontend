@@ -72,6 +72,10 @@ function EditBikePage({ editBike, setEditBike }) {
       const file = files[i];
 
       if (isValidImage(file.name)) {
+        if (file.size > 1 * 1024 * 1024) { 
+          toast.error('Image size should be less than 1 MB');
+          break;
+      }
         const reader = new FileReader();
 
         reader.onload = () => {

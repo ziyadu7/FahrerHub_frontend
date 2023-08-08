@@ -56,6 +56,10 @@ function CreateRideFrom(props) {
 
     const handleImageChange = (img) => {
         if (isValidImage(img.target.files[0].name)) {
+            if (file.size > 1 * 1024 * 1024) { 
+                toast.error('Image size should be less than 1 MB');
+                return;
+            }
             let reader = new FileReader()
             reader.readAsDataURL(img.target.files[0])
             reader.onload = () => {
