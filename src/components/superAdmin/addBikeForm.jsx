@@ -38,7 +38,6 @@ function AddBikeForm(props) {
         const results = [];
 
         for (let i = 0; i < files.length; i++) {
-            console.log(files[i].name);
             if (isValidImage(files[i].name)) {
                 if (file.size > 1 * 1024 * 1024) { 
                     toast.error('Image size should be less than 1 MB');

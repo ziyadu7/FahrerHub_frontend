@@ -94,8 +94,9 @@ function ProfilePage() {
     }
 
     const handleImageChange = (img) => {
-        if (isValidImage(img.target.files[0].name)) {
-            if (file.size > 1 * 1024 * 1024) { 
+        console.log(img?.target?.files[0],'profile image');
+        if (isValidImage(img?.target?.files[0].name)) {
+            if (img?.target?.files[0]?.size > 1 * 1024 * 1024) { 
                 toast.error('Image size should be less than 1 MB');
                 return;
             }
