@@ -18,7 +18,7 @@ function SingleRide() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loader, setReloader] = useState(true)
   const [sure, setSure] = useState(false)
-  const [map,setMap] = useState(false)
+  const [map, setMap] = useState(false)
 
 
   const navigate = useNavigate()
@@ -163,9 +163,9 @@ function SingleRide() {
             <img src={ride?.image} className='w-full h-96 -z-0 rounded-lg object-cover' alt='' />
             <div className='bg-blue-500 absolute top-10 h-6 rounded-lg'>
               <div className='flex justify-between gap-1'>
-              <p className='text-white text-center'>
-  {ride?.from.split(',')[0].trim() + '-' + ride?.destination.split(',')[0].trim()}
-</p>
+                <p className='text-white text-center'>
+                  {ride?.from.split(',')[0].trim() + '-' + ride?.destination.split(',')[0].trim()}
+                </p>
 
               </div>
             </div>
@@ -215,12 +215,12 @@ function SingleRide() {
 
           <div className='container mx-auto backdrop-blur-sm '>
             <div className='flex justify-between container mx-auto px-5 py-2 lg:px-32 relative lg:pt-24'>
-              <h1 className='text-center text-3xl font-extrabold text-white mt-2'>{map?'Route Map':'Riders'}</h1>
-              <h1 onClick={()=>setMap(!map)} className='text-center hover:font-bold text-white mt-2'>{map?'Riders':'Route Map'}</h1>
+              <h1 className='text-center text-3xl font-extrabold text-white mt-2'>{map ? 'Route Map' : 'Riders'}</h1>
+              <h1 onClick={() => setMap(!map)} className='text-center hover:font-bold text-white mt-2'>{map ? 'Riders' : 'Route Map'}</h1>
             </div>
-            {map?<div>
+            {map ? <div>
               <RouteMap startLatitude={ride?.fromLocation?.latitude} startLongitude={ride?.fromLocation?.longitude} endLatitude={ride?.destinationLocation?.latitude} endLongitude={ride?.destinationLocation?.longitude} />
-            </div>:<div className='justify-center container px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 mx-auto lg:max-w-6xl md:items-center md:px-8'>
+            </div> : <div className='justify-center container px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 mx-auto lg:max-w-6xl md:items-center md:px-8'>
               {ride?.riders.map((rider) => (
                 <RiderCard userId={userId} ride={ride} rider={rider} removeRider={removeRider} />
               ))}

@@ -53,6 +53,8 @@ function ProfilePage() {
         })
     }, [change])
 
+    
+
     const submitEdits = async () => {
         setErr('')
         let mobile = newMob||phone
@@ -71,13 +73,12 @@ function ProfilePage() {
             }).then((res) => {
                 toast.success(res.data.message)
                 setEdit(false)
-                setSubmitLoad(false)
                 setChange(!change)
+                setSubmitLoad(false)
             }).catch((error) => {
+                console.log(error);
                 if (error?.response?.data) {
                     toast.error(error.response.data.errMsg)
-                    setSubmitLoad(false)
-                } else {
                     setSubmitLoad(false)
                 }
             })
@@ -118,6 +119,8 @@ function ProfilePage() {
         }).catch((err) => {
             if (err.response.data.errMsg) {
                 toast.error(err.response.data.errMsg)
+            }else{
+                console.log(err);
             }
         })
     }
@@ -192,13 +195,15 @@ function ProfilePage() {
                                         type="button"
                                         onClick={() => {
                                             setEdit(false)
+                                            setSubmitLoad(false)
+                                            removeEdits()
                                         }
                                         }
                                     >
                                         Close
                                     </button>
                                     <button
-                                        className={`bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                                        className={`bg-emerald-500 flex text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                                         type="button"
                                         onClick={() => {
                                             setSubmitLoad(true)
@@ -206,8 +211,7 @@ function ProfilePage() {
                                         }}
 
                                     >
-                                        {submitLoad?<CgSpinner size={20} className='animate-spin' /> :''}
-                                        <span>Submit</span>
+                                        {submitLoad?<CgSpinner size={20} className='animate-spin' /> : <span>Submit</span>}
                                     </button>
                                 </div>
                             </div>

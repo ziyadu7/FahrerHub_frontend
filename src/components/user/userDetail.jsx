@@ -89,7 +89,7 @@ function UserDetail(props) {
                   <p className="mb-4 text-black font-bold text-center">Participated Rides
                   </p>
                   {rides.map((ride) => (
-                    <p key={ride._id} className="mb-1 text-sm text-center">{ride.from}-{ride.destination}</p>
+                    <p key={ride._id} className="mb-1 text-sm text-center"> {ride?.from.split(',')[0].trim() + '-' + ride?.destination.split(',')[0].trim()}</p>
                   ))}
 
                 </div>

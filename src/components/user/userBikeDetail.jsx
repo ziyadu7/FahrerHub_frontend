@@ -5,11 +5,11 @@ import '../../assets/css/club/upcomingRides.css'
 
 function UserBikeDetail(props) {
 
-    const setShowBike = props.setShowBike
-    const token = props.token
-    const bike = props.bike
-    const setChange = props.setChange
-    const change = props.change
+    const setShowBike = props?.setShowBike
+    const token = props?.token
+    const bike = props?.bike
+    const setChange = props?.setChange
+    const change = props?.change
 
     const [make, setMake] = useState('')
     const [model, setModel] = useState('')
@@ -28,7 +28,6 @@ function UserBikeDetail(props) {
                     authorization: `Bearer ${token}`
                 }
             }).then((res) => {
-                console.log(change,'=======');
                 toast.success(res.data.message)
                 setChange(!change)
                 setForm(false)
@@ -152,11 +151,9 @@ function UserBikeDetail(props) {
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                         {edit ? <button type="button" onClick={() => {
                             addBike()
-                setChange(!change)
 
                         }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button> : <button type="button" onClick={() => {
-                setChange(!change)
-                editBike();
+                            editBike();
                         }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button>}
 
                     </div>
