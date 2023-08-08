@@ -3,6 +3,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
+import Loader from '../user/loader'
 
 function ClubShowRides() {
   const [rides, setRides] = useState([])

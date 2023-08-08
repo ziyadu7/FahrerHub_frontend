@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
+import Loader from '../user/loader'
 
 function UserManagement() {
 

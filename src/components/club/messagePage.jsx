@@ -151,7 +151,7 @@ function MessagePage(props) {
                     <div className="flex flex-col flex-auto h-full p-6 ">
                         <button onClick={() => navigate(-1)} className='bg-black px-4 sm:hidden text-white hover:bg-white hover:text-black py-2 rounded-md'>Back</button>
 
-                        {chat ?loader?<Loader bg={'white'} colour={'black'} />: <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+                        {loader?<Loader bg={'white'} colour={'black'} />:chat ? <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                             <div className="flex flex-col h-full overflow-x-auto mb-4">
 
                                 <div className="flex flex-col h-full">
