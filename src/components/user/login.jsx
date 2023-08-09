@@ -117,7 +117,7 @@ function Login() {
               className="block border border-grey-light w-full p-3 rounded mb-4"
               name="password"
               placeholder="Password" />
-            <GoogleOAuthProvider clientId='956208601128-aea9cgt0a2135p8vfm4i77ntb1q0h8kj.apps.googleusercontent.com'>
+            <GoogleOAuthProvider clientId={import.meta.env.vite_CLIENTID}>
               <GoogleLoginComponent />
             </GoogleOAuthProvider>
             </>

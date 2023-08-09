@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-    baseURL:'https://fahrerhub.site',
+    baseURL:import.meta.env.vite_SERVERURL,
     headers:{
         "Content-Type":'application/json'
     }

@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyBf_udtNjNT6ZDO4q8l7Si5JED4Gbz9gYg",
+  apiKey: import.meta.env.vite_FIREBASEAPI,
   authDomain: "fir-2092e.firebaseapp.com",
   projectId: "fir-2092e",
   storageBucket: "fir-2092e.appspot.com",

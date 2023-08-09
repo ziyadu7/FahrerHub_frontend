@@ -66,7 +66,7 @@ function Home() {
       }
 
       chartInstanceRef.current = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data,
         options,
       });
