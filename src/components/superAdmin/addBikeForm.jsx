@@ -22,7 +22,9 @@ function AddBikeForm(props) {
         axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
             setLocations(res?.data?.locations)
         }).catch((err) => {
-            if (err.response.status == 403) {
+            if (err.response.status === 404) {
+                navigate('/serverError')
+            } else if (err.response.status == 403) {
                 navigate('/accessDenied')
             } else if (err.response.status == 500) {
                 navigate('/serverError')
@@ -86,7 +88,9 @@ function AddBikeForm(props) {
                 setShowAdd(false)
                 setImages([])
             }).catch((error) => {
-                if (err.response.status == 403) {
+                if (err.response.status === 404) {
+                    navigate('/serverError')
+                } else if (err.response.status == 403) {
                     navigate('/accessDenied')
                 } else if (err.response.status == 500) {
                     navigate('/serverError')

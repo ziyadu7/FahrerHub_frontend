@@ -28,11 +28,13 @@ function YourClubPage() {
             setClubs(res.data.clubs)
             setLoader(false)
         }).catch((err) => {
-            if(err.response.status==403){
-                navigate('/accessDenied')
-            }else if(err.response.status==500){
+            if (err.response.status === 404) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
+                navigate('/serverError')
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -47,11 +49,13 @@ function YourClubPage() {
             toast.success(res.data.message)
             setReload(!reload)
         }).catch((err) => {
-            if(err.response.status==403){
-                navigate('/accessDenied')
-            }else if(err.response.status==500){
+            if (err.response.status === 404) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
+                navigate('/serverError')
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -59,7 +63,7 @@ function YourClubPage() {
 
     return (
         <>
-            {loader ? <Loader  bg={'white'} colour={'black'}/> :
+            {loader ? <Loader bg={'white'} colour={'black'} /> :
                 <div className='bg-[url(https://wallpapercave.com/wp/wp7610092.jpg)] bg-cover bg-center w-full min-h-screen  bg-fixed'>
                     <>
                         <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>

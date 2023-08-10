@@ -37,7 +37,9 @@ function ClubAdminHead(props) {
           toast.success(res.data.message)
         }
       }).catch((err) => {
-        if (err.response.status == 403) {
+        if (err.response.status === 404) {
+          navigate('/serverError')
+        } else if (err.response.status == 403) {
           navigate('/accessDenied')
         } else if (err.response.status == 500) {
           navigate('/serverError')

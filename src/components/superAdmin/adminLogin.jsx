@@ -12,10 +12,6 @@ function AdminLogin() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        console.log('loging')
-    }, [])
-
     async function handleLogin() {
         if (email.trim().length == 0 || password.trim().length == 0) {
             toast.error('Fill all the fields')
@@ -31,7 +27,9 @@ function AdminLogin() {
                     navigate('/admin')
                 }
             }).catch((err) => {
-                if (err.response.status == 403) {
+                if (err.response.status === 404) {
+                    navigate('/serverError')
+                } else if (err.response.status == 403) {
                     navigate('/accessDenied')
                 } else if (err.response.status == 500) {
                     navigate('/serverError')

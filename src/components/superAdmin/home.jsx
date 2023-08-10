@@ -15,7 +15,7 @@ function Home() {
   const [userCount, setUserCount] = useState(0)
   const [rentGrap, setRentGraph] = useState([])
   const { token } = useSelector((store) => store.SuperAdmin)
-  const [loader,setLoader] = useState(true)
+  const [loader, setLoader] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,11 +31,13 @@ function Home() {
       setRentGraph(res?.data?.rentGrap)
       setLoader(false)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status === 404) {
         navigate('/serverError')
-    }else if(err?.response?.data){
+      } else if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
-    }
+      }
     })
   }, [])
 
@@ -90,43 +92,43 @@ function Home() {
     },
   };
   return (
-    <>{loader?<Loader bg={'white'} colour={'black'}/>:
-    <div className="min-h-screen w-full ">
-      <Toaster toastOptions={3000} />
-      <header className="bg-white ps-5 shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        </div>
-      </header>
-      <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Rent Bike Details Card */}
-            <DashCard userCount={userCount} />
-            <DashCard bikeCount={bikeCount} />
-            <DashCard clubCount={clubCount} />
+    <>{loader ? <Loader bg={'white'} colour={'black'} /> :
+      <div className="min-h-screen w-full ">
+        <Toaster toastOptions={3000} />
+        <header className="bg-white ps-5 shadow">
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           </div>
+        </header>
+        <main>
+          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {/* Rent Bike Details Card */}
+              <DashCard userCount={userCount} />
+              <DashCard bikeCount={bikeCount} />
+              <DashCard clubCount={clubCount} />
+            </div>
 
-          {/* Rent Details Table */}
-          <div className="mt-8 bg-white shadow rounded-lg">
-            <DashRentTable rentDetails={rentDetails} />
-          </div>
+            {/* Rent Details Table */}
+            <div className="mt-8 bg-white shadow rounded-lg">
+              <DashRentTable rentDetails={rentDetails} />
+            </div>
 
-          {/* Chart */}
-          <div className="mt-8 bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-xl font-bold text-gray-900">Rent Details Chart</h2>
-              <div className="mt-4 flex justify-center">
-                <div className='md:w-11/12 w-full'>
-                <canvas className='w-3/4' ref={chartRef}></canvas>
+            {/* Chart */}
+            <div className="mt-8 bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <h2 className="text-xl font-bold text-gray-900">Rent Details Chart</h2>
+                <div className="mt-4 flex justify-center">
+                  <div className='md:w-11/12 w-full'>
+                    <canvas className='w-3/4' ref={chartRef}></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-}</>
+        </main>
+      </div>
+    }</>
   )
 }
 

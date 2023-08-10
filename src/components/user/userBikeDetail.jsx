@@ -35,11 +35,13 @@ function UserBikeDetail(props) {
                 setForm(false)
                 setEdit(false)
             }).catch((err) => {
-                if(err.response.status==403){
-                    navigate('/accessDenied')
-                }else if(err.response.status==500){
+                if (err.response.status === 404) {
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
+                    navigate('/serverError')
+                } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
                 }
             })
@@ -59,11 +61,13 @@ function UserBikeDetail(props) {
                 setChange(!change)
                 setForm(false)
             }).catch((err) => {
-                if(err.response.status==403){
-                    navigate('/accessDenied')
-                }else if(err.response.status==500){
+                if (err.response.status === 404) {
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
+                    navigate('/serverError')
+                } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
                 }
             })
@@ -80,8 +84,8 @@ function UserBikeDetail(props) {
 
     const addImage = (img) => {
         if (isValidImage(img?.target?.files[0]?.name)) {
-            
-            if (img.target.files[0].size > 1 * 1024 * 1024) { 
+
+            if (img.target.files[0].size > 1 * 1024 * 1024) {
                 toast.error('Image size should be less than 1 MB');
                 return;
             }

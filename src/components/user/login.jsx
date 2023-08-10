@@ -31,9 +31,7 @@ function Login() {
           navigate('/')
         }
       }).catch((err) => {
-        if(err?.response?.status === 403){
-          toast.error(err?.response?.data?.errMsg)
-      }else if (err?.response.status === 401) {
+        if (err?.response.status === 401) {
           setRemail(true)
           toast.error(err?.response.data.errMsg)
         } else if (err?.response.status === 500) {

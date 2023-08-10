@@ -17,14 +17,14 @@ function ProfilePage() {
     const [edit, setEdit] = useState(false)
     const [name, setNewName] = useState('')
     const [phone, setPhone] = useState('')
-    const [newMob,setNewMob] = useState(null)
+    const [newMob, setNewMob] = useState(null)
     const [adminClubs, setAdminClubs] = useState()
     const [memberClubs, setMemberClubs] = useState()
     const [profileImage, setNewProfile] = useState('')
     const [rentHistory, setRentHistory] = useState()
     const [rides, setRides] = useState([])
-    const [loader,setLoader] = useState(true)
-    const [submitLoad,setSubmitLoad] = useState(false)
+    const [loader, setLoader] = useState(true)
+    const [submitLoad, setSubmitLoad] = useState(false)
     const [err, setErr] = useState('')
     const [showBike, setShowBike] = useState(false)
     const navigate = useNavigate()
@@ -47,11 +47,13 @@ function ProfilePage() {
             setNewProfile(res?.data?.user?.profileImage)
             setRides(res?.data?.rides)
         }).catch((err) => {
-            if(err.response.status==403){
-                navigate('/accessDenied')
-            }else if(err.response.status==500){
+            if (err.response.status === 404) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
+                navigate('/serverError')
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -61,15 +63,15 @@ function ProfilePage() {
 
     const submitEdits = async () => {
         setErr('')
-        let mobile = newMob||phone
+        let mobile = newMob || phone
         if (name.trim().length == 0) {
             setErr("Fill all the fields")
             setSubmitLoad(false)
-        }else if (regex_mobile.test(mobile) == false) {
+        } else if (regex_mobile.test(mobile) == false) {
             setErr("Enter valid mobile number")
             setSubmitLoad(false)
         } else {
-            if(mobile==phone){
+            if (mobile == phone) {
                 mobile = false
             }
             axiosInstance.patch('/user/editProfile', { name, profileImage, mobile }, {
@@ -83,11 +85,13 @@ function ProfilePage() {
                 setSubmitLoad(false)
             }).catch((err) => {
                 setSubmitLoad(false)
-                if(err.response.status==403){
-                    navigate('/accessDenied')
-                }else if(err.response.status==500){
+                if (err.response.status === 404) {
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
+                    navigate('/serverError')
+                } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
                 }
             })
@@ -103,9 +107,9 @@ function ProfilePage() {
     }
 
     const handleImageChange = (img) => {
-        console.log(img?.target?.files[0],'profile image');
+        console.log(img?.target?.files[0], 'profile image');
         if (isValidImage(img?.target?.files[0].name)) {
-            if (img?.target?.files[0]?.size > 1 * 1024 * 1024) { 
+            if (img?.target?.files[0]?.size > 1 * 1024 * 1024) {
                 setErr('Image size should be less than 1 MB');
                 setSubmitLoad(false)
                 return;
@@ -124,8 +128,8 @@ function ProfilePage() {
         }
     };
 
-    const returnBike = (rentId,bikeId) => {
-        axiosInstance.patch('/user/returnBike', { rentId,bikeId }, {
+    const returnBike = (rentId, bikeId) => {
+        axiosInstance.patch('/user/returnBike', { rentId, bikeId }, {
             headers: {
                 authorization: `Bearer ${token}`
             }
@@ -133,11 +137,13 @@ function ProfilePage() {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if(err.response.status==403){
-                navigate('/accessDenied')
-            }else if(err.response.status==500){
+            if (err.response.status === 404) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
+                navigate('/serverError')
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -145,99 +151,99 @@ function ProfilePage() {
 
     return (
         <div className="capitalize bg-[url('https://www.ktm.com/language-masters/en/segment-pages/naked/79-DUKE-Hero-Image.jpg')] min-h-screen bg-cover bg-fixed">
-            <Toaster toastOptions={{ duration: 4000 }}/>{loader?<Loader bg={'white'} colour={'black'}/>: 
-            edit ?
-                <>
-                    <div className="justify-center bg-transparent items-center flex overflow-x-hidden overflow-y-auto disableBar fixed inset-0 z-50 outline-none focus:outline-none">
-                        <div className="relative w-auto max-h-full my-6 mx-auto max-w-3xl">
-                            {/*content*/}
-                            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                {/*header*/}
-                                <div className="flex justify-center p-5 border-b border-solid border-slate-200 rounded-t">
-                                    <h3 className="text-3xl font-semibold">
-                                        Edit Details
-                                    </h3>
-                                </div>
-                                {/*body*/}
-                                <div className="relative p-6 flex-auto">
-                                    <div className='px-5'>
-                                        <div className="space-y-12">
-                                            <div className="border-b border-gray-900/10 pb-12">
+            <Toaster toastOptions={{ duration: 4000 }} />{loader ? <Loader bg={'white'} colour={'black'} /> :
+                edit ?
+                    <>
+                        <div className="justify-center bg-transparent items-center flex overflow-x-hidden overflow-y-auto disableBar fixed inset-0 z-50 outline-none focus:outline-none">
+                            <div className="relative w-auto max-h-full my-6 mx-auto max-w-3xl">
+                                {/*content*/}
+                                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                                    {/*header*/}
+                                    <div className="flex justify-center p-5 border-b border-solid border-slate-200 rounded-t">
+                                        <h3 className="text-3xl font-semibold">
+                                            Edit Details
+                                        </h3>
+                                    </div>
+                                    {/*body*/}
+                                    <div className="relative p-6 flex-auto">
+                                        <div className='px-5'>
+                                            <div className="space-y-12">
+                                                <div className="border-b border-gray-900/10 pb-12">
 
-                                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                                    <div className="sm:col-span-3">
-                                                        <label className="block text-sm font-medium leading-6 text-gray-900">Name</label>
-                                                        <div className="mt-2">
-                                                            <input type="text" onChange={(e) => setNewName(e.target.value)} placeholder={name} name="name" id="name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="sm:col-span-3">
-                                                        <label className="block text-sm font-medium leading-6 text-gray-900">Phone</label>
-                                                        <div className="mt-2">
-                                                            <input type="text" onChange={(e) => setNewMob(e.target.value)} placeholder={newMob||phone} name="last-name" id="last-name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                                                        </div>
-                                                    </div>
-                                                    <div className=''>
-                                                        <div>
-                                                            <div className='md:flex'>
-                                                                <img
-                                                                    src={profileImage ? profileImage : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
-                                                                    alt="...."
-                                                                    className="avatar"
-                                                                />
-                                                            </div>
-                                                            <div className="pt-5">
-                                                                <input
-                                                                    type="file"
-                                                                    name="photo"
-                                                                    acceptedfiles=".jpg,.jpeg,.png"
-                                                                    id="file"
-                                                                    onChange={handleImageChange}
-                                                                />
+                                                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                                        <div className="sm:col-span-3">
+                                                            <label className="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                                                            <div className="mt-2">
+                                                                <input type="text" onChange={(e) => setNewName(e.target.value)} placeholder={name} name="name" id="name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                                             </div>
                                                         </div>
+                                                        <div className="sm:col-span-3">
+                                                            <label className="block text-sm font-medium leading-6 text-gray-900">Phone</label>
+                                                            <div className="mt-2">
+                                                                <input type="text" onChange={(e) => setNewMob(e.target.value)} placeholder={newMob || phone} name="last-name" id="last-name" className="block w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                        <div className=''>
+                                                            <div>
+                                                                <div className='md:flex'>
+                                                                    <img
+                                                                        src={profileImage ? profileImage : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
+                                                                        alt="...."
+                                                                        className="avatar"
+                                                                    />
+                                                                </div>
+                                                                <div className="pt-5">
+                                                                    <input
+                                                                        type="file"
+                                                                        name="photo"
+                                                                        acceptedfiles=".jpg,.jpeg,.png"
+                                                                        id="file"
+                                                                        onChange={handleImageChange}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className='flex justify-center'>
-                                                    <span className='text-red-700'>{err}</span>
+                                                    <div className='flex justify-center'>
+                                                        <span className='text-red-700'>{err}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='flex justify-center'>
-                                </div>
-                                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                                    <button
-                                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                        type="button"
-                                        onClick={() => {
-                                            setEdit(false)
-                                            setSubmitLoad(false)
-                                            removeEdits()
-                                        }
-                                        }
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        className={`bg-emerald-500 flex text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-                                        type="button"
-                                        onClick={() => {
-                                            setSubmitLoad(true)
-                                            submitEdits()
-                                        }}
+                                    <div className='flex justify-center'>
+                                    </div>
+                                    <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                                        <button
+                                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            type="button"
+                                            onClick={() => {
+                                                setEdit(false)
+                                                setSubmitLoad(false)
+                                                removeEdits()
+                                            }
+                                            }
+                                        >
+                                            Close
+                                        </button>
+                                        <button
+                                            className={`bg-emerald-500 flex text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                                            type="button"
+                                            onClick={() => {
+                                                setSubmitLoad(true)
+                                                submitEdits()
+                                            }}
 
-                                    >
-                                        {submitLoad?<CgSpinner size={20} className='animate-spin' /> : <span>Submit</span>}
-                                    </button>
+                                        >
+                                            {submitLoad ? <CgSpinner size={20} className='animate-spin' /> : <span>Submit</span>}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-                </> :
-                showBike ? <UserBikeDetail change={change} setChange={setChange} bike={user?.bike} token={token} setShowBike={setShowBike} /> : <UserDetail setShowBike={setShowBike} user={user} setEdit={setEdit} adminClubs={adminClubs} returnBike={returnBike} memberClubs={memberClubs} rides={rides} rentHistory={rentHistory} />
+                        <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                    </> :
+                    showBike ? <UserBikeDetail change={change} setChange={setChange} bike={user?.bike} token={token} setShowBike={setShowBike} /> : <UserDetail setShowBike={setShowBike} user={user} setEdit={setEdit} adminClubs={adminClubs} returnBike={returnBike} memberClubs={memberClubs} rides={rides} rentHistory={rentHistory} />
             }
         </div>
     )
