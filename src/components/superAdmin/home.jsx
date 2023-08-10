@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import DashCard from './dashCard';
 import Loader from '../user/loader';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [rentDetails, setRentDetails] = useState([])
@@ -15,6 +16,7 @@ function Home() {
   const [rentGrap, setRentGraph] = useState([])
   const { token } = useSelector((store) => store.SuperAdmin)
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/admin/getDashbord', {
@@ -29,7 +31,11 @@ function Home() {
       setRentGraph(res?.data?.rentGrap)
       setLoader(false)
     }).catch((err) => {
-      toast.error(err?.response?.data?.errMsg)
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if(err?.response?.data){
+        toast.error(err?.response?.data?.errMsg)
+    }
     })
   }, [])
 

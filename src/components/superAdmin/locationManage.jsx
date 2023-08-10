@@ -24,6 +24,9 @@ function LocationManage(props) {
                 setShowModal(false)
                 setErr('')
             }).catch((err) => {
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }
                 setErr(err?.response?.data?.errMsg)
             })
         }
@@ -43,8 +46,10 @@ function LocationManage(props) {
                 setShowModal(false)
                 setErr('')
             }).catch((err) => {
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }
                 setErr(err?.response?.data?.errMsg)
-                toast.error(err?.response?.data?.errMsg)
             })
         }
     }

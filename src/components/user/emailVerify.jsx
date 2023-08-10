@@ -13,8 +13,12 @@ function EmailVerify() {
         axiosInstance.get(`/user/verify/${userId}`).then((res) => {
             setSuccess(true)
         }).catch((err) => {
-            toast.error(err?.response?.data?.errMsg)
             setFail(true)
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
+            }
         })
     })
     return (

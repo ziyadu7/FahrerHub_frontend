@@ -23,8 +23,12 @@ function BikesPage({ setEditBike }) {
         axiosInstance.get('/admin/showBikes', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
             setBikes(res.data.bikes)
             setLoader(false)
-        }).catch((error) => {
-            toast.error(error?.response?.data?.errMsg)
+        }).catch((err) => {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
+            }
         })
     }, [showAdd, bikeUpdation])
 
@@ -37,8 +41,12 @@ function BikesPage({ setEditBike }) {
         }).then((res) => {
             toast.success(res.data.message)
             setBikeUpdation(!bikeUpdation)
-        }).catch((error) => {
-            toast.error(error?.response.data.errMsg)
+        }).catch((err) => {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
+            }
         })
     }
 
@@ -54,8 +62,12 @@ function BikesPage({ setEditBike }) {
                 toast.error(err?.response?.data?.errMsg)
                 console.log(err);
             })
-        } catch (error) {
-            console.log(error); g
+        } catch (err) {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
+            }
         }
     }
 

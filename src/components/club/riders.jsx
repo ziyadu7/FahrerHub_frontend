@@ -4,6 +4,7 @@ import RidersCard from './ridersCard'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../api/axios'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function RidersBody() {
 
@@ -12,6 +13,7 @@ function RidersBody() {
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [riders, setRdiers] = useState([])
   const [admin, setAdmin] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/club/getRiders', {
@@ -23,7 +25,9 @@ function RidersBody() {
       setAdmin(res.data.admin)
       setLoader(false)
     }).catch((err) => {
-      console.log(err);
+      if(err.response.status==500){
+        navigate('/serverError')
+    }
     })
   }, [])
 

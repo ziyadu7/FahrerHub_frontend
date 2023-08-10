@@ -21,8 +21,10 @@ function ResetPassword() {
                 toast.success(res?.data?.message)
                 setSuccess(true)
             }).catch((err) => {
-                if (err.data.response.errMsg) {
-                    toast.error(err.data.response.errMsg)
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    toast.error(err?.response?.data?.errMsg)
                 }
             })
         } else {

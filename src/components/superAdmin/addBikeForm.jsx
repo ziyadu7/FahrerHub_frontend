@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../api/axios'
 import LocationManage from './locationManage'
 import { toast } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom';
 
 function AddBikeForm(props) {
 
@@ -14,13 +15,18 @@ function AddBikeForm(props) {
     const [locationId, setLocationId] = useState('')
     const [locations, setLocations] = useState([])
     const [images, setImages] = useState([])
+    const navigate = useNavigate()
     const token = props.token
 
     useEffect(() => {
         axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
             setLocations(res?.data?.locations)
         }).catch((err) => {
-            toast.error(err?.response?.data?.errMsg)
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
+            }
         })
     }, [])
 
@@ -78,7 +84,11 @@ function AddBikeForm(props) {
                 setShowAdd(false)
                 setImages([])
             }).catch((error) => {
-                toast.error(error?.response.data.errMsg)
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    toast.error(err?.response?.data?.errMsg)
+                }
             })
         }
     }

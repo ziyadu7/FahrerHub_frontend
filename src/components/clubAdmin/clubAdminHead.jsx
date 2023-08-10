@@ -37,7 +37,9 @@ function ClubAdminHead(props) {
           toast.success(res.data.message)
         }
       }).catch((err) => {
-        if (err.response.data.errMsg) {
+        if(err.response.status==500){
+          navigate('/serverError')
+      }else if (err.response.data.errMsg) {
           toast.error(err.response.data.errMsg)
         }
       })

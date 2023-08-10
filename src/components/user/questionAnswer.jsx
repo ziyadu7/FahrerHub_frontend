@@ -34,7 +34,11 @@ function QuestionAnswer(props) {
       })
       toast.success(res.data.message)
     }).catch((err) => {
-      toast.error(err?.response?.data?.errMsg)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }
 
@@ -63,7 +67,11 @@ function QuestionAnswer(props) {
         });
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
+        }
       });
   };
 
@@ -92,7 +100,11 @@ function QuestionAnswer(props) {
         });
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
+        }
       });
   };
 
@@ -111,9 +123,9 @@ function QuestionAnswer(props) {
                       <h3 className="font-semibold tracking-tight">{question?.question}?</h3>
                     </div>
                     <div className="w-auto p-2">
-                      {arrow ? <button onClick={(e) =>{e.preventDefault(); setArrow(false)}}>
+                      {arrow ? <button onClick={(e) => { e.preventDefault(); setArrow(false) }}>
                         <SlArrowUp />
-                      </button> : <button onClick={(e) => {e.preventDefault(); setArrow(true)}}>
+                      </button> : <button onClick={(e) => { e.preventDefault(); setArrow(true) }}>
                         <SlArrowDown />
                       </button>}
                     </div>

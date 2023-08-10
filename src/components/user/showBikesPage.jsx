@@ -5,8 +5,7 @@ import {
   CardBody,
   CardFooter,
   Typography,
-  Button,
-  button
+  Button
 } from "@material-tailwind/react";
 import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
@@ -15,6 +14,7 @@ import BikeCard from './bikeCard';
 import SearchBox from './search';
 import '../../assets/css/club/upcomingRides.css'
 import Loader from './loader';
+import { useNavigate } from 'react-router-dom';
 
 function ShowBikesPage() {
 
@@ -30,6 +30,7 @@ function ShowBikesPage() {
   const [locations, setLocations] = useState([])
   const [locationSearch, setLocationSearch] = useState('')
   const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
 
   const token = useSelector((state) => state.User.token)
 
@@ -43,10 +44,10 @@ function ShowBikesPage() {
       setLocations(res.data.locations)
       setLoader(false)
     }).catch((error) => {
-      if (error.response.data) {
-        toast.error(error.response.data.errMsg)
-      } else {
-        toast.error(error.message)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
       }
 
     })
@@ -67,8 +68,10 @@ function ShowBikesPage() {
           window.location.href = res.data.url
         }
       }).catch((err) => {
-        if (err.response.data.errMsg) {
-          toast.error(err.response.data.errMsg)
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
         }
       })
     }
@@ -88,6 +91,12 @@ function ShowBikesPage() {
       if (res.data.isReview) {
         setIsReview(true)
       }
+    }).catch((err) => {
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }
 
@@ -99,7 +108,11 @@ function ShowBikesPage() {
     }).then((res) => {
       toast.success(res.data.message)
     }).catch((err) => {
-      toast.error(err.response?.data.errMsg)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }
 

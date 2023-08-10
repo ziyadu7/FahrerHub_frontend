@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function UserManagement() {
 
@@ -12,6 +13,7 @@ function UserManagement() {
     const [users,setUsers] = useState([])
     const [reload,setReload] = useState(false)
     const [loader,setLoader] = useState(true)
+    const navigate = useNavigate()
 
     useEffect(()=>{
         axiosInstance.get('/admin/users',{  headers: {
@@ -20,9 +22,11 @@ function UserManagement() {
             setUsers(res?.data?.users)
             setLoader(false)
           }).then((err)=>{
-            if(err?.response?.data?.errMsg){
-                toast.error(err?.response?.data?.errMsg)
-            }
+            if(err.response.status==500){
+              navigate('/serverError')
+          }else if(err?.response?.data){
+              toast.error(err?.response?.data?.errMsg)
+          }
           })
     },[reload])
 
@@ -34,9 +38,11 @@ function UserManagement() {
             toast.success(res?.data?.message)
             setReload(!reload)
           }).catch((err)=>{
-            if(err?.response?.data?.errMsg){
-                toast.error(err?.response?.data?.errMsg)
-            }
+            if(err.response.status==500){
+              navigate('/serverError')
+          }else if(err?.response?.data){
+              toast.error(err?.response?.data?.errMsg)
+          }
           })
     }
 

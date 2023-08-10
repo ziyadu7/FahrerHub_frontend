@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import Loader from '../user/loader';
+import { useNavigate } from 'react-router-dom';
 
 
 function ClubImagesPage() {
@@ -10,6 +11,7 @@ function ClubImagesPage() {
   const [images, setImages] = useState([])
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/club/getImages', {
@@ -20,7 +22,9 @@ function ClubImagesPage() {
       setImages(res.data.images)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })

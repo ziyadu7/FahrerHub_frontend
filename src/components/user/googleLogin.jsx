@@ -43,9 +43,11 @@ function GoogleLoginComponent() {
             const userId = res?.data?.userId
             dispatch(userLogin({ name, token, role, userId }))
             navigate('/')
-        }).catch((error) => {
-            if (error?.response?.data.errMsg) {
-                toast.error(error?.response?.data.errMsg)
+        }).catch((err) => {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
             }
         })
     }

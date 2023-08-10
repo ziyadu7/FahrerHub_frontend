@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function RentsPage() {
 
@@ -12,6 +13,7 @@ function RentsPage() {
   const [rents, setRents] = useState()
   const [search, setSearch] = useState('')
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/admin/rents', {
@@ -22,7 +24,11 @@ function RentsPage() {
       setRents(res.data.rents)
       setLoader(false)
     }).catch((err) => {
-      toast.error(err.response.data.errMsg)
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if(err?.response?.data){
+        toast.error(err?.response?.data?.errMsg)
+    }
     })
   }, [])
 
@@ -34,7 +40,11 @@ function RentsPage() {
     }).then((res) => {
       toast.error(res.data.message)
     }).catch((err) => {
-      toast.error(err)
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if(err?.response?.data){
+        toast.error(err?.response?.data?.errMsg)
+    }
     })
   }
 

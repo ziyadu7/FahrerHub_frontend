@@ -6,6 +6,7 @@ import axiosInstance from '../../api/axios'
 import { Toaster, toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../../components/user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function Clubs() {
 
@@ -15,6 +16,7 @@ function Clubs() {
   const [change, setChange] = useState(false)
   const [protClubs,setProtClubs] = useState([])
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
       axiosInstance.get('/user/clubs', {
@@ -26,9 +28,11 @@ function Clubs() {
           setProtClubs(res.data.protClubs)
           setLoader(false)
       }).catch((err) => {
-          if (err.response.data.errMsg) {
-              toast.error(err.response.data.errMsg)
-          }
+        if(err.response.status==500){
+            navigate('/serverError')
+        }else if(err?.response?.data){
+            toast.error(err?.response?.data?.errMsg)
+        }
       })
   }, [change])
   return (

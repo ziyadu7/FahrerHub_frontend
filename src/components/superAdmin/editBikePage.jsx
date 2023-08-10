@@ -24,8 +24,11 @@ function EditBikePage({ editBike, setEditBike }) {
     axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
       setLocations(res?.data?.locations)
     }).catch((err) => {
-      toast.error(err?.response?.data?.errMsg)
-      console.log(err)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }, [])
 
@@ -48,10 +51,11 @@ function EditBikePage({ editBike, setEditBike }) {
         toast.success(res.data.message)
         setTimeout(() => { navigate('/admin/rentBikes') }, 3000)
       }).catch((error) => {
-        if (error.data.response.errMsg) {
-          toast.error(error.data.response.errMsg)
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
         }
-
       })
     }
   }
@@ -72,10 +76,10 @@ function EditBikePage({ editBike, setEditBike }) {
       const file = files[i];
 
       if (isValidImage(file.name)) {
-        if (file.size > 1 * 1024 * 1024) { 
+        if (file.size > 1 * 1024 * 1024) {
           toast.error('Image size should be less than 1 MB');
           break;
-      }
+        }
         const reader = new FileReader();
 
         reader.onload = () => {
@@ -101,7 +105,7 @@ function EditBikePage({ editBike, setEditBike }) {
 
 
   return (
-    <div style={{ width: '95%' }}  className=' ms-5 mt-5 sm:w-auto'><Toaster toastOptions={{ duration: 4000 }} />
+    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'><Toaster toastOptions={{ duration: 4000 }} />
       <div className='flex justify-between md:mx-5 md:my-5 '><h1 className=''>Rent Bikes</h1><button className='bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded' onClick={() => navigate('/admin/rentBikes')}>Back</button></div>
       <div className='px-5'>
         <h1>ADD NEW BIKES</h1>

@@ -7,6 +7,7 @@ import UserBikeDetail from './userBikeDetail'
 import Loader from './loader'
 import '../../assets/css/club/upcomingRides.css'
 import { CgSpinner } from 'react-icons/cg'
+import { useNavigate } from 'react-router-dom'
 
 
 function ProfilePage() {
@@ -26,6 +27,7 @@ function ProfilePage() {
     const [submitLoad,setSubmitLoad] = useState(false)
     const [err, setErr] = useState('')
     const [showBike, setShowBike] = useState(false)
+    const navigate = useNavigate()
     const regex_mobile = /^\d{10}$/
 
 
@@ -45,10 +47,10 @@ function ProfilePage() {
             setNewProfile(res?.data?.user?.profileImage)
             setRides(res?.data?.rides)
         }).catch((error) => {
-            if (error.response.data) {
-                toast.error(error.response.data.errMsg)
-            } else {
-                toast.error(error.message)
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
             }
         })
     }, [change])
@@ -78,10 +80,11 @@ function ProfilePage() {
                 setChange(!change)
                 setSubmitLoad(false)
             }).catch((error) => {
-                console.log(error);
-                if (error?.response?.data) {
-                    toast.error(error.response.data.errMsg)
-                    setSubmitLoad(false)
+                setSubmitLoad(false)
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    toast.error(err?.response?.data?.errMsg)
                 }
             })
         }
@@ -126,10 +129,10 @@ function ProfilePage() {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if (err.response.data.errMsg) {
-                toast.error(err.response.data.errMsg)
-            }else{
-                console.log(err);
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
             }
         })
     }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import axiosInstance from '../../api/axios'
 import '../../assets/css/club/upcomingRides.css'
+import { useNavigate } from 'react-router-dom'
 
 function UserBikeDetail(props) {
 
@@ -18,6 +19,7 @@ function UserBikeDetail(props) {
     const [image, setImage] = useState('')
     const [form, setForm] = useState(false)
     const [edit, setEdit] = useState(false)
+    const navigate = useNavigate()
 
     const editBike = () => {
         if (make.trim().length == 0 || model.trim().length == 0 || cc == 0 || category.trim().length == 0 || image.trim().length == 0) {
@@ -33,7 +35,11 @@ function UserBikeDetail(props) {
                 setForm(false)
                 setEdit(false)
             }).catch((err) => {
-                console.log(err);
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    toast.error(err?.response?.data?.errMsg)
+                }
             })
         }
     }
@@ -51,7 +57,11 @@ function UserBikeDetail(props) {
                 setChange(!change)
                 setForm(false)
             }).catch((err) => {
-                console.log(err);
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    toast.error(err?.response?.data?.errMsg)
+                }
             })
         }
     }

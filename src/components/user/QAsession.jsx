@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SearchBox from './search'
 import Loader from './loader'
+import { useNavigate } from 'react-router-dom'
 
 function QAsession() {
   const [search, setSearch] = useState('')
@@ -12,8 +13,9 @@ function QAsession() {
   const [questions, setQuestions] = useState([])
   const [reload, setReload] = useState(false)
   const { token, userId } = useSelector((state) => state.User)
-  const [loader,setLoader] = useState(true)
-  
+  const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     axiosInstance.get('/user/getQuestions', {
@@ -24,14 +26,18 @@ function QAsession() {
       setLoader(false)
       setQuestions(res.data.questions)
     }).catch((err) => {
-      toast.error(err?.response?.data?.errMsg)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }, [reload])
 
   const addQuestion = () => {
-    if(question.trim().length==0){
+    if (question.trim().length == 0) {
       toast.error('Ask any question')
-    }else{
+    } else {
       axiosInstance.post('/user/addQuestion', { question }, {
         headers: {
           authorization: `Bearer ${token}`
@@ -40,32 +46,36 @@ function QAsession() {
         toast.success(res.data.message)
         setReload(!reload)
       }).catch((err) => {
-        toast.error(err?.response?.data?.errMsg)
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
+        }
       })
     }
-  
+
   }
 
 
   return (
     <>
-    {loader?<Loader bg={'white'} colour={'black'}/>:<div className='capitalize bg-[url(https://wallpaperaccess.com/full/1433024.jpg)] bg-cover bg-fixed min-h-screen'>
-    <div className={`justify-end px-4 mx-auto lg:max-w-7xl pt-4 md:items-center flex md:px-8`}>
-      <SearchBox search={search} setSearch={setSearch} />
-    </div>
-    <div className={`px-4 mx-auto lg:max-w-7xl pt-4 md:items-center bg-black bg-opacity-20 `}>
-      <div className=''>
-        <h1 className='text-3xl text-white'>Disscussion form</h1>
-        <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} className='bg-slate-700 text-white focus:border-2 focus:border-white rounded-s-md px-2 py-1' />
-          <button onClick={() => addQuestion()} className='bg-blue-700 rounded-e-md px-2 py-1'>Ask</button>
-      </div>
-      <div className='px-4 mx-auto lg:max-w-7xl pt-4 md:items-center bg-black bg-opacity-20 '>
-        {questions.filter(question => question.question.toLowerCase().includes(search.toLowerCase())).map((question) => (
-          <QuestionAnswer key={question._id} userId={userId} question={question} token={token} />
-        ))}
-      </div>
-    </div>
-  </div>}</>
+      {loader ? <Loader bg={'white'} colour={'black'} /> : <div className='capitalize bg-[url(https://wallpaperaccess.com/full/1433024.jpg)] bg-cover bg-fixed min-h-screen'>
+        <div className={`justify-end px-4 mx-auto lg:max-w-7xl pt-4 md:items-center flex md:px-8`}>
+          <SearchBox search={search} setSearch={setSearch} />
+        </div>
+        <div className={`px-4 mx-auto lg:max-w-7xl pt-4 md:items-center bg-black bg-opacity-20 `}>
+          <div className=''>
+            <h1 className='text-3xl text-white'>Disscussion form</h1>
+            <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} className='bg-slate-700 text-white focus:border-2 focus:border-white rounded-s-md px-2 py-1' />
+            <button onClick={() => addQuestion()} className='bg-blue-700 rounded-e-md px-2 py-1'>Ask</button>
+          </div>
+          <div className='px-4 mx-auto lg:max-w-7xl pt-4 md:items-center bg-black bg-opacity-20 '>
+            {questions.filter(question => question.question.toLowerCase().includes(search.toLowerCase())).map((question) => (
+              <QuestionAnswer key={question._id} userId={userId} question={question} token={token} />
+            ))}
+          </div>
+        </div>
+      </div>}</>
   )
 }
 

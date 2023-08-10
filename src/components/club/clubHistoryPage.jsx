@@ -4,11 +4,13 @@ import { useSelector } from 'react-redux'
 import axiosInstance from '../../api/axios'
 import RideCard from './rideCard'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function ClubHistoryPage() {
   const [rides, setRides] = useState([])
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -20,7 +22,9 @@ function ClubHistoryPage() {
       setRides(res.data.rides)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })

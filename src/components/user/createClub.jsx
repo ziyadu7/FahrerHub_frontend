@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
 import { CgSpinner } from 'react-icons/cg'
+import { useNavigate } from 'react-router-dom'
 
 function CreateClub(props) {
 
@@ -13,6 +14,7 @@ function CreateClub(props) {
     const [err, setErr] = useState('')
     const [isPrivate, setIsPrivate] = useState(true)
     const [submited,setSubmited] = useState(false)
+    const navigate = useNavigate()
 
     const setModal = props.setModal
     const setChange = props.setChange
@@ -37,9 +39,12 @@ function CreateClub(props) {
                 }
                 setModal(false)
             }).catch((err) => {
-                if (err.response.data.errMsg) {
+                if(err.response.status==500){
                     setSubmited(false)
-                    toast.error(err.response.data.errMsg)
+                    navigate('/serverError')
+                }else if(err?.response?.data){
+                    setSubmited(false)
+                    toast.error(err?.response?.data?.errMsg)
                 }
             })
 

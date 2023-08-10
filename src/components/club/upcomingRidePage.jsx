@@ -26,7 +26,9 @@ function UpcomingRides() {
       setRides(res.data.rides)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })

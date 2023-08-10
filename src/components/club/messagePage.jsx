@@ -60,8 +60,9 @@ function MessagePage(props) {
             setMessage('')
             setLoader(false)
         }).catch((err) => {
-            console.log(err);
-            if (err?.response?.data?.errMsg) {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if (err?.response?.data?.errMsg) {
                 toast.error(err.response.data.errMsg)
             }
         })
@@ -83,7 +84,9 @@ function MessagePage(props) {
                 console.log('new message');
                 socket.emit('new message', res?.data?.msg, chatId)
             }).catch((err) => {
-                if (err?.response?.data?.errMsg) {
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if (err?.response?.data?.errMsg) {
                     toast.error(err.response.data.errMsg)
                 }
             })
@@ -93,10 +96,6 @@ function MessagePage(props) {
 
     useEffect(() => {
         socket.on('messageResponse', (msg, room) => {
-            console.log(chat);
-            console.log(msg.sender,'hhhh');
-            console.log(msg?.sender?.toString()!==userId?.toString());
-            console.log(userId);
             if (room == chat?._id&&msg?.sender?.toString()!==userId?.toString()) {
                 console.log('response in');
                 let updMsg = [...messages, msg];

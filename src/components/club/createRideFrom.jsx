@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function CreateRideFrom(props) {
 
@@ -18,6 +19,7 @@ function CreateRideFrom(props) {
     const [toLatitude,setToLatitude] = useState('')
     const [fromSug,setFromSug] = useState(false)
     const [toSug,setToSug] = useState(false)
+    const navigate = useNavigate()
 
 
     const { clubToken } = useSelector((store) => store.ClubMember)
@@ -39,7 +41,9 @@ function CreateRideFrom(props) {
                 toast.success(res?.data?.message)
                 setRefresh(!refresh)
             }).catch((err) => {
-                if (err.response.data.errMsg) {
+                if(err.response.status==500){
+                    navigate('/serverError')
+                }else if (err.response.data.errMsg) {
                     toast.error(err.response.data.errMsg)
                 }
             })

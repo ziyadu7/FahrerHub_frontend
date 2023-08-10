@@ -5,12 +5,14 @@ import ClubCard from './clubCard'
 import '../../assets/css/club/upcomingRides.css'
 import CreateClub from './createClub'
 import SearchBox from './search'
+import { useNavigate } from 'react-router-dom'
 
 function ShowClubsPage(props) {
 
     const [modal, setModal] = useState(false)
 
     const [search, setSearch] = useState('')
+    const navigate = useNavigate()
 
     const change = props?.change
     const setChange = props?.setChange
@@ -28,8 +30,10 @@ function ShowClubsPage(props) {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if (err.response.data.errMsg) {
-                toast.error(err.response.data.errMsg)
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if(err?.response?.data){
+                toast.error(err?.response?.data?.errMsg)
             }
         })
     }

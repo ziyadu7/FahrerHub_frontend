@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import { Toaster, toast } from 'react-hot-toast'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function ClubMembersManage() {
   const { clubToken } = useSelector((store) => store.ClubMember)
@@ -10,13 +11,16 @@ function ClubMembersManage() {
   const [search, setSearch] = useState('')
   const [change, setChange] = useState(false)
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/clubAdmin/getMembers', { headers: { authorization: `Bearer ${clubToken}` } }).then((res) => {
       setMembers(res.data.members)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -27,7 +31,9 @@ function ClubMembersManage() {
       toast.success(res.data.message)
       setChange(!change)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -38,7 +44,9 @@ function ClubMembersManage() {
       toast.success(res.data.message)
       setChange(!change)
     }).catch((err) => {
-      console.log(err)
+      if(err.response.status==500){
+        navigate('/serverError')
+    }
     })
   }
 

@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import Loader from '../user/loader';
+import { useNavigate } from 'react-router-dom';
 
 function ClubAddImage() {
 
@@ -13,6 +14,7 @@ function ClubAddImage() {
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get('/clubAdmin/getImages', {
@@ -23,7 +25,9 @@ function ClubAddImage() {
       setImages(res.data.images)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.message) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.message) {
         toast.error(err.response.data.message)
       }
     })
@@ -67,7 +71,9 @@ function ClubAddImage() {
         setReload(!reload)
         setAddImage(false)
       }).catch((err) => {
-        if (err.response.data.message) {
+        if(err.response.status==500){
+          navigate('/serverError')
+      }else if (err.response.data.message) {
           toast.error(err.response.data.message)
         }
       })
@@ -85,7 +91,9 @@ function ClubAddImage() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })

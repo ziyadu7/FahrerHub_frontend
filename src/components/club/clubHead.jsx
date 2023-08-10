@@ -28,7 +28,9 @@ function ClubHead(props) {
             toast.success(res.data.message)
             navigate('/')
         }).catch((err) => {
-            if (err.response.data.errMsg) {
+            if(err.response.status==500){
+                navigate('/serverError')
+            }else if (err.response.data.errMsg) {
                 toast.error(err.response.data.errMsg)
             }
         })

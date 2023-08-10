@@ -27,8 +27,10 @@ function SignUp() {
           navigate('/login')
         }
       }).catch((err) => {
-        if (err) {
-          toast.error(err.response.data.errMsg)
+        if (err.response.status == 500) {
+          navigate('/serverError')
+        } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
         }
       })
     } catch (error) {
@@ -51,7 +53,7 @@ function SignUp() {
       } else if (password !== rePassword) {
         setErr("Password doesn't match")
       } else {
-        handleSubmit() 
+        handleSubmit()
       }
     }
 
@@ -64,7 +66,7 @@ function SignUp() {
 
     <>
       <Toaster toastOptions={{ duration: 4000 }} />
-     <div className="bg-grey-lighter min-h-screen flex flex-col">
+      <div className="bg-grey-lighter min-h-screen flex flex-col">
         <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
           <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
             <h1 className="mb-8 text-3xl text-center">Sign up</h1>

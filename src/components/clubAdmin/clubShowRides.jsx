@@ -14,6 +14,7 @@ function ClubShowRides() {
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((store) => store.ClubMember)
   const [loader,setLoader] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosInstance.get(`/club/getRides?admin=${clubToken}`, {
@@ -24,7 +25,9 @@ function ClubShowRides() {
       setLoader(false)
       setRides(res.data.rides)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -43,7 +46,9 @@ function ClubShowRides() {
       setName('')
       setBlockRideId('')
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -59,7 +64,9 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -75,7 +82,9 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -91,7 +100,9 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
+      if(err.response.status==500){
+        navigate('/serverError')
+    }else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })

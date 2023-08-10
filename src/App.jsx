@@ -11,12 +11,13 @@ import AdminRoute from './routes/adminRoute'
 import ClubRoute from './routes/clubRoute'
 import ClubAdminRoute from './routes/clubAdminRoute'
 import PaySuccess from './components/user/paySuccess'
-import NotFound from './components/notFound.jsx/notFound'
+import NotFound from './components/errorPage/notFound'
 import PayFail from './components/user/payFail'
 import Questions from './pages/users/Questions'
 import EmailVerify from './components/user/emailVerify'
 import ResetPassword from './components/user/resetPassword'
 import OtpLogin from './components/user/otpLogin'
+import ServerError from './components/errorPage/serverError'
 
 function App() {
   const user = useSelector((state)=>state.User)
@@ -56,6 +57,10 @@ function App() {
         {/* NOT FOUND PAGE */}
 
         <Route path='*' element ={<NotFound/>}/>
+
+        {/* 500 ERROR PAGE */}
+
+        <Route path = '/serverError' element={<ServerError/>} />
 
 
       </Routes>

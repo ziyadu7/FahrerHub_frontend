@@ -4,13 +4,15 @@ import { useSelector } from 'react-redux'
 import { Toaster, toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
 import Loader from '../user/loader'
+import { useNavigate } from 'react-router-dom'
 
 function ClubListPage() {
   const { token } = useSelector((state) => state.SuperAdmin)
   const [clubs, setClubs] = useState()
   const [search, setSearch] = useState('')
   const [reload, setReload] = useState(false)
-  const [loader,setLoader] = useState(true)
+  const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
 
 
   const blockClub = (clubId, isBlock) => {
@@ -22,7 +24,11 @@ function ClubListPage() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      toast.error(err?.response?.data?.errMsg)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
     })
   }
 
@@ -35,13 +41,15 @@ function ClubListPage() {
       setClubs(res.data.clubs)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
+      if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
       }
     })
   }, [reload])
   return (
-    <div style={{ width: '95%' }} className=''><Toaster toastOptions={4000}/>{loader?<Loader bg={'white'} colour={'black'}/>:<>
+    <div style={{ width: '95%' }} className=''><Toaster toastOptions={4000} />{loader ? <Loader bg={'white'} colour={'black'} /> : <>
       <div className="flex justify-end m-2">
         <SearchBox search={search} setSearch={setSearch} />
       </div>
@@ -90,7 +98,7 @@ function ClubListPage() {
           </div>
         </div>
       </div></>
-}
+    }
     </div>
   )
 }

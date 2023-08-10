@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { Toaster, toast } from 'react-hot-toast'
@@ -16,6 +16,7 @@ function ClubHome() {
     const [page,setPage] = useState('images')
     const {token} = useSelector((store)=>store.User)
     const [club,setClub] = useState(null)
+    const navigate = useNavigate()
     useEffect(()=>{
       axiosInstance.get(`/club/home/${id}`,{headers:{
         authorization:`Bearer ${token}`
@@ -26,9 +27,11 @@ function ClubHome() {
         dispatch(clubMemberLogin({role,clubToken,clubId}))
         setClub(res.data.club)
       }).catch((err)=>{
-        if(err.response.data.errMsg){
-          toast.error(err.response.data.errMsg)
-        }
+        if(err.response.status==500){
+          navigate('/serverError')
+      }else if(err?.response?.data){
+          toast.error(err?.response?.data?.errMsg)
+      }
       })
     },[])
   return (
