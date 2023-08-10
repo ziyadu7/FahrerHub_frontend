@@ -44,7 +44,9 @@ function ShowBikesPage() {
       setLocations(res.data.locations)
       setLoader(false)
     }).catch((error) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -68,7 +70,9 @@ function ShowBikesPage() {
           window.location.href = res.data.url
         }
       }).catch((err) => {
-        if (err.response.status == 500) {
+        if (err.response.status == 403) {
+          navigate('/accessDenied')
+        } else if (err.response.status == 500) {
           navigate('/serverError')
         } else if (err?.response?.data) {
           toast.error(err?.response?.data?.errMsg)
@@ -92,7 +96,9 @@ function ShowBikesPage() {
         setIsReview(true)
       }
     }).catch((err) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -108,7 +114,9 @@ function ShowBikesPage() {
     }).then((res) => {
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -189,17 +197,6 @@ function ShowBikesPage() {
                 </p>
                 <p className="mb-2">
                   <span className="font-semibold">Location : </span>{bike?.locationId?.location}
-                </p>
-                <p className="mb-2">
-                  <span className="font-semibold">Current User : </span> {user && user?.user.name}
-                </p>
-                <p className="mb-2">
-                  <span className="font-semibold">Booked From : </span>
-                  {user && new Date(user?.fromDate).toLocaleDateString()}
-                </p>
-                <p className="mb-2">
-                  <span className="font-semibold">To : </span>
-                  {user && new Date(user?.toDate).toLocaleDateString()}
                 </p>
                 {isBooked ? (
                   <button className="bg-gray-300 text-black font-semibold py-2 px-4 rounded mb-4" disabled>

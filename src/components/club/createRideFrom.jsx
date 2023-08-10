@@ -15,10 +15,10 @@ function CreateRideFrom(props) {
     const [image, setImage] = useState('')
     const [fromLongitude, setFromLongitude] = useState('')
     const [fromLatitude, setFromLatitude] = useState('')
-    const [toLongitude,setToLongitude] = useState('')
-    const [toLatitude,setToLatitude] = useState('')
-    const [fromSug,setFromSug] = useState(false)
-    const [toSug,setToSug] = useState(false)
+    const [toLongitude, setToLongitude] = useState('')
+    const [toLatitude, setToLatitude] = useState('')
+    const [fromSug, setFromSug] = useState(false)
+    const [toSug, setToSug] = useState(false)
     const navigate = useNavigate()
 
 
@@ -28,12 +28,12 @@ function CreateRideFrom(props) {
     const [maxRiders, setRidersCound] = useState(0)
 
     const handeSubmit = async () => {
-        if (from.trim().length == 0 || destination.trim().length == 0 || image == '' ||fromLongitude==''||toLongitude==''||fromLatitude==''||toLatitude==''|| description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
+        if (from.trim().length == 0 || destination.trim().length == 0 || image == '' || fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
             toast.error('Fill all the fiels')
         } else if (new Date() >= new Date(startDate) || startDate == endDate || new Date() >= new Date(endDate)) {
             toast.error('Enter correct dates')
         } else {
-            axiosInstance.post('/club/createRide', { startDate, endDate, from, image, destination, maxRiders, description ,fromLatitude,fromLongitude,toLatitude,toLongitude}, {
+            axiosInstance.post('/club/createRide', { startDate, endDate, from, image, destination, maxRiders, description, fromLatitude, fromLongitude, toLatitude, toLongitude }, {
                 headers: {
                     authorization: `Bearer ${clubToken}`
                 }
@@ -41,9 +41,11 @@ function CreateRideFrom(props) {
                 toast.success(res?.data?.message)
                 setRefresh(!refresh)
             }).catch((err) => {
-                if(err.response.status==500){
+                if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
                     navigate('/serverError')
-                }else if (err.response.data.errMsg) {
+                } else if (err.response.data.errMsg) {
                     toast.error(err.response.data.errMsg)
                 }
             })
@@ -60,7 +62,7 @@ function CreateRideFrom(props) {
 
     const handleImageChange = (img) => {
         if (isValidImage(img?.target?.files[0]?.name)) {
-            if (img.target.files[0].size > 1 * 1024 * 1024) { 
+            if (img.target.files[0].size > 1 * 1024 * 1024) {
                 toast.error('Image size should be less than 1 MB');
                 return;
             }
@@ -87,7 +89,7 @@ function CreateRideFrom(props) {
             access_token: MAPBOX_API_KEY,
             types: 'place', // Limit results to places only
             limit: 5, // Number of suggestions to retrieve
-            country:"IN"
+            country: "IN"
         };
 
         try {
@@ -146,7 +148,7 @@ function CreateRideFrom(props) {
                         />
                         {/* Display location suggestions */}
                         <ul>
-                            {fromSug&&locationSuggestions.map((suggestion) => (
+                            {fromSug && locationSuggestions.map((suggestion) => (
                                 <li key={suggestion.id}>
                                     {/* Assuming you want to display the place name as a suggestion */}
                                     <button
@@ -179,11 +181,11 @@ function CreateRideFrom(props) {
                                 handleLocationSuggestion(e.target.value); // Fetch suggestions as the user types
                             }}
                             value={destination}
-                            placeholder={destination||'destination'}
+                            placeholder={destination || 'destination'}
                             className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                         <ul>
-                            {toSug&&locationSuggestions.map((suggestion) => (
+                            {toSug && locationSuggestions.map((suggestion) => (
                                 <li key={suggestion.id}>
                                     {/* Assuming you want to display the place name as a suggestion */}
                                     <button

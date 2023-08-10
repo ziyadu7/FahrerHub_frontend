@@ -46,8 +46,10 @@ function ProfilePage() {
             setRentHistory(res?.data?.rentBikes)
             setNewProfile(res?.data?.user?.profileImage)
             setRides(res?.data?.rides)
-        }).catch((error) => {
-            if(err.response.status==500){
+        }).catch((err) => {
+            if(err.response.status==403){
+                navigate('/accessDenied')
+            }else if(err.response.status==500){
                 navigate('/serverError')
             }else if(err?.response?.data){
                 toast.error(err?.response?.data?.errMsg)
@@ -79,9 +81,11 @@ function ProfilePage() {
                 setEdit(false)
                 setChange(!change)
                 setSubmitLoad(false)
-            }).catch((error) => {
+            }).catch((err) => {
                 setSubmitLoad(false)
-                if(err.response.status==500){
+                if(err.response.status==403){
+                    navigate('/accessDenied')
+                }else if(err.response.status==500){
                     navigate('/serverError')
                 }else if(err?.response?.data){
                     toast.error(err?.response?.data?.errMsg)
@@ -129,7 +133,9 @@ function ProfilePage() {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if(err.response.status==500){
+            if(err.response.status==403){
+                navigate('/accessDenied')
+            }else if(err.response.status==500){
                 navigate('/serverError')
             }else if(err?.response?.data){
                 toast.error(err?.response?.data?.errMsg)

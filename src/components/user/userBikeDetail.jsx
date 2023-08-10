@@ -35,7 +35,9 @@ function UserBikeDetail(props) {
                 setForm(false)
                 setEdit(false)
             }).catch((err) => {
-                if(err.response.status==500){
+                if(err.response.status==403){
+                    navigate('/accessDenied')
+                }else if(err.response.status==500){
                     navigate('/serverError')
                 }else if(err?.response?.data){
                     toast.error(err?.response?.data?.errMsg)
@@ -57,7 +59,9 @@ function UserBikeDetail(props) {
                 setChange(!change)
                 setForm(false)
             }).catch((err) => {
-                if(err.response.status==500){
+                if(err.response.status==403){
+                    navigate('/accessDenied')
+                }else if(err.response.status==500){
                     navigate('/serverError')
                 }else if(err?.response?.data){
                     toast.error(err?.response?.data?.errMsg)

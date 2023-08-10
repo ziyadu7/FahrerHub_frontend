@@ -18,6 +18,7 @@ import EmailVerify from './components/user/emailVerify'
 import ResetPassword from './components/user/resetPassword'
 import OtpLogin from './components/user/otpLogin'
 import ServerError from './components/errorPage/serverError'
+import Forbiden from './components/errorPage/forbiden'
 
 function App() {
   const user = useSelector((state)=>state.User)
@@ -61,6 +62,10 @@ function App() {
         {/* 500 ERROR PAGE */}
 
         <Route path = '/serverError' element={<ServerError/>} />
+
+        {/* ACCESS DENIED ERROR PAGE */}
+
+        <Route path='/accessDenied' element={<Forbiden/>} />
 
 
       </Routes>

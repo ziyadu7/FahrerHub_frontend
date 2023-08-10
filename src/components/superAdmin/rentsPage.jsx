@@ -12,7 +12,7 @@ function RentsPage() {
   const adminName = name
   const [rents, setRents] = useState()
   const [search, setSearch] = useState('')
-  const [loader,setLoader] = useState(true)
+  const [loader, setLoader] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,11 +24,13 @@ function RentsPage() {
       setRents(res.data.rents)
       setLoader(false)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if(err?.response?.data){
+      } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
-    }
+      }
     })
   }, [])
 
@@ -40,16 +42,18 @@ function RentsPage() {
     }).then((res) => {
       toast.error(res.data.message)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if(err?.response?.data){
+      } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
-    }
+      }
     })
   }
 
   return (
-    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>
+    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader ? <Loader bg={'white'} colour={'black'} /> : <>
       <div className="flex justify-end m-2">
         <SearchBox search={search} setSearch={setSearch} />
 
@@ -114,8 +118,8 @@ function RentsPage() {
           </div>
         </div>
       </div>
-      </>
-}
+    </>
+    }
     </div>
   )
 }

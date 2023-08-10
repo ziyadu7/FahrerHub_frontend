@@ -25,7 +25,7 @@ function MessagePage(props) {
     const [message, setMessage] = useState('')
     const [profile1, setProfile1] = useState(null)
     const [profile2, setProfile2] = useState(null)
-    const [loader,setLoader] = useState(true)
+    const [loader, setLoader] = useState(true)
     const navigate = useNavigate()
 
 
@@ -55,14 +55,15 @@ function MessagePage(props) {
                 setProfile1(res?.data?.chat.users[1].profileImage)
             }
             let id = res?.data?.chat._id;
-            console.log('joined chat');
             socket.emit('joinChat', id)
             setMessage('')
             setLoader(false)
         }).catch((err) => {
-            if(err.response.status==500){
+            if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
                 navigate('/serverError')
-            }else if (err?.response?.data?.errMsg) {
+            } else if (err?.response?.data?.errMsg) {
                 toast.error(err.response.data.errMsg)
             }
         })
@@ -84,9 +85,11 @@ function MessagePage(props) {
                 console.log('new message');
                 socket.emit('new message', res?.data?.msg, chatId)
             }).catch((err) => {
-                if(err.response.status==500){
+                if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
                     navigate('/serverError')
-                }else if (err?.response?.data?.errMsg) {
+                } else if (err?.response?.data?.errMsg) {
                     toast.error(err.response.data.errMsg)
                 }
             })
@@ -96,7 +99,7 @@ function MessagePage(props) {
 
     useEffect(() => {
         socket.on('messageResponse', (msg, room) => {
-            if (room == chat?._id&&msg?.sender?.toString()!==userId?.toString()) {
+            if (room == chat?._id && msg?.sender?.toString() !== userId?.toString()) {
                 console.log('response in');
                 let updMsg = [...messages, msg];
                 setMessages(updMsg)
@@ -130,7 +133,7 @@ function MessagePage(props) {
 
                         {users.length !== 0 ? users.map((user) => (
                             <>
-                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() => loadChat(userId, user?.rider?._id)} className={`flex flex-col items-center ${chat?.users.some(friend=>friend._id==user?.rider?._id)?"bg-indigo-300":"bg-indigo-100"} border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg`}>
+                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() => loadChat(userId, user?.rider?._id)} className={`flex flex-col items-center ${chat?.users.some(friend => friend._id == user?.rider?._id) ? "bg-indigo-300" : "bg-indigo-100"} border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg`}>
                                     <div className="h-20 w-20 rounded-full border overflow-hidden">
                                         <img
                                             src={user.rider?.profileImage ? user.rider?.profileImage : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}
@@ -150,7 +153,7 @@ function MessagePage(props) {
                     <div className="flex flex-col flex-auto h-full p-6 ">
                         <button onClick={() => navigate(-1)} className='bg-black px-4 sm:hidden text-white hover:bg-white hover:text-black py-2 rounded-md'>Back</button>
 
-                        {loader?<Loader bg={'white'} colour={'black'} />:chat ? <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+                        {loader ? <Loader bg={'white'} colour={'black'} /> : chat ? <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                             <div className="flex flex-col h-full overflow-x-auto mb-4">
 
                                 <div className="flex flex-col h-full">

@@ -27,7 +27,9 @@ function SignUp() {
           navigate('/login')
         }
       }).catch((err) => {
-        if (err.response.status == 500) {
+        if (err.response.status == 403) {
+          navigate('/accessDenied')
+        } else if (err.response.status == 500) {
           navigate('/serverError')
         } else if (err?.response?.data) {
           toast.error(err?.response?.data?.errMsg)
@@ -60,10 +62,7 @@ function SignUp() {
 
   }
 
-
-
   return (
-
     <>
       <Toaster toastOptions={{ duration: 4000 }} />
       <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -116,9 +115,9 @@ function SignUp() {
 
           <div className="text-grey-dark mt-6">
             Already have an account?
-            <a className="no-underline border-b border-blue text-blue" href="../login/">
+            <p className="no-underline border-b border-blue text-blue" href="../login/">
               Log in
-            </a>.
+            </p>.
           </div>
         </div>
       </div>

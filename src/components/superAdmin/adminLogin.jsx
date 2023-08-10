@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
@@ -12,9 +12,9 @@ function AdminLogin() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log('loging')
-    },[])
+    }, [])
 
     async function handleLogin() {
         if (email.trim().length == 0 || password.trim().length == 0) {
@@ -31,9 +31,11 @@ function AdminLogin() {
                     navigate('/admin')
                 }
             }).catch((err) => {
-                if(err.response.status==500){
+                if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
                 }
             })

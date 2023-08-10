@@ -24,7 +24,9 @@ function EditBikePage({ editBike, setEditBike }) {
     axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
       setLocations(res?.data?.locations)
     }).catch((err) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -51,7 +53,9 @@ function EditBikePage({ editBike, setEditBike }) {
         toast.success(res.data.message)
         setTimeout(() => { navigate('/admin/rentBikes') }, 3000)
       }).catch((error) => {
-        if (err.response.status == 500) {
+        if (err.response.status == 403) {
+          navigate('/accessDenied')
+        } else if (err.response.status == 500) {
           navigate('/serverError')
         } else if (err?.response?.data) {
           toast.error(err?.response?.data?.errMsg)

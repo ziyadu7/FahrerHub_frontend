@@ -16,7 +16,7 @@ function BikesPage({ setEditBike }) {
     const [bikeUpdation, setBikeUpdation] = useState(false)
     const [search, setSearch] = useState('')
     const { token } = useSelector((state) => state.SuperAdmin)
-    const [loader,setLoader] = useState(true)
+    const [loader, setLoader] = useState(true)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -24,9 +24,11 @@ function BikesPage({ setEditBike }) {
             setBikes(res.data.bikes)
             setLoader(false)
         }).catch((err) => {
-            if(err.response.status==500){
+            if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -42,9 +44,11 @@ function BikesPage({ setEditBike }) {
             toast.success(res.data.message)
             setBikeUpdation(!bikeUpdation)
         }).catch((err) => {
-            if(err.response.status==500){
+            if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -63,16 +67,18 @@ function BikesPage({ setEditBike }) {
                 console.log(err);
             })
         } catch (err) {
-            if(err.response.status==500){
+            if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         }
     }
 
     return (
-        <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>
+        <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader ? <Loader bg={'white'} colour={'black'} /> : <>
             <div className="flex justify-end m-2">
                 <SearchBox search={search} setSearch={setSearch} />
 
@@ -134,8 +140,8 @@ function BikesPage({ setEditBike }) {
                         </div>
                     </div>
                 </div>}
-                </>
-}
+        </>
+        }
 
         </div>
     )

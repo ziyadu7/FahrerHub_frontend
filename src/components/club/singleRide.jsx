@@ -37,9 +37,11 @@ function SingleRide() {
         setIsJoined(true)
       }
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -54,9 +56,11 @@ function SingleRide() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -72,9 +76,11 @@ function SingleRide() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -89,10 +95,12 @@ function SingleRide() {
     }).then((res) => {
       toast.success(res.data.message)
       setReload(!reload)
-    }).catch(err=>{
-      if(err.response.status==500){
+    }).catch(err => {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }
+      }
     })
   }
 
@@ -105,9 +113,11 @@ function SingleRide() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }
+      }
     })
   }
 
@@ -115,7 +125,7 @@ function SingleRide() {
     <>
       {loader ? (
         <div className='h-screen w-full bg-black'>
-          <Loader colour={'white'}/>
+          <Loader colour={'white'} />
         </div>
       ) : (
         <div

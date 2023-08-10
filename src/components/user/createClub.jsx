@@ -13,7 +13,7 @@ function CreateClub(props) {
     const [logo, setLogo] = useState('')
     const [err, setErr] = useState('')
     const [isPrivate, setIsPrivate] = useState(true)
-    const [submited,setSubmited] = useState(false)
+    const [submited, setSubmited] = useState(false)
     const navigate = useNavigate()
 
     const setModal = props.setModal
@@ -39,10 +39,12 @@ function CreateClub(props) {
                 }
                 setModal(false)
             }).catch((err) => {
-                if(err.response.status==500){
+                if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
                     setSubmited(false)
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err?.response?.data) {
                     setSubmited(false)
                     toast.error(err?.response?.data?.errMsg)
                 }
@@ -61,7 +63,7 @@ function CreateClub(props) {
 
     const handleImageChange = (img) => {
         if (isValidImage(img?.target?.files[0].name)) {
-            if (img.target.files[0].size > 1 * 1024 * 1024) { 
+            if (img.target.files[0].size > 1 * 1024 * 1024) {
                 toast.error('Image size should be less than 1 MB');
                 return;
             }
@@ -206,8 +208,8 @@ function CreateClub(props) {
                             }}
 
                         >
-                                  {submited?<CgSpinner size={20} className='animate-spin' /> :''}
-                                        <span>Submit</span>
+                            {submited ? <CgSpinner size={20} className='animate-spin' /> : ''}
+                            <span>Submit</span>
                         </button>
                     </div>
                 </div>

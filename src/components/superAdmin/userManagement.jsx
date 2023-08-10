@@ -8,51 +8,59 @@ import { useNavigate } from 'react-router-dom'
 
 function UserManagement() {
 
-    const {token} = useSelector((state=>state.SuperAdmin))
-    const [search,setSearch] = useState('')
-    const [users,setUsers] = useState([])
-    const [reload,setReload] = useState(false)
-    const [loader,setLoader] = useState(true)
-    const navigate = useNavigate()
+  const { token } = useSelector((state => state.SuperAdmin))
+  const [search, setSearch] = useState('')
+  const [users, setUsers] = useState([])
+  const [reload, setReload] = useState(false)
+  const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
 
-    useEffect(()=>{
-        axiosInstance.get('/admin/users',{  headers: {
-            authorization: `Bearer ${token}`
-          }}).then((res)=>{
-            setUsers(res?.data?.users)
-            setLoader(false)
-          }).then((err)=>{
-            if(err.response.status==500){
-              navigate('/serverError')
-          }else if(err?.response?.data){
-              toast.error(err?.response?.data?.errMsg)
-          }
-          })
-    },[reload])
+  useEffect(() => {
+    axiosInstance.get('/admin/users', {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      setUsers(res?.data?.users)
+      setLoader(false)
+    }).then((err) => {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
+    })
+  }, [reload])
 
 
-    const statusChange = (userId,blocked)=>{
-        axiosInstance.patch('/admin/userStatus',{userId,blocked},{ headers: {
-            authorization: `Bearer ${token}`
-          }}).then((res)=>{
-            toast.success(res?.data?.message)
-            setReload(!reload)
-          }).catch((err)=>{
-            if(err.response.status==500){
-              navigate('/serverError')
-          }else if(err?.response?.data){
-              toast.error(err?.response?.data?.errMsg)
-          }
-          })
-    }
+  const statusChange = (userId, blocked) => {
+    axiosInstance.patch('/admin/userStatus', { userId, blocked }, {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      toast.success(res?.data?.message)
+      setReload(!reload)
+    }).catch((err) => {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
+        navigate('/serverError')
+      } else if (err?.response?.data) {
+        toast.error(err?.response?.data?.errMsg)
+      }
+    })
+  }
 
 
 
   return (
-    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader?<Loader bg={'white'} colour={'black'}/>:<>      <div className="flex justify-end m-2">
-        <SearchBox search={search} setSearch={setSearch} />
+    <div style={{ width: '95%' }} className=' ms-5 mt-5 sm:w-auto'>{loader ? <Loader bg={'white'} colour={'black'} /> : <>      <div className="flex justify-end m-2">
+      <SearchBox search={search} setSearch={setSearch} />
 
-      </div>
+    </div>
       <div className='grid grid-cols-1 '>
         <div className="inline-block py-2 pe-4">
           <div className="overflow-auto">
@@ -79,15 +87,15 @@ function UserManagement() {
                     .filter(
                       (user) =>
                         user.name.toLowerCase().includes(search) ||
-                        user.email.toLowerCase().includes(search) 
+                        user.email.toLowerCase().includes(search)
                     )
                     .map((user) => (
                       <tr key={user._id} className="border-b dark:border-neutral-500">
                         <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
                         <td className="whitespace-nowrap px-6 py-4">{user.email}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{user.phone||'Not Provided'}</td>
-                        <td onClick={()=>statusChange(user._id,user.isBlocked)} className="whitespace-nowrap flex justify-between px-6 py-4">
-                          {user.isBlocked ? <span className='text-green-600 me-1'>Unblock</span>: <span className='text-red-700 px-4 me-1'>Block</span> }
+                        <td className="whitespace-nowrap px-6 py-4">{user.phone || 'Not Provided'}</td>
+                        <td onClick={() => statusChange(user._id, user.isBlocked)} className="whitespace-nowrap flex justify-between px-6 py-4">
+                          {user.isBlocked ? <span className='text-green-600 me-1'>Unblock</span> : <span className='text-red-700 px-4 me-1'>Block</span>}
                         </td>
                       </tr>
                     ))
@@ -104,7 +112,7 @@ function UserManagement() {
           </div>
         </div>
       </div>
-      </>
+    </>
     }    </div>
   )
 }

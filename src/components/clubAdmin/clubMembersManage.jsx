@@ -10,7 +10,7 @@ function ClubMembersManage() {
   const [members, setMembers] = useState([])
   const [search, setSearch] = useState('')
   const [change, setChange] = useState(false)
-  const [loader,setLoader] = useState(true)
+  const [loader, setLoader] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -18,9 +18,11 @@ function ClubMembersManage() {
       setMembers(res.data.members)
       setLoader(false)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -31,9 +33,11 @@ function ClubMembersManage() {
       toast.success(res.data.message)
       setChange(!change)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -44,15 +48,17 @@ function ClubMembersManage() {
       toast.success(res.data.message)
       setChange(!change)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }
+      }
     })
   }
 
   return (
     <div className='bg-gradient-to-b from-cyan-950'><Toaster toastOptions={3000} />
-    {loader?<Loader colour={'white'} />: <div className='grid grid-cols-1 pt-8 sm:p-5'>
+      {loader ? <Loader colour={'white'} /> : <div className='grid grid-cols-1 pt-8 sm:p-5'>
         <div className="flex justify-end m-2">
           <div className='flex'>
             <label className="sr-only">Search</label>
@@ -116,7 +122,7 @@ function ClubMembersManage() {
           </div>
         </div>
       </div>}
-     
+
     </div>
   )
 }

@@ -22,9 +22,11 @@ function ClubHistoryPage() {
       setRides(res.data.rides)
       setLoader(false)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }else if (err.response.data.errMsg) {
+      } else if (err.response.data.errMsg) {
         toast.error(err.response.data.errMsg)
       }
     })
@@ -33,12 +35,12 @@ function ClubHistoryPage() {
     <div className='bg-[url(https://wallpapercave.com/wp/wp3647900.jpg)] capitalize bg-fixed min-h-screen'>
       <Toaster toastOptions={3000} />
       {loader ? <Loader colour={'white'} /> :
-      <div className='justify-between px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 mx-auto lg:max-w-7xl md:items-center md:px-8'>
-        {rides.length != 0 ? rides.map((ride) => (
-          <RideCard key={ride._id} ride={ride} isUpcoming={false} />
-        )) : <div className='text-white flex justify-center items-center w-screen'>No rides
-        </div>}
-      </div>
+        <div className='justify-between px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 mx-auto lg:max-w-7xl md:items-center md:px-8'>
+          {rides.length != 0 ? rides.map((ride) => (
+            <RideCard key={ride._id} ride={ride} isUpcoming={false} />
+          )) : <div className='text-white flex justify-center items-center w-screen'>No rides
+          </div>}
+        </div>
       }
     </div>
   )

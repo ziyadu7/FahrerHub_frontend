@@ -24,7 +24,9 @@ function ClubListPage() {
       toast.success(res.data.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -41,7 +43,9 @@ function ClubListPage() {
       setClubs(res.data.clubs)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.status == 500) {
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)

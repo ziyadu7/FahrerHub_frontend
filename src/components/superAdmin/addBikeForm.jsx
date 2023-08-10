@@ -22,9 +22,11 @@ function AddBikeForm(props) {
         axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
             setLocations(res?.data?.locations)
         }).catch((err) => {
-            if(err.response.status==500){
+            if (err.response.status == 403) {
+                navigate('/accessDenied')
+            } else if (err.response.status == 500) {
                 navigate('/serverError')
-            }else if(err?.response?.data){
+            } else if (err?.response?.data) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
@@ -45,7 +47,7 @@ function AddBikeForm(props) {
 
         for (let i = 0; i < files.length; i++) {
             if (isValidImage(files[i].name)) {
-                if (file.size > 1 * 1024 * 1024) { 
+                if (file.size > 1 * 1024 * 1024) {
                     toast.error('Image size should be less than 1 MB');
                     break;
                 }
@@ -84,9 +86,11 @@ function AddBikeForm(props) {
                 setShowAdd(false)
                 setImages([])
             }).catch((error) => {
-                if(err.response.status==500){
+                if (err.response.status == 403) {
+                    navigate('/accessDenied')
+                } else if (err.response.status == 500) {
                     navigate('/serverError')
-                }else if(err?.response?.data){
+                } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
                 }
             })

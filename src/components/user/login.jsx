@@ -30,8 +30,10 @@ function Login() {
           dispatch(userLogin({ name, token, role, userId }))
           navigate('/')
         }
-      }).catch((error) => {
-        if (error.response.status === 401) {
+      }).catch((err) => {
+        if(err.response.status==403){
+          navigate('/accessDenied')
+      }else if (err.response.status === 401) {
           setRemail(true)
           toast.error(error.response.data.errMsg)
         } else if (err.response.status == 500) {
@@ -64,9 +66,9 @@ function Login() {
               <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">Forgot password?</h1>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 Remember your password?{' '}
-                <a onClick={() => setForgott(false)} className="text-blue-600 decoration-2 hover:underline font-medium">
+                <p onClick={() => setForgott(false)} className="text-blue-600 decoration-2 hover:underline font-medium">
                   Login here
-                </a>
+                </p>
               </p>
             </div>
 
@@ -140,14 +142,14 @@ function Login() {
           <div className="text-grey-dark mt-6">
             <div>
               Don't have an account?
-              <a className="no-underline border-b border-blue text-blue" href="/register">
+              <p className="no-underline border-b border-blue text-blue" href="/register">
                 Register
-              </a>.
+              </p>.
             </div>
             <div className='flex justify-center'>
-              <a className="no-underline border-b text-blue-700 border-blue text-blue" onClick={() => setForgott(true)}>
+              <p className="no-underline border-b text-blue-700 border-blue text-blue" onClick={() => setForgott(true)}>
                 Forgott Password?
-              </a>.
+              </p>.
             </div>
           </div>
         </div>

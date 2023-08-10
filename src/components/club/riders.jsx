@@ -25,28 +25,30 @@ function RidersBody() {
       setAdmin(res.data.admin)
       setLoader(false)
     }).catch((err) => {
-      if(err.response.status==500){
+      if (err.response.status == 403) {
+        navigate('/accessDenied')
+      } else if (err.response.status == 500) {
         navigate('/serverError')
-    }
+      }
     })
   }, [])
 
   return (
     <div className='bg-[url(https://wallpapercave.com/wp/wp3647900.jpg)] bg-fixed min-h-screen'>
-        {loader ? <Loader colour={'white'} /> :<>
-      <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
-        <SearchBox search={search} setSearch={setSearch} />
-      </div>
-      <div className="justify-between mt-2 sm:mt-5 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8">
-        <div className="text-center container py-5">
-          <div className="grid sm:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-            {loader ? '' : <RidersCard admin={admin} />}
-            {riders.filter((rider) => admin.admin._id!==rider.member._id&&rider.member.name.toLowerCase().includes(search)).map((rider) => (   
+      {loader ? <Loader colour={'white'} /> : <>
+        <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
+          <SearchBox search={search} setSearch={setSearch} />
+        </div>
+        <div className="justify-between mt-2 sm:mt-5 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8">
+          <div className="text-center container py-5">
+            <div className="grid sm:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+              {loader ? '' : <RidersCard admin={admin} />}
+              {riders.filter((rider) => admin.admin._id !== rider.member._id && rider.member.name.toLowerCase().includes(search)).map((rider) => (
                 <RidersCard key={rider._id} rider={rider} />
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
       </>}
     </div>
   )
