@@ -43,7 +43,7 @@ function ShowBikesPage() {
       setBikes(res.data.bikes)
       setLocations(res.data.locations)
       setLoader(false)
-    }).catch((error) => {
+    }).catch((err) => {
       if (err.response.status == 403) {
         navigate('/accessDenied')
       } else if (err.response.status == 500) {

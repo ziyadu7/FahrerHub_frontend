@@ -2,37 +2,40 @@ import React from 'react'
 
 function Forbiden() {
   return (
-    <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 w-full bg-white">
-    <div className="text-center">
-      <div className="relative scene">
-        <div className="overlay left-0 top-0"></div>
-        <div className="overlay right-0 top-0"></div>
-        <div className="overlay bottom-0 right-0"></div>
-        <div className="overlay bottom-0 left-0"></div>
-        <span className="bg-403 text-[440px] font-display absolute z-0 bg-clip-text text-transparent transform translate-x-[-25%] -translate-z-100 skew-y-[-3deg]">
-          403
-        </span>
-        <div className="text relative z-7 pointer-events-none transform transition-transform duration-600 ease-bezier-acc-back scale-91">
-          <span className="block font-sans-serif text-center text-shadow text-transparent animate-popIn animate-duration-600 animate-delay-base-2-3-1-2 opacity-100">
-            <span className="hero-text"></span>
-            <span className="msg">
-              can't let <span>you</span> in.
-            </span>
-          </span>
-          <span className="support block font-sans-serif text-center animate-popIn animate-duration-600 animate-delay-base-4-3 relative mt-8">
-            <span>unexpected?</span>
-            <p
-              href="#"
-              className="text-[#b2b3b4] no-underline relative after:bg-white after:w-110% after:ml-[-5%] after:h-5 after:block after:opacity-[.55] after:mt-13px after:outline-transparent hover:after-opacity-100 focus:after-opacity-100 active:after-opacity-100"
+    <div className="flex h-screen items-center justify-center bg-gray-900 text-white">
+      <div className="text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Forbidden!</h1>
+        <h2 className="text-2xl md:text-3xl mb-8">Code 403</h2>
+        <div className="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1000 1000"
+            className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4"
+          >
+            <defs>
+              <path
+                id="textPath"
+                d="M 250 500 A 250,250 0 1 1 250 500.0001"
+              />
+            </defs>
+            <text
+              x="0"
+              y="0"
+              textAnchor="middle"
+              style={{ fontSize: '16pt' }}
             >
-              contact support
-            </p>
-          </span>
+              <textPath xlinkHref="#textPath" startOffset="0%">
+                MOUSE JAIL
+              </textPath>
+              <textPath xlinkHref="#textPath" startOffset="50%">
+                MOUSE JAIL
+              </textPath>
+            </text>
+          </svg>
+          <div className="absolute w-2 h-2 md:w-4 md:h-4 bg-white rounded-full" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}></div>
         </div>
-        <div className="lock absolute box-shadow-pattern"></div>
       </div>
     </div>
-  </div>
   )
 }
 
