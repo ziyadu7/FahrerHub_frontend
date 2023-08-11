@@ -7,7 +7,7 @@ import io from 'socket.io-client'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../user/loader'
 
-const END_POINT = import.meta.env.vite_SERVERURL;
+const END_POINT = import.meta.env.VITE_MAPBOXTOKEN;
 let socket;
 function MessagePage(props) {
 
