@@ -107,15 +107,15 @@ function SignUp() {
             <button
               type="submit"
               onClick={() => onSignUP()}
-              className="w-full text-center py-3 rounded bg-green-800 text-white hover:bg-green-dark focus:outline-none my-1"
+              className="w-full text-center cursor-pointer py-3 rounded bg-green-800 text-white hover:bg-green-dark focus:outline-none my-1"
             >Create Account</button>
 
 
           </div>
 
-          <div className="text-grey-dark mt-6">
+          <div className="text-grey-dark mt-6 flex">
             Already have an account?
-            <p className="no-underline border-b border-blue text-blue" onClick={()=>navigate('/login')}>
+            <p className="no-underline border-b border-blue text-blue cursor-pointer" onClick={()=>navigate('/login')}>
               Log in
             </p>.
           </div>

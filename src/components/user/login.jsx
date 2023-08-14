@@ -44,13 +44,17 @@ function Login() {
   }
 
   const forgotPassword = () => {
-    axiosInstance.post('/user/forgottPassword', { email }).then((res) => {
-      toast.success(res.data.messasge)
-    }).catch((error) => {
-      if (error.response.data.errMsg) {
-        toast.error(error.response.data.errMsg)
-      }
-    })
+    if(email.trim().length==0){
+      toast.error('Enter email')
+    }else{
+      axiosInstance.post('/user/forgottPassword', { email }).then((res) => {
+        toast.success(res.data.messasge)
+      }).catch((error) => {
+        if (error.response.data.errMsg) {
+          toast.error(error.response.data.errMsg)
+        }
+      })
+    }
   }
 
 
@@ -64,14 +68,14 @@ function Login() {
               <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">Forgot password?</h1>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 Remember your password?{' '}
-                <p onClick={() => setForgott(false)} className="text-blue-600 decoration-2 hover:underline font-medium">
+                <p onClick={() => setForgott(false)} className="text-blue-600 decoration-2 hover:underline cursor-pointer font-medium">
                   Login here
                 </p>
               </p>
             </div>
 
             <div className="mt-5">
-              <form>
+              <div>
                 <div className="grid gap-y-4">
                   <div>
                     <label htmlFor="email" className="block text-sm font-bold ml-1 mb-2 dark:text-white">Email address</label>
@@ -91,13 +95,12 @@ function Login() {
                   </div>
                   <button
                     onClick={forgotPassword}
-                    type="submit"
-                    className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
+                    className="py-3 px-4 inline-flex cursor-pointer justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
                   >
                     Reset password
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -119,16 +122,19 @@ function Login() {
               className="block border border-grey-light w-full p-3 rounded mb-4"
               name="password"
               placeholder="Password" />
+              <div className='flex justify-center'>
               <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENTID}>
                 <GoogleLoginComponent />
               </GoogleOAuthProvider>
+              </div>
+              
             </>
             }
             <div className=''>
 
               <button
                 onClick={() => { handleLogin(), reMail ? toast.success('Check your mail') : '' }}
-                className={`w-full text-center py-3 rounded ${reMail == true ? 'bg-amber-700' : 'bg-green-800'} text-white hover:bg-green-dark focus:outline-none my-1`}
+                className={`w-full text-center py-3 rounded ${reMail == true ? 'bg-amber-700' : 'bg-green-800'} text-white hover:bg-green-dark cursor-pointer focus:outline-none my-1`}
               >{reMail == true ? 'Verify mail' : "Login Account"}</button>
               {/* <button
               onClick={()=>navigate('/otpLogin')}
@@ -137,16 +143,16 @@ function Login() {
             </div>
 
           </div>
-          <div className="text-grey-dark mt-6">
-            <div>
+          <div className="text-grey-dark mt-6 ">
+            <div className='flex'>
               Don't have an account?
-              <p className="no-underline border-b border-blue text-blue" cc>
+              <p className="no-underline border-b border-blue text-blue cursor-pointer" onClick={()=>navigate('/register')}>
                 Register
               </p>.
             </div>
             <div className='flex justify-center'>
-              <p className="no-underline border-b text-blue-700 border-blue text-blue" onClick={() => setForgott(true)}>
-                Forgott Password?
+              <p className="no-underline border-b text-blue-700 border-blue text-blue cursor-pointer" onClick={() => setForgott(true)}>
+                Forgot Password?
               </p>.
             </div>
           </div>

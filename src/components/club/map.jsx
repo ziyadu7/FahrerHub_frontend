@@ -12,7 +12,7 @@ function RouteMap(props) {
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
-    mapboxgl.accessToken =  import.meta.env.VITE_SERVERURL;
+    mapboxgl.accessToken =  import.meta.env.VITE_MAPBOXTOKEN;
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,

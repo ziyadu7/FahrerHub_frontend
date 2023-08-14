@@ -85,7 +85,7 @@ function CreateRideFrom(props) {
 
     // Function to get location suggestions from Mapbox Geocoding API
     const getLocationSuggestions = async (query) => {
-        const MAPBOX_API_KEY = import.meta.env.VITE_SERVERURL
+        const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOXTOKEN
         const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json`;
         const params = {
             access_token: MAPBOX_API_KEY,
@@ -119,6 +119,7 @@ function CreateRideFrom(props) {
                     <div className="mt-2">
                         <input
                             type="date"
+                            min={new Date().toISOString().split('T')[0]}
                             onChange={(e) => setStartDate(e.target.value)}
                             className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
@@ -129,6 +130,7 @@ function CreateRideFrom(props) {
                     <div className="mt-2">
                         <input
                             type="date"
+                            min={new Date().toISOString().split('T')[0]}
                             onChange={(e) => setEndDate(e.target.value)}
                             className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />

@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast'
 import SearchBox from './search'
 import Loader from './loader'
 import '../../assets/css/club/upcomingRides.css'
+import { AlertIcon } from './warning'
 
 function YourClubPage() {
 
@@ -65,29 +66,31 @@ function YourClubPage() {
         <>
             {loader ? <Loader bg={'white'} colour={'black'} /> :
                 <div className='bg-[url(https://wallpapercave.com/wp/wp7610092.jpg)] bg-cover bg-center w-full min-h-screen  bg-fixed'>
-                    <>
-                        <div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
-                            <SearchBox search={search} setSearch={setSearch} />
-                        </div>
-                        <div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3  mx-auto lg:max-w-7xl md:items-center md:px-8`}>
+                    <>{
+                        reqClubs?.length!=0&&clubs?.length!==0?<><div className={`justify-end pt-4 px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8`}>
+                        <SearchBox search={search} setSearch={setSearch} />
+                    </div>
+                    <div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3  mx-auto lg:max-w-7xl md:items-center md:px-8`}>
 
-                            {reqClubs ? reqClubs.filter((club) => club.clubName.toLowerCase().includes(search) || club.city.toLowerCase().includes(search)).map((club) => {
-                                return (
+                        {reqClubs ? reqClubs.filter((club) => club.clubName.toLowerCase().includes(search) || club.city.toLowerCase().includes(search)).map((club) => {
+                            return (
 
-                                    club.admins[0].admin._id == userId ? '' : <ClubCard key={club._id} removeRequest={removeRequest} reqClubs={true} isJoined={true} club={club} navigate={navigate} />
+                                club.admins[0].admin._id == userId ? '' : <ClubCard key={club._id} removeRequest={removeRequest} reqClubs={true} isJoined={true} club={club} navigate={navigate} />
 
 
-                                )
-                            }) : ''}
-                            {clubs ? clubs.filter((club) => club.clubName.toLowerCase().includes(search) || club.city.toLowerCase().includes(search)).map((club) => {
-                                return (
+                            )
+                        }) : ''}
+                        {clubs ? clubs.filter((club) => club.clubName.toLowerCase().includes(search) || club.city.toLowerCase().includes(search)).map((club) => {
+                            return (
 
-                                    <ClubCard key={club._id} reqClubs={false} isJoined={true} club={club} navigate={navigate} />
+                                <ClubCard key={club._id} reqClubs={false} isJoined={true} club={club} navigate={navigate} />
 
-                                )
-                            }) : <div className='flex justify-center md:ms-16'> <Loader /></div>}
+                            )
+                        }) : <div className='flex justify-center md:ms-16'> <Loader /></div>}
 
-                        </div>
+                    </div></>:<AlertIcon message ={"You haven't joined any club"}/>
+                    }
+                        
                     </>
                 </div>
             }

@@ -6,6 +6,7 @@ import '../../assets/css/club/upcomingRides.css'
 import CreateClub from './createClub'
 import SearchBox from './search'
 import { useNavigate } from 'react-router-dom'
+import { AlertIcon } from './warning'
 
 function ShowClubsPage(props) {
 
@@ -60,7 +61,7 @@ function ShowClubsPage(props) {
                 </div>
 
                 </div>
-                <div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 mx-auto lg:max-w-7xl md:items-center md:px-8`}>
+                {clubs?.length==0?<div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 mx-auto lg:max-w-7xl md:items-center md:px-8`}>
                     {clubs
                         ? clubs
                             .filter(
@@ -74,7 +75,7 @@ function ShowClubsPage(props) {
                                 );
                             })
                         : null}
-                </div>
+                </div>:<div className='p-4'><AlertIcon message={'No clubs to show'}/></div>}
 
             </>}
 
