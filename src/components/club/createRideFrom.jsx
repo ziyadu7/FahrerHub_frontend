@@ -85,7 +85,7 @@ function CreateRideFrom(props) {
 
     // Function to get location suggestions from Mapbox Geocoding API
     const getLocationSuggestions = async (query) => {
-        const MAPBOX_API_KEY = 'pk.eyJ1Ijoieml5YWR1IiwiYSI6ImNsa2tyb3hycjBmMHQza28zY2JyeGE5bXEifQ.uK6EfNoLf37b1K6oFdjFJw';
+        const MAPBOX_API_KEY = import.meta.env.VITE_SERVERURL
         const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json`;
         const params = {
             access_token: MAPBOX_API_KEY,

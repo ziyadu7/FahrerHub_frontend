@@ -140,7 +140,7 @@ function Login() {
           <div className="text-grey-dark mt-6">
             <div>
               Don't have an account?
-              <p className="no-underline border-b border-blue text-blue" href="/register">
+              <p className="no-underline border-b border-blue text-blue" cc>
                 Register
               </p>.
             </div>

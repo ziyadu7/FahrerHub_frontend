@@ -115,7 +115,7 @@ function SignUp() {
 
           <div className="text-grey-dark mt-6">
             Already have an account?
-            <p className="no-underline border-b border-blue text-blue" href="../login/">
+            <p className="no-underline border-b border-blue text-blue" onClick={()=>navigate('/login')}>
               Log in
             </p>.
           </div>
