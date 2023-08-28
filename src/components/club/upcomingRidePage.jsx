@@ -7,6 +7,7 @@ import RideCard from './rideCard'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../user/loader'
 import CreateRideFrom from './createRideFrom'
+import { AlertIcon } from '../user/warning'
 
 function UpcomingRides() {
 
@@ -54,9 +55,7 @@ function UpcomingRides() {
         <div className='justify-between px-4  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-3 mx-auto lg:max-w-7xl md:items-center md:px-8'>
           {rides.length != 0 ? rides.map((ride) => (
             <RideCard key={ride._id} ride={ride} isUpcoming={true} navigate={navigate} />
-          )) : <div className='text-white flex justify-center items-center w-screen'>
-            Currently no rides available
-          </div>}
+          )) : <AlertIcon message = {'Currently no rides available'}/>}
         </div></>}
     </div>
   )

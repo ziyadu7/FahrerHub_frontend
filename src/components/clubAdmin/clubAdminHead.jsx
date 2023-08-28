@@ -149,7 +149,7 @@ function ClubAdminHead(props) {
       }} className='w-full min-h-screen capitalize disableBar overflow-y-scroll overflow-hidden'>
         <div className='backdrop-blur-sm w-full bg-gradient-to-tr from-cyan-950  bg-opacity-30 items-center min-h-screen '>
           <div className='w-full flex justify-end'>
-            <button onClick={() => navigate(`/club/home/${club._id}`)} className='bg-yellow-500 rounded-md px-3 font-semibold mt-2 me-2 sm:mt-4 sm:me-4 py-1 text-white'>Admin Logout</button>
+            <button onClick={() => navigate(-1)} className='bg-yellow-500 rounded-md px-3 font-semibold mt-2 me-2 sm:mt-4 sm:me-4 py-1 text-white'>Admin Logout</button>
             <button onClick={() => window.my_modal_5.showModal()} className='bg-yellow-500 rounded-md px-3 font-semibold mt-2 me-2 sm:mt-4 sm:me-4 py-1 text-white'>Edit Club</button>
           </div>
 

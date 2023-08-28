@@ -61,7 +61,7 @@ function ShowClubsPage(props) {
                 </div>
 
                 </div>
-                {clubs?.length==0?<div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 mx-auto lg:max-w-7xl md:items-center md:px-8`}>
+                {clubs&&clubs?.length!==0?<div className={`justify-between px-4 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 mx-auto lg:max-w-7xl md:items-center md:px-8`}>
                     {clubs
                         ? clubs
                             .filter(

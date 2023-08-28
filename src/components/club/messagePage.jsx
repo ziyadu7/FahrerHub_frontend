@@ -7,7 +7,7 @@ import io from 'socket.io-client'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../user/loader'
 
-const END_POINT = import.meta.env.VITE_MAPBOXTOKEN;
+const END_POINT = import.meta.env.VITE_SERVERURL;
 let socket;
 function MessagePage(props) {
 
@@ -25,14 +25,13 @@ function MessagePage(props) {
     const [message, setMessage] = useState('')
     const [profile1, setProfile1] = useState(null)
     const [profile2, setProfile2] = useState(null)
-    const [loader, setLoader] = useState(true)
+    const [loader, setLoader] = useState(false)
     const navigate = useNavigate()
 
 
     useEffect(() => {
         socket = io(END_POINT)
         socket.emit('setup', userId)
-        console.log('connecting');
         socket.on('connection')
         return () => {
             socket.disconnect()
@@ -40,6 +39,7 @@ function MessagePage(props) {
     }, [])
 
     const loadChat = (userId, receiverId) => {
+        setLoader(true)
         axiosInstance.post('/chat/accessChat', { userId, receiverId, clubId, rideId }, {
             headers: {
                 authorization: `Bearer ${clubToken}`
@@ -84,7 +84,6 @@ function MessagePage(props) {
                 let updMsg = [...messages, res?.data?.msg];
                 setMessages(updMsg)
                 setMessage('')
-                console.log('new message');
                 socket.emit('new message', res?.data?.msg, chatId)
             }).catch((err) => {
                 if (err.response.status === 404) {
