@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { userLogout } from '../../store/slice/user'
 import { PowerIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { SiClubhouse } from 'react-icons/si'
@@ -13,6 +13,7 @@ function NavBar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { token } = useSelector((state) => state.User)
+  const location = useLocation()
 
   const [navbar, setNavbar] = useState(false);
 
@@ -69,41 +70,41 @@ function NavBar() {
               className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 `}
             >
               <ul className="ms-2 hover:cursor-pointer items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-                <li className="md:text-black text-white hover:text-slate-700">
+                <li className={`${location.pathname=='/' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700`}>
                   <div className='flex' onClick={() => { navigate('/')}}>
                     <AiFillHome className="h-5 w-5 me-2" />
                     <p>Home</p>
 
                   </div>
                 </li>
-                <li className="md:text-black text-white hover:text-slate-700">
+                <li className={`${location.pathname=='/showBikes' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700`}>
                   <div onClick={() => navigate('/showBikes')} className='flex'>
                     <RiMotorbikeFill className="h-5 w-5 me-2" />
                     <p>Rent Bikes</p>
                   </div>
                 </li>
-                <li className="md:text-black text-white  hover:text-slate-700">
+                <li className={`${location.pathname=='/clubs' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700`}>
                   <div onClick={() => { navigate('/clubs') }} className='flex'>
                     <SiClubhouse className="h-5 w-5 me-2" />
                     <p>Clubs</p>
 
                   </div>
                 </li>
-                <li className="md:text-black text-white  hover:text-slate-700">
+                <li className={`${location.pathname=='/yourClubs' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700`}>
                   <div onClick={() => { navigate('/yourClubs') }} className='flex'>
                     <SiClubhouse className="h-5 w-5 me-2" />
                     <p>Your Clubs</p>
 
                   </div>
                 </li>
-                <li className="md:text-black text-white  hover:text-slate-700">
+                <li className={`${location.pathname=='/questions' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700`}>
                   <div onClick={() => navigate('/questions')} className='flex'>
                     <AiOutlineComment className="h-5 w-5 me-2" />
                     <p>Q/A</p>
 
                   </div>
                 </li>
-                <li className="md:text-black hover:cursor-pointer text-white md:hidden  hover:text-slate-700">
+                <li className={`${location.pathname=='/profile' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'}hover:text-slate-700 md:hidden`}>
                   {token ? <div onClick={() => navigate('/profile')} className='flex'>
                     <UserCircleIcon className="h-5 w-5 me-2" />
                     <p>Profile</p>
@@ -134,7 +135,7 @@ function NavBar() {
         </div>
         <div className='hidden md:flex'>
           {token !== null ? <ul className="items-center  hover:cursor-pointer justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-            <li className="md:text-black text-white  md:flex  hover:text-slate-700">
+            <li className={`${location.pathname=='/profile' ?'md:text-slate-600 text-gray-400':'md:text-black  text-white'} md:flex hover:text-slate-700`}>
               <div onClick={() => navigate('/profile')} className='flex'>
                 <UserCircleIcon className="h-5 w-5 me-2" />
                 <p className='md:hidden' >Profile</p>

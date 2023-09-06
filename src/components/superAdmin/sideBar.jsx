@@ -10,7 +10,7 @@ import {
   PowerIcon
 } from "@heroicons/react/24/solid";
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { superAdminLogout } from '../../store/slice/superAdmin'
 import { TfiAngleDoubleRight, TfiAngleDoubleLeft, } from 'react-icons/tfi'
 import { RiMotorbikeFill } from 'react-icons/ri'
@@ -26,7 +26,7 @@ function SideBar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [show, setShow] = useState(true)
-
+  const location = useLocation()
 
   return (
     <>
@@ -38,28 +38,28 @@ function SideBar() {
             <div className=''>{show ? "" : <TfiAngleDoubleLeft className="ms-5 lg:hidden mt-5" onClick={() => setShow(true)} size={20} />}</div>
 
             <List>
-              <ListItem className={`hover:scale-105 transition-transform`} onClick={() => navigate('/admin')} >
+              <ListItem className={`${location.pathname=='/admin' ?'scale-105':''} hover:scale-105 transition-transform`} onClick={() => navigate('/admin')} >
                 <ListItemPrefix>
                   <AiFillHome className="h-5 w-5 me-2" />
                 </ListItemPrefix>
                 Home
 
               </ListItem>
-              <ListItem className='hover:scale-105 transition-transform' onClick={() => navigate('/admin/rentBikes')}>
+              <ListItem className={`hover:scale-105 transition-transform ${location.pathname=='/admin/rentBikes' ?'scale-105':''}`} onClick={() => navigate('/admin/rentBikes')}>
                 <ListItemPrefix>
                   <RiMotorbikeFill className="h-5 w-5 me-2" />
                 </ListItemPrefix>
                 Rent Bikes
 
               </ListItem>
-              <ListItem className='hover:scale-105 transition-transform' onClick={() => navigate('/admin/users')}>
+              <ListItem className={`${location.pathname=='/admin/users' ?'scale-105':''} hover:scale-105 transition-transform`} onClick={() => navigate('/admin/users')}>
                 <ListItemPrefix>
                   <FaUsersCog className="h-5 w-5 me-2" />
                 </ListItemPrefix>
                 Users
 
               </ListItem>
-              <ListItem className='hover:scale-105 transition-transform' onClick={() => navigate('/admin/rents')}>
+              <ListItem className={`hover:scale-105 transition-transform ${location.pathname=='/admin/rents' ?'scale-105':''}`} onClick={() => navigate('/admin/rents')}>
                 <ListItemPrefix>
                   <MdDirectionsBike className="h-5 w-5 me-2" />
                 </ListItemPrefix>
@@ -67,7 +67,7 @@ function SideBar() {
 
               </ListItem>
 
-              <ListItem className='hover:scale-105 transition-transform' onClick={() => {
+              <ListItem className={`${location.pathname=='/admin/clubs' ?'scale-105':''} hover:scale-105 transition-transform`} onClick={() => {
                 navigate('/admin/clubs')
               }} >
                 <ListItemPrefix>
