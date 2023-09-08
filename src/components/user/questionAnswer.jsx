@@ -3,6 +3,8 @@ import { SlArrowDown, SlArrowUp } from 'react-icons/sl'
 import axiosInstance from '../../api/axios'
 import { toast } from 'react-hot-toast'
 import { AiOutlineLike, AiFillLike } from 'react-icons/ai'
+import { PiUserFill } from 'react-icons/pi'
+import { RiQuestionAnswerFill } from 'react-icons/ri'
 
 function QuestionAnswer(props) {
 
@@ -50,7 +52,7 @@ function QuestionAnswer(props) {
     event.preventDefault();
     axiosInstance
       .post('/user/addLike', { answerId, questionId }, { headers: { authorization: `Bearer ${token}` } })
-      .then((res) => {
+      .then(() => {
         setQuestion((prevQuestion) => {
           const updatedAnswers = prevQuestion.answers.map((answer) => {
             if (answer._id === answerId) {
@@ -87,7 +89,7 @@ function QuestionAnswer(props) {
     event.preventDefault();
     axiosInstance
       .post('/user/disLike', { answerId, questionId }, { headers: { authorization: `Bearer ${token}` } })
-      .then((res) => {
+      .then(() => {
         setQuestion((prevQuestion) => {
           const updatedAnswers = prevQuestion.answers.map((answer) => {
             if (answer._id === answerId) {
@@ -145,17 +147,17 @@ function QuestionAnswer(props) {
                   </div>
                   <div className={`${arrow ? 'block' : " hidden"} `}>
                     <div className='flex'>
-                      <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} className=' bg-slate-700 focus:border-2 focus:border-white rounded-s-md px-0 sm:px-2 py-1' />
+                      <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} className=' bg-slate-700 focus:border-2 sm:w-full w-3/4 focus:border-white rounded-s-md px-0 sm:px-2 py-1' />
                       <button onClick={(e) => addAnswer(question._id, e)} className='bg-blue-700 rounded-e-md px-2 py-1'>answer</button>
                     </div>
                     {
                       question?.answers?.map((answer) => (
                         <div key={answer._id} className='mt-2'>
-                          <p>Answer by : {answer?.answerBy?.name}</p>
+                          <p className='flex'><PiUserFill/>:{answer?.answerBy?.name}</p>
                           <div className='flex justify-between'>
-                            <p className={`tracking-tight`}>Answer : {answer?.answer}</p>
+                            <p className={`tracking-tight flex`}><RiQuestionAnswerFill/>:{answer?.answer}</p>
                             <div className='flex'>
-                              <p>Likes:{answer?.likeCount}</p>{answer?.likes?.includes(userId) ? <AiFillLike onClick={(e) => disLike(answer._id, question._id, e)} className='w-8 h-5' /> : <AiOutlineLike onClick={(e) => addLike(answer._id, question._id, e)} className='w-8 h-5' />}
+                              <p>{answer?.likeCount}</p>{answer?.likes?.includes(userId) ? <AiFillLike onClick={(e) => disLike(answer._id, question._id, e)} className='w-8 h-5' /> : <AiOutlineLike onClick={(e) => addLike(answer._id, question._id, e)} className='w-8 h-5' />}
                             </div>
                           </div>
 
