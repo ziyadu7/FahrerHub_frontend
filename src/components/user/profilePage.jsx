@@ -243,7 +243,7 @@ function ProfilePage() {
                         </div>
                         <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
                     </> :
-                    showBike ? <UserBikeDetail change={change} setChange={setChange} bike={user?.bike} token={token} setShowBike={setShowBike} /> : <UserDetail setShowBike={setShowBike} user={user} setEdit={setEdit} adminClubs={adminClubs} returnBike={returnBike} memberClubs={memberClubs} rides={rides} rentHistory={rentHistory} />
+                    showBike ? <UserBikeDetail change={change} setChange={setChange} bike={user?.bike} token={token} setShowBike={setShowBike} /> : <UserDetail setChange = {setChange} change = {change} setShowBike={setShowBike} user={user} setEdit={setEdit} adminClubs={adminClubs} returnBike={returnBike} memberClubs={memberClubs} rides={rides} rentHistory={rentHistory} />
             }
         </div>
     )

@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import '../../assets/css/club/upcomingRides.css'
 import RentHistory from './rentHistory'
+import axiosInstance from '../../api/axios'
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 function UserDetail(props) {
 
@@ -12,8 +15,34 @@ function UserDetail(props) {
   const rentHistory = props.rentHistory
   const returnBike = props.returnBike
   const setShowBike = props.setShowBike
+  const setChange = props.setChange
+  const change = props.change
+
+  const navigate = useNavigate()
+  const { token } = useSelector((state) => state.User)
 
   const [showRent, setShowRent] = useState(false)
+
+  const cancelBooking = (rentId,bikeId)=>{
+      axiosInstance.patch('user/cancelBooking',{rentId,bikeId},{
+        headers: {
+          authorization: `Bearer ${token}`
+      }
+      }).then(res=>{
+        toast.success(res.data.message)
+        setChange(!change)
+      }).catch(err=>{
+        if (err.response.status === 404) {
+          navigate('/serverError')
+      } else if (err.response.status == 403) {
+          navigate('/accessDenied')
+      } else if (err.response.status == 500) {
+          navigate('/serverError')
+      } else if (err?.response?.data) {
+          toast.error(err?.response?.data?.errMsg)
+      }
+      })
+  }
 
   return (
     <div className='flex justify-center items-center disableBar backdrop-blur-sm w-full h-full'>
@@ -108,7 +137,7 @@ function UserDetail(props) {
                             <p className="font-semibold">{rent.bike.make + ' ' + rent.bike.model}</p>
                           </div>
                           <div className='flex justify-end'>
-                            <p>Status : {rent.returned ? <span className='text-indigo-800 ms-1 '>Returned</span> : new Date() > new Date(rent.toDate) ? <span className='text-red-700 me-1' onClick={() => returnBike(rent._id, rent.bike._id)}>Return</span> : <span className='text-green-600 me-1'>Currently Using</span>}</p>
+                            <p>Status : {rent.returned ? <span className='text-indigo-800 ms-1 '>Returned</span> : new Date() > new Date(rent.toDate) ? <span className='text-red-700 me-1' onClick={() => returnBike(rent._id, rent.bike._id)}>Return</span> :new Date() < new Date(rent.fromDate)? <span onClick={()=>cancelBooking(rent._id, rent.bike._id)} className='text-red-700 me-1'>Cancel</span> : <span className='text-green-600 me-1'>Currently Using</span>}</p>
                           </div>
                         </div>
                       )
