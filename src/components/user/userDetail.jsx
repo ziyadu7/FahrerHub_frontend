@@ -4,6 +4,7 @@ import RentHistory from './rentHistory'
 import axiosInstance from '../../api/axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function UserDetail(props) {
 
