@@ -6,7 +6,6 @@ import { GrNext, GrPrevious } from 'react-icons/gr';
 const ImageSlider = ({images,height,width,currentIndex,manageIndex}) => {
     
     const nextImage = () => {
-        console.log(currentIndex);
         manageIndex((prevIndex) => Math.floor((prevIndex + 1) % images.length));
     };
     

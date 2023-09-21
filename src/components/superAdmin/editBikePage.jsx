@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast, Toaster } from 'react-hot-toast';
 import LocationManage from './locationManage';
-import ImageSlider from './imageSlider';
+import ImageSlider from '../custom/imageSlider';
 
 function EditBikePage({ editBike, setEditBike }) {
 

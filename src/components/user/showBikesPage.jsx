@@ -15,6 +15,7 @@ import SearchBox from './search';
 import '../../assets/css/club/upcomingRides.css'
 import Loader from './loader';
 import { useNavigate } from 'react-router-dom';
+import ImageSlider from '../custom/imageSlider';
 
 function ShowBikesPage() {
 
@@ -30,6 +31,7 @@ function ShowBikesPage() {
   const [locations, setLocations] = useState([])
   const [locationSearch, setLocationSearch] = useState('')
   const [loader, setLoader] = useState(true)
+  const [currentIndex, manageIndex] = useState(0)
   const navigate = useNavigate()
 
   const token = useSelector((state) => state.User.token)
@@ -188,12 +190,8 @@ function ShowBikesPage() {
         <div className="w-full flex justify-center h-full backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="flex flex-col md:flex-row md:items-center">
-              <div className="carousel carousel-end md:ms-0 w-full md:w-3/4">
-                {bike.images.map((image, index) => (
-                  <div className="carousel-item w-full" key={index}>
-                    <img className="transition-opacity duration-500" src={image} alt="Bike" />
-                  </div>
-                ))}
+              <div className="md:ms-0 w-full md:w-[900px]">
+                <ImageSlider images={bike.images} height={'md:h-[500px] sm:h-[400px] h-[300px]'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-full'} />
               </div>
               <div className="text-lg md:col-span-2 ms-10 text-white flex flex-col justify-center mt-8 md:mt-0">
                 <p className="mb-2">
