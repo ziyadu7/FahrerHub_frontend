@@ -99,7 +99,7 @@ function ProfilePage() {
     }
 
     function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp','.avif'];
 
         const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
 

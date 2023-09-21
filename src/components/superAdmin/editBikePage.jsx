@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast, Toaster } from 'react-hot-toast';
 import LocationManage from './locationManage';
+import ImageSlider from './imageSlider';
 
 function EditBikePage({ editBike, setEditBike }) {
 
-  const [locationId, setLocationId] = useState(editBike.locationId)
+  const [locationId, setLocationId] = useState(editBike?.locationId._id)
   const [locations, setLocations] = useState([])
-  const [croppedImages, setCroppedImages] = useState([]);
+  const [images, setImages] = useState(editBike.images);
   const [make, setMake] = useState(editBike.make)
   const [model, setModel] = useState(editBike.model)
   const [rentAmount, setAmount] = useState(editBike.rentAmount)
@@ -18,6 +19,9 @@ function EditBikePage({ editBike, setEditBike }) {
   const [category, setCategory] = useState(editBike.category)
   const [description, setDescription] = useState(editBike.description)
   const { token } = useSelector((state) => state.SuperAdmin)
+  const [currentIndex, manageIndex] = useState(0)
+  const [loading,setLoading] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -37,24 +41,35 @@ function EditBikePage({ editBike, setEditBike }) {
   }, [])
 
   const handleSubmit = () => {
-    if (make.trim().length == 0 || model.trim().length == 0 || locationId.trim().length == 0 || rentAmount == 0 || cc == 0 || category.trim().length == 0 || description.trim().length == 0) {
+    setLoading(true)
+    if (make.trim().length == 0 || model.trim().length == 0 || images.length < 1 || locationId.trim().length == 0 || rentAmount == 0 || cc == 0 || category.trim().length == 0 || description.trim().length == 0) {
       toast.error('Fill all the fields')
     } else {
-      let images
-      if (croppedImages.length > 0) {
-        images = croppedImages
-      } else {
-        images = editBike.images
-      }
+      const formData = new FormData();
 
-      axiosInstance.patch(`/admin/editBike/${editBike._id}`, { make, model, rentAmount, locationId, images, cc, category, description }, {
+      images.forEach((image) => {
+        formData.append(`images`, image);
+      });
+
+      formData.append('make', make);
+      formData.append('model', model);
+      formData.append('rentAmount', rentAmount);
+      formData.append('locationId', locationId);
+      formData.append('cc', cc);
+      formData.append('category', category);
+      formData.append('description', description);
+
+      axiosInstance.patch(`/admin/editBike/${editBike._id}`, formData, {
         headers: {
-          authorization: `Bearer ${token}`
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
+        setLoading(false)
         toast.success(res.data.message)
         setTimeout(() => { navigate('/admin/rentBikes') }, 3000)
       }).catch((err) => {
+        setLoading(false)
         if (err.response.status === 404) {
           navigate('/serverError')
         } else if (err.response.status == 403) {
@@ -68,45 +83,23 @@ function EditBikePage({ editBike, setEditBike }) {
     }
   }
 
-  function isValidImage(logo) {
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-
-    const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-    return validExtensions.includes(extension);
-  }
+  const isImage = (file) => {
+    const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/avif", "image/png", "image/gif", "image/webp"]; // Add more types if necessary
+    return acceptedImageTypes.includes(file.type);
+  };
 
   const handleImageChange = (event) => {
-    const files = event.target.files;
-    const results = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      if (isValidImage(file.name)) {
-        if (file.size > 1 * 1024 * 1024) {
-          toast.error('Image size should be less than 1 MB');
-          break;
-        }
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          results.push(reader.result);
-
-          if (results.length === files.length) {
-            setCroppedImages(results);
-          }
-        };
-
-        reader.onerror = (error) => {
-          console.log(error);
-        };
-
-        reader.readAsDataURL(file);
+    const files = Array.from(event.target.files);
+    if (files.length > 4) {
+      toast.error('Maximum 4 images allowed')
+    } else {
+      const imageFiles = files.filter(isImage);
+      if (imageFiles.length === files.length) {
+        setImages(files);
+        manageIndex(0)
       } else {
         toast.error('Add valid image')
       }
-
     }
   };
 
@@ -161,13 +154,11 @@ function EditBikePage({ editBike, setEditBike }) {
               <div className="sm:col-span-3">
                 <label className="block text-sm font-medium leading-6 text-gray-900">Location</label>
                 <div className="mt-2">
-                  <select onChange={(e) => setLocationId(e.target.value)} id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    {console.log(locationId)}
-                    <option selected>{locationId?.location}</option>
+                  <select onChange={(e) => setLocationId(e.target.value)} id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value={locationId._id}>{editBike?.locationId?.location}</option>
+                    {console.log(locationId, '==')}
                     {locations.map((location) => (
-                      <>
-                        <option value={location?._id}>{location.location}</option>
-                      </>
+                      <option key={location._id} value={location?._id}>{location.location}</option>
                     ))}
                   </select>
                 </div>
@@ -179,30 +170,7 @@ function EditBikePage({ editBike, setEditBike }) {
 
 
                 <div className="">
-                  <div className='md:flex'>
-                    {croppedImages.length == 0 && editBike.images.map((image, index) => (
-                      <>
-                        <img key={index + 1}
-                          src={
-                            image
-                          }
-                          alt="...."
-                          className="avatar"
-                        />
-
-                      </>
-                    ))}
-
-                    {croppedImages.map((image, index) =>
-                      <img key={index}
-                        src={
-                          image
-                        }
-                        alt="...."
-                        className="avatar grid md:grid-cols-4"
-                      />)}
-
-                  </div>
+                  <ImageSlider images={images} height={'h-56 '} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-56'} />
                   <div className="pt-5">
                     <input
                       type="file"
@@ -218,11 +186,10 @@ function EditBikePage({ editBike, setEditBike }) {
             </div>
           </div>
         </div>
-
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button type="button" onClick={() => {
             handleSubmit()
-          }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button>
+          }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{loading?<div className='flex'><div className="h-5 w-5 border-t-transparent border-solid animate-spin rounded-full border-white border-4"></div><p className="ml-2"> Processing... </p></div>:'Confirm'} </button>
         </div>
       </div>
 
