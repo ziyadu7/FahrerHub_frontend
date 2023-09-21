@@ -43,6 +43,7 @@ function EditBikePage({ editBike, setEditBike }) {
   const handleSubmit = () => {
     setLoading(true)
     if (make.trim().length == 0 || model.trim().length == 0 || images.length < 1 || locationId.trim().length == 0 || rentAmount == 0 || cc == 0 || category.trim().length == 0 || description.trim().length == 0) {
+      setLoading(false)
       toast.error('Fill all the fields')
     } else {
       const formData = new FormData();
@@ -188,7 +189,7 @@ function EditBikePage({ editBike, setEditBike }) {
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button type="button" onClick={() => {
-            handleSubmit()
+           loading?'':handleSubmit()
           }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{loading?<div className='flex'><div className="h-5 w-5 border-t-transparent border-solid animate-spin rounded-full border-white border-4"></div><p className="ml-2"> Processing... </p></div>:'Confirm'} </button>
         </div>
       </div>

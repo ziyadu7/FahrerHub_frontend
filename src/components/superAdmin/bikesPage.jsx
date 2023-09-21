@@ -92,7 +92,7 @@ function BikesPage({ setEditBike }) {
             <Toaster toastOptions={{ duration: 4000 }} />
             <div className='flex justify-between md:mx-5 md:my-5 '><h1 className=''>Rent Bikes</h1><button className='bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded' onClick={() => setShowAdd(!showAdd)}>{showAdd ? 'Back' : 'Add Bike'}</button></div>
             {showAdd ?
-                <AddBikeForm token={token} />
+                <AddBikeForm token={token} setShowAdd={setShowAdd} />
                 : <div className='grid grid-cols-1 '>
                     <div className="inline-block py-2 pe-4">
                         <div className="overflow-auto">

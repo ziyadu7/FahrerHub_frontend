@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import LocationManage from './locationManage'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom';
+import ImageSlider from '../custom/imageSlider';
 
 function AddBikeForm(props) {
 
@@ -15,8 +16,11 @@ function AddBikeForm(props) {
     const [locationId, setLocationId] = useState('')
     const [locations, setLocations] = useState([])
     const [images, setImages] = useState([])
+    const [currentIndex, manageIndex] = useState(0)
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const token = props.token
+    const setShowAdd = props.setShowAdd
 
     useEffect(() => {
         axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
@@ -34,65 +38,58 @@ function AddBikeForm(props) {
         })
     }, [])
 
-    function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-
-        const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-        return validExtensions.includes(extension);
-    }
-
+    const isImage = (file) => {
+        const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/avif", "image/png", "image/gif", "image/webp"]; // Add more types if necessary
+        return acceptedImageTypes.includes(file.type);
+    };
 
     const handleImageChange = (event) => {
-        const files = event.target.files;
-        const results = [];
-
-        for (let i = 0; i < files.length; i++) {
-            if (isValidImage(files[i].name)) {
-                if (file.size > 1 * 1024 * 1024) {
-                    toast.error('Image size should be less than 1 MB');
-                    break;
-                }
-                const file = files[i];
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    results.push(reader.result);
-
-                    if (results.length === files.length) {
-                        setImages(results);
-                    }
-                };
-
-                reader.onerror = (error) => {
-                    console.log(error);
-                };
-
-                reader.readAsDataURL(file);
+        const files = Array.from(event.target.files);
+        if (files.length > 4) {
+            toast.error('Maximum 4 images allowed')
+        } else {
+            const imageFiles = files.filter(isImage);
+            if (imageFiles.length === files.length) {
+                setImages(files);
+                manageIndex(0)
             } else {
                 toast.error('Add valid image')
-                break
             }
-
         }
     };
 
 
     const handleSubmit = () => {
-        console.log(locationId);
+        setLoading(true)
         if (make.trim().length == 0 || model.trim().length == 0 || locationId == '' || rentAmount == 0 || images.length == 0 || cc == 0 || category.trim().length == 0 || description.trim().length == 0) {
+            setLoading(false)
             toast.error('Fill all the fields')
         } else {
-            axiosInstance.post('/admin/addBike', { make, model, rentAmount, locationId, images, cc, category, description }, { headers: { authorization: `Bearer ${token}` } }).then((res) => {
+            const formData = new FormData();
+
+            images.forEach((image) => {
+                formData.append(`images`, image);
+            });
+
+            formData.append('make', make);
+            formData.append('model', model);
+            formData.append('rentAmount', rentAmount);
+            formData.append('locationId', locationId);
+            formData.append('cc', cc);
+            formData.append('category', category);
+            formData.append('description', description);
+
+            axiosInstance.post('/admin/addBike', formData, { headers: { authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }).then((res) => {
                 toast.success(res.data.message)
                 setShowAdd(false)
+                setLoading(false)
                 setImages([])
-            }).catch((error) => {
-                if (err.response.status === 404) {
+            }).catch((err) => {
+                if (err?.response?.status === 404) {
                     navigate('/serverError')
-                } else if (err.response.status == 403) {
+                } else if (err?.response?.status == 403) {
                     navigate('/accessDenied')
-                } else if (err.response.status == 500) {
+                } else if (err?.response?.status == 500) {
                     navigate('/serverError')
                 } else if (err?.response?.data) {
                     toast.error(err?.response?.data?.errMsg)
@@ -164,18 +161,7 @@ function AddBikeForm(props) {
 
 
                             <div className="">
-                                <div className='md:flex'>
-                                    {images.length == 0 ? '' : images.map((image, i) => (
-                                        <img key={i} style={{ height: '100px', width: '100px' }}
-                                            src={
-                                                image
-                                            }
-                                            alt="...."
-                                            className="avatar"
-                                        />
-                                    ))}
-
-                                </div>
+                                {images.length == 0 ? '' : <ImageSlider images={images} height={'h-56 '} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-56'} />}
                                 <div className="pt-5">
                                     <input
                                         type="file"
@@ -193,7 +179,9 @@ function AddBikeForm(props) {
             </div>
 
             <div className="mt-6 flex items-center justify-end gap-x-6">
-                <button type="" onClick={() => handleSubmit()} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button>
+                <button type="button" onClick={() => {
+                    loading?'':handleSubmit()
+                }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{loading ? <div className='flex'><div className="h-5 w-5 border-t-transparent border-solid animate-spin rounded-full border-white border-4"></div><p className="ml-2"> Processing... </p></div> : 'Confirm'} </button>
             </div>
         </div>
     )
