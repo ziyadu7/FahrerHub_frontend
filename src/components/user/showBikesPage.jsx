@@ -1,12 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button
-} from "@material-tailwind/react";
 import axiosInstance from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
@@ -16,6 +8,7 @@ import '../../assets/css/club/upcomingRides.css'
 import Loader from './loader';
 import { useNavigate } from 'react-router-dom';
 import ImageSlider from '../custom/imageSlider';
+import { SlArrowDown} from 'react-icons/sl'
 
 function ShowBikesPage() {
 
@@ -32,18 +25,26 @@ function ShowBikesPage() {
   const [locationSearch, setLocationSearch] = useState('')
   const [loader, setLoader] = useState(true)
   const [currentIndex, manageIndex] = useState(0)
+  const [ noMore,setNoMore] = useState(false)
   const navigate = useNavigate()
 
   const token = useSelector((state) => state.User.token)
 
   useEffect(() => {
-    axiosInstance.get('/user/showBikes', {
+    fetchData()
+  }, [])
+
+  function fetchData(){
+    axiosInstance.get(`/user/showBikes?skip=${bikes.length}`, {
       headers: {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      setBikes(res.data.bikes)
-      setLocations(res.data.locations)
+      if(bikes.length == 0){
+        setLocations(res.data.locations)
+      }
+      setNoMore(res?.data?.noMore)
+      setBikes([...bikes,...res.data.bikes])
       setLoader(false)
     }).catch((err) => {
       if (err.response.status === 404) {
@@ -57,8 +58,7 @@ function ShowBikesPage() {
       }
 
     })
-  }, [])
-
+  }
 
   const handleBooking = async () => {
     const currentDate = new Date()
@@ -303,7 +303,7 @@ function ShowBikesPage() {
               className="block w-full py-2 px-4 leading-tight bg-black border border-gray-300 dark:bg-gray-700 dark:border-gray-600 rounded shadow-sm focus:outline-none focus:bg-black focus:border-gray-500 dark:focus:border-gray-400"
             >
               <option value="">All</option>
-              {locations.map((location) => (
+              {locations?.map((location) => (
                 <option key={location._id} value={location.location.toLowerCase()}>
                   {location.location}
                 </option>
@@ -311,7 +311,6 @@ function ShowBikesPage() {
             </select>
           </div>
           <div className='flex justify-center'>
-
             <SearchBox search={search} setSearch={setSearch} />
           </div>
         </div>
@@ -319,31 +318,17 @@ function ShowBikesPage() {
           <div className="text-center container py-5">
 
             <div className="grid grid-cols-1 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {bikes ? bikes.filter((bike) => (bike.locationId.location.toLowerCase().includes(locationSearch)) && (bike.make.toLowerCase().includes(search) || bike.model.toLowerCase().includes(search) || bike.category.toLowerCase().includes(search))).map((bike) => {
+              {bikes.length>0 ? bikes.filter((bike) => (bike.locationId.location.toLowerCase().includes(locationSearch)) && (bike.make.toLowerCase().includes(search) || bike.model.toLowerCase().includes(search) || bike.category.toLowerCase().includes(search))).map((bike) => {
                 return (
                   <div key={bike._id}><BikeCard setSingleBike={setSingleBike} bike={bike} /></div>
                 )
               })
-                : <Card className="md:w-auto sm:w-auto">
-                  <CardHeader color="blue-gray" className="relative h-auto">
-                    <img src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="img-blur-shadow" layout="fill" />
-                  </CardHeader>
-                  <CardBody>
-                    <Typography variant="h5" color="blue-gray" className="mb-2">
-                      UI/UX Review Check
-                    </Typography>
-                    <Typography>
-                      The place is close to Barceloneta Beach and bus stop just 2 min by walk
-                      and near to &quot;Naviglio&quot; where you can enjoy the main night life
-                      in Barcelona.
-                    </Typography>
-                  </CardBody>
-                  <CardFooter className="pt-0">
-                    <Button>Read More</Button>
-                  </CardFooter>
-                </Card>
+              
+                : <Loader bg={''} colour={'black'} />
               }
-
+            </div>
+            <div className='flex justify-center'>
+            {noMore?'':<div onClick={fetchData} className='flex'><p>See More</p> <SlArrowDown /></div>}
             </div>
           </div>
         </section>
