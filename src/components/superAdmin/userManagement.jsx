@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
 import Loader from '../user/loader'
 import { useNavigate } from 'react-router-dom'
+import Pagination from '../custom/pagination'
 
 function UserManagement() {
 
@@ -13,29 +14,44 @@ function UserManagement() {
   const [users, setUsers] = useState([])
   const [reload, setReload] = useState(false)
   const [loader, setLoader] = useState(true)
-  const navigate = useNavigate()
+  const [skip,setSkip] = useState(0)
+  const [currentPage,setCurrentPage] = useState(1)
+  const [pagelength,setPagelength] = useState(0)
+  const [noMore,setNoMore] = useState(false)
+
+  const navigate = useNavigate()  
 
   useEffect(() => {
-    axiosInstance.get('/admin/users', {
+      fetchData()
+  }, [reload,skip])
+
+  useEffect(() => {
+      setSkip(0)
+      setTimeout(fetchData,1000)
+  }, [search])
+
+
+  function fetchData() {
+    axiosInstance.get(`/admin/users?skip=${skip}&search=${search}`, {
       headers: {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
+      setNoMore(res?.data?.noMore)
       setUsers(res?.data?.users)
       setLoader(false)
     }).then((err) => {
-      if (err.response.status === 404) {
+      if (err?.response.status === 404) {
         navigate('/serverError')
-      } else if (err.response.status == 403) {
+      } else if (err?.response.status == 403) {
         navigate('/accessDenied')
-      } else if (err.response.status == 500) {
+      } else if (err?.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
       }
     })
-  }, [reload])
-
+  }
 
   const statusChange = (userId, blocked) => {
     axiosInstance.patch('/admin/userStatus', { userId, blocked }, {
@@ -46,11 +62,11 @@ function UserManagement() {
       toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.status === 404) {
+      if (err?.response.status === 404) {
         navigate('/serverError')
-      } else if (err.response.status == 403) {
+      } else if (err?.response.status == 403) {
         navigate('/accessDenied')
-      } else if (err.response.status == 500) {
+      } else if (err?.response.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -112,7 +128,17 @@ function UserManagement() {
                     </tr>
                   )}
               </tbody>
+              
             </table>
+              <div className='flex justify-end'>
+              <Pagination
+              noMore={noMore}
+          currentPage={currentPage}
+          skip={skip}
+          setSkip={setSkip}
+          onPageChange={setCurrentPage}
+        />
+              </div>
           </div>
         </div>
       </div>
