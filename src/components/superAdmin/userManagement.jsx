@@ -15,10 +15,8 @@ function UserManagement() {
   const [reload, setReload] = useState(false)
   const [loader, setLoader] = useState(true)
   const [skip,setSkip] = useState(0)
-  const [currentPage,setCurrentPage] = useState(1)
   const [totalPage,setTotalPage] = useState(0)
   const [calls,setCalls] = useState(0)
-  const [noMore,setNoMore] = useState(false)
 
   const navigate = useNavigate()  
 
@@ -45,7 +43,6 @@ function UserManagement() {
         setTotalPage(res?.data?.length)
       }
       setCalls(calls+1)
-      setNoMore(res?.data?.noMore)
       setUsers(res?.data?.users)
       setLoader(false)
     }).then((err) => {
@@ -140,12 +137,9 @@ function UserManagement() {
             </table>
               <div className='flex justify-center'>
               <Pagination
-              noMore={noMore}
-          currentPage={currentPage}
           totalPage={totalPage}
           skip={skip}
           setSkip={setSkip}
-          onPageChange={setCurrentPage}
         />
               </div>
           </div>

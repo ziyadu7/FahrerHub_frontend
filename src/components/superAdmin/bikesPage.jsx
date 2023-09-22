@@ -18,9 +18,9 @@ function BikesPage({ setEditBike }) {
     const [search, setSearch] = useState('')
     const { token } = useSelector((state) => state.SuperAdmin)
     const [loader, setLoader] = useState(true)
-    const [skip, setSkip] = useState(0)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [noMore, setNoMore] = useState(false)
+    const [skip,setSkip] = useState(0)
+    const [totalPage,setTotalPage] = useState(0)
+    const [calls,setCalls] = useState(0)
 
     const navigate = useNavigate()
 
@@ -29,13 +29,19 @@ function BikesPage({ setEditBike }) {
     }, [showAdd, bikeUpdation, skip])
 
     useEffect(() => {
+        if(search.trim()==''){
+            setCalls(0)
+          }
         setSkip(0)
         setTimeout(fetchData, 1000)
     }, [search])
 
     function fetchData() {
-        axiosInstance.get(`/admin/showBikes?skip=${skip}&search=${search}`, { headers: { authorization: `Bearer ${token}` } }).then((res) => {
-            setNoMore(res?.data?.noMore)
+        axiosInstance.get(`/admin/showBikes?skip=${skip}&search=${search}&calls=${calls}`, { headers: { authorization: `Bearer ${token}` } }).then((res) => {
+            if(calls==0||search.trim()!=''){
+                setTotalPage(res?.data?.length)
+              }
+            setCalls(calls+1)
             setBikes(res?.data?.bikes)
             setLoader(false)
         }).catch((err) => {
@@ -159,11 +165,9 @@ function BikesPage({ setEditBike }) {
                             </table>
                             <div className='flex justify-end'>
                                 <Pagination
-                                    noMore={noMore}
-                                    currentPage={currentPage}
+                                    totalPage={totalPage}
                                     skip={skip}
                                     setSkip={setSkip}
-                                    onPageChange={setCurrentPage}
                                 />
                             </div>
                         </div>
