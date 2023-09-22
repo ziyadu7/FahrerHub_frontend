@@ -16,7 +16,8 @@ function UserManagement() {
   const [loader, setLoader] = useState(true)
   const [skip,setSkip] = useState(0)
   const [currentPage,setCurrentPage] = useState(1)
-  const [pagelength,setPagelength] = useState(0)
+  const [totalPage,setTotalPage] = useState(0)
+  const [calls,setCalls] = useState(0)
   const [noMore,setNoMore] = useState(false)
 
   const navigate = useNavigate()  
@@ -26,17 +27,24 @@ function UserManagement() {
   }, [reload,skip])
 
   useEffect(() => {
+    if(search.trim()==''){
+      setCalls(0)
+    }
       setSkip(0)
       setTimeout(fetchData,1000)
   }, [search])
 
 
   function fetchData() {
-    axiosInstance.get(`/admin/users?skip=${skip}&search=${search}`, {
+    axiosInstance.get(`/admin/users?skip=${skip}&search=${search}&calls=${calls}`, {
       headers: {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
+      if(calls==0||search.trim()!=''){
+        setTotalPage(res?.data?.length)
+      }
+      setCalls(calls+1)
       setNoMore(res?.data?.noMore)
       setUsers(res?.data?.users)
       setLoader(false)
@@ -130,10 +138,11 @@ function UserManagement() {
               </tbody>
               
             </table>
-              <div className='flex justify-end'>
+              <div className='flex justify-center'>
               <Pagination
               noMore={noMore}
           currentPage={currentPage}
+          totalPage={totalPage}
           skip={skip}
           setSkip={setSkip}
           onPageChange={setCurrentPage}

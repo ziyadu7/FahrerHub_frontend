@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBox from '../user/search';
 import AddBikeForm from './addBikeForm';
 import Loader from '../user/loader'
+import Pagination from '../custom/pagination';
 
 
 function BikesPage({ setEditBike }) {
@@ -17,11 +18,25 @@ function BikesPage({ setEditBike }) {
     const [search, setSearch] = useState('')
     const { token } = useSelector((state) => state.SuperAdmin)
     const [loader, setLoader] = useState(true)
+    const [skip, setSkip] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [noMore, setNoMore] = useState(false)
+
     const navigate = useNavigate()
 
     useEffect(() => {
-        axiosInstance.get('/admin/showBikes', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
-            setBikes(res.data.bikes)
+        fetchData()
+    }, [showAdd, bikeUpdation, skip])
+
+    useEffect(() => {
+        setSkip(0)
+        setTimeout(fetchData, 1000)
+    }, [search])
+
+    function fetchData() {
+        axiosInstance.get(`/admin/showBikes?skip=${skip}&search=${search}`, { headers: { authorization: `Bearer ${token}` } }).then((res) => {
+            setNoMore(res?.data?.noMore)
+            setBikes(res?.data?.bikes)
             setLoader(false)
         }).catch((err) => {
             if (err.response.status === 404) {
@@ -34,8 +49,7 @@ function BikesPage({ setEditBike }) {
                 toast.error(err?.response?.data?.errMsg)
             }
         })
-    }, [showAdd, bikeUpdation])
-
+    }
 
     const removeBike = (id) => {
         axiosInstance.delete(`/admin/removeBike/${id}`, {
@@ -143,6 +157,15 @@ function BikesPage({ setEditBike }) {
                                         )}
                                 </tbody>
                             </table>
+                            <div className='flex justify-end'>
+                                <Pagination
+                                    noMore={noMore}
+                                    currentPage={currentPage}
+                                    skip={skip}
+                                    setSkip={setSkip}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>}
