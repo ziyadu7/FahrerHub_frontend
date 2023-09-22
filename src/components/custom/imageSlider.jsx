@@ -16,7 +16,7 @@ const ImageSlider = ({images,height,width,currentIndex,manageIndex}) => {
     };
   return (
     <>
-        {images.length > 0 ? 
+        {images?.length > 0 ? 
             <div className="relative w-full max-w-screen-lg mx-auto">
                 <div className={`relative ${height ? height : 'h-auto'} ${width ? width : 'w-auto'} overflow-hidden `}>
                 {Array.from(images).map((image, index) => (
@@ -29,7 +29,7 @@ const ImageSlider = ({images,height,width,currentIndex,manageIndex}) => {
                     }`}
                     />
                 ))}
-                { images.length > 1 &&
+                { images?.length > 1 &&
                     <>
                         <button
                         className="absolute left-1 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 opacity-70 rounded-full cursor-pointer"
