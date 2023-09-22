@@ -111,6 +111,11 @@ function UserDetail(props) {
                   <p className="w-1/3 font-semibold">Phone</p>
                   <p className="text-black mb-0">{user.phone}</p>
                 </div>
+                <hr className="my-2" />
+                <div className="flex items-center">
+                  <p className="w-1/3 font-semibold">Wallet</p>
+                  <p className="text-black mb-0">{user.wallet}</p>
+                </div>
               </div>
             </div>
             {showRent?<RentHistory setShowRent={setShowRent} rents={rentHistory}/>:<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
