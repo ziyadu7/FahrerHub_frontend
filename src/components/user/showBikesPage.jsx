@@ -22,20 +22,35 @@ function ShowBikesPage() {
   const [user, setUser] = useState(null)
   const [review, setReview] = useState('')
   const [locations, setLocations] = useState([])
-  const [locationSearch, setLocationSearch] = useState('')
+  const [location, setLocationSearch] = useState(0)
   const [loader, setLoader] = useState(true)
   const [currentIndex, manageIndex] = useState(0)
   const [ noMore,setNoMore] = useState(false)
+  const [limit,setLimit] = useState(10)
   const navigate = useNavigate()
 
   const token = useSelector((state) => state.User.token)
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [limit,location])
+
+  useEffect(() => {
+    let timer
+    if(search.trim()!==''){
+       timer = setTimeout(()=>{
+        fetchData()
+      },1000)
+    }else{
+      fetchData()
+    }
+
+    return clearInterval(timer)
+  }, [search])
 
   function fetchData(){
-    axiosInstance.get(`/user/showBikes?skip=${bikes.length}`, {
+
+    axiosInstance.get(`/user/showBikes?limit=${limit}&location=${location}&search=${search}`, {
       headers: {
         authorization: `Bearer ${token}`
       }
@@ -43,8 +58,9 @@ function ShowBikesPage() {
       if(bikes.length == 0){
         setLocations(res.data.locations)
       }
+      
       setNoMore(res?.data?.noMore)
-      setBikes([...bikes,...res.data.bikes])
+      setBikes(res.data.bikes)
       setLoader(false)
     }).catch((err) => {
       if (err.response.status === 404) {
@@ -298,13 +314,13 @@ function ShowBikesPage() {
           <div className="flex mb-2 sm:mb-0">
             <select
               onChange={(e) => {
-                setLocationSearch(e.target.value);
+                setLocationSearch(e.target.value)
               }}
               className="block w-full py-2 px-4 leading-tight bg-black border border-gray-300 dark:bg-gray-700 dark:border-gray-600 rounded shadow-sm focus:outline-none focus:bg-black focus:border-gray-500 dark:focus:border-gray-400"
             >
-              <option value="">All</option>
+              <option value={0}>All</option>
               {locations?.map((location) => (
-                <option key={location._id} value={location.location.toLowerCase()}>
+                <option key={location._id} value={location._id}>
                   {location.location}
                 </option>
               ))}
@@ -318,7 +334,7 @@ function ShowBikesPage() {
           <div className="text-center container py-5">
 
             <div className="grid grid-cols-1 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {bikes.length>0 ? bikes.filter((bike) => (bike.locationId.location.toLowerCase().includes(locationSearch)) && (bike.make.toLowerCase().includes(search) || bike.model.toLowerCase().includes(search) || bike.category.toLowerCase().includes(search))).map((bike) => {
+              {bikes.length > 0 ? bikes.filter((bike) => (bike.make.toLowerCase().includes(search) || bike.model.toLowerCase().includes(search) || bike.category.toLowerCase().includes(search))).map((bike) => {
                 return (
                   <div key={bike._id}><BikeCard setSingleBike={setSingleBike} bike={bike} /></div>
                 )
@@ -328,7 +344,9 @@ function ShowBikesPage() {
               }
             </div>
             <div className='flex justify-center'>
-            {noMore?'':<div onClick={fetchData} className='flex'><p>See More</p> <SlArrowDown /></div>}
+            {noMore?'':<div onClick={()=>{
+              setLimit(limit+10)
+             } } className='flex'><p>See More</p> <SlArrowDown /></div>}
             </div>
           </div>
         </section>
