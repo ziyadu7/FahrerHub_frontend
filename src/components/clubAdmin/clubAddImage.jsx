@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Toaster, toast } from 'react-hot-toast';
 import Loader from '../user/loader';
 import { useNavigate } from 'react-router-dom';
+import ImageSlider from '../custom/imageSlider';
 
 function ClubAddImage() {
 
@@ -14,6 +15,8 @@ function ClubAddImage() {
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [loader, setLoader] = useState(true)
+  const [currentIndex, manageIndex] = useState(0)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -37,38 +40,31 @@ function ClubAddImage() {
     })
   }, [reload])
 
-  function isValidImage(logo) {
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+  const isImage = (file) => {
+    const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/avif", "image/png", "image/gif", "image/webp"]
+    return acceptedImageTypes.includes(file.type);
+  };
 
-    const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
+  const handleImageChange = (event) => {
+    const file = event.target.files[0]
 
-    return validExtensions.includes(extension);
-  }
-
-  const handleImageChange = (img) => {
-    if (isValidImage(img?.target?.files[0]?.name)) {
-      if (img.target.files[0]?.size > 1 * 1024 * 1024) {
-        toast.error('Image size should be less than 1 MB');
-        return;
-      }
-      let reader = new FileReader()
-      reader.readAsDataURL(img.target.files[0])
-      reader.onload = () => {
-        setImage(reader.result)
-      }
-      reader.onerror = (err) => {
-        console.log(err);
-      }
+    const imageFile = isImage(file)
+    if (imageFile) {
+      setImage(file);
+      manageIndex(0)
     } else {
-      toast.error('Please add valid image')
+      toast.error('Add valid image')
     }
-  }
+  };
 
   const postImage = async () => {
-    if (image.trim().length != 0) {
-      axiosInstance.post('/clubAdmin/addImage', { image }, {
+    if (image != '') {
+      const formData = new FormData();
+      formData.append('image',image)
+      axiosInstance.post('/clubAdmin/addImage', formData, {
         headers: {
-          authorization: `Bearer ${clubToken}`
+          authorization: `Bearer ${clubToken}`,
+          'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
         toast.success(res.data.message)
@@ -140,11 +136,7 @@ function ClubAddImage() {
             <div className="flex justify-center">
               {image && (
                 <div className="max-w-full h-auto overflow-x-auto">
-                  <img
-                    src={image}
-                    className="block max-w-full h-auto"
-                    alt="Uploaded Image"
-                  />
+                  <ImageSlider images={[image]} height={'h-60'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-64'} />
                 </div>
               )}
             </div>
