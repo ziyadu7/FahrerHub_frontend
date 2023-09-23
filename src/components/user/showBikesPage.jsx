@@ -34,17 +34,19 @@ function ShowBikesPage() {
   }, [limit,location])
 
   useEffect(() => {
-    let timer
-    if(search.trim()!==''){
-       timer = setTimeout(()=>{
-        fetchData()
-      },1000)
-    }else{
-      fetchData()
-    }
+    let timer;
 
-    return clearInterval(timer)
-  }, [search])
+    console.log(search);
+  
+    timer = setTimeout(() => {
+      fetchData();
+    }, 1000);
+  
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+  
 
   function fetchData(){
 
@@ -58,14 +60,14 @@ function ShowBikesPage() {
       }
       
       setNoMore(res?.data?.noMore)
-      setBikes(res.data.bikes)
+      setBikes(res?.data?.bikes)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.status === 404) {
+      if (err?.response?.status === 404) {
         navigate('/serverError')
-      } else if (err.response.status == 403) {
+      } else if (err?.response?.status == 403) {
         navigate('/accessDenied')
-      } else if (err.response.status == 500) {
+      } else if (err?.response?.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -90,11 +92,11 @@ function ShowBikesPage() {
         setIsReview(true)
       }
     }).catch((err) => {
-      if (err.response.status === 404) {
+      if (err?.response?.status === 404) {
         navigate('/serverError')
-      } else if (err.response.status == 403) {
+      } else if (err?.response?.status == 403) {
         navigate('/accessDenied')
-      } else if (err.response.status == 500) {
+      } else if (err?.response?.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -110,11 +112,11 @@ function ShowBikesPage() {
     }).then((res) => {
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
+      if (err?.response?.status === 404) {
         navigate('/serverError')
-      } else if (err.response.status == 403) {
+      } else if (err?.response?.status == 403) {
         navigate('/accessDenied')
-      } else if (err.response.status == 500) {
+      } else if (err?.response?.status == 500) {
         navigate('/serverError')
       } else if (err?.response?.data) {
         toast.error(err?.response?.data?.errMsg)
@@ -150,7 +152,7 @@ function ShowBikesPage() {
           <div className="text-center container py-5">
 
             <div className="grid grid-cols-1 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {bikes.length > 0 ? bikes.filter((bike) => (bike.make.toLowerCase().includes(search) || bike.model.toLowerCase().includes(search) || bike.category.toLowerCase().includes(search))).map((bike) => {
+              {bikes.length > 0 ?bikes.map((bike) => {
                 return (
                   <div key={bike._id}><BikeCard setSingleBike={setSingleBike} bike={bike} /></div>
                 )

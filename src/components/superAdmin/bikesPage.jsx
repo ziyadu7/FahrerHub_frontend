@@ -33,7 +33,13 @@ function BikesPage({ setEditBike }) {
             setCalls(0)
           }
         setSkip(0)
-        setTimeout(fetchData, 1000)
+        let timer = setTimeout(() => {
+            fetchData();
+          }, 1000);
+    
+          return () => {
+            clearTimeout(timer);
+          };
     }, [search])
 
     function fetchData() {
