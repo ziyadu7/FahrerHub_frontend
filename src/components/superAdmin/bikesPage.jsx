@@ -21,6 +21,7 @@ function BikesPage({ setEditBike }) {
     const [skip,setSkip] = useState(0)
     const [totalPage,setTotalPage] = useState(0)
     const [calls,setCalls] = useState(0)
+    const [btLoading,setBtLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -48,6 +49,7 @@ function BikesPage({ setEditBike }) {
                 setTotalPage(res?.data?.length)
               }
             setCalls(calls+1)
+            setBtLoading(false)
             setBikes(res?.data?.bikes)
             setLoader(false)
         }).catch((err) => {
@@ -171,6 +173,8 @@ function BikesPage({ setEditBike }) {
                             </table>
                             <div className='flex justify-end'>
                                 <Pagination
+                                btLoading={btLoading}
+                                setBtLoading={setBtLoading}
                                     totalPage={totalPage}
                                     skip={skip}
                                     setSkip={setSkip}

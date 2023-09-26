@@ -17,6 +17,7 @@ function UserManagement() {
   const [skip,setSkip] = useState(0)
   const [totalPage,setTotalPage] = useState(0)
   const [calls,setCalls] = useState(0)
+  const [btLoading,setBtLoading] = useState(false)
 
   const navigate = useNavigate()  
 
@@ -53,6 +54,7 @@ function UserManagement() {
       setCalls(calls+1)
       setUsers(res?.data?.users)
       setLoader(false)
+      setBtLoading(false)
     }).then((err) => {
       if (err?.response.status === 404) {
         navigate('/serverError')
@@ -146,6 +148,8 @@ function UserManagement() {
               <div className='flex justify-center'>
               <Pagination
           totalPage={totalPage}
+          btLoading={btLoading}
+          setBtLoading={setBtLoading}
           skip={skip}
           setSkip={setSkip}
         />

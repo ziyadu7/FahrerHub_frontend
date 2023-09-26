@@ -25,6 +25,7 @@ function MessagePage(props) {
     const [message, setMessage] = useState('')
     const [profile1, setProfile1] = useState(null)
     const [profile2, setProfile2] = useState(null)
+    const [reciever,setReciever] = useState(null) 
     const [loader, setLoader] = useState(false)
     const navigate = useNavigate()
 
@@ -36,7 +37,7 @@ function MessagePage(props) {
         return () => {
             socket.disconnect()
         }
-    }, [])
+    }, [chat])
 
     const loadChat = (userId, receiverId) => {
         setLoader(true)
@@ -50,7 +51,9 @@ function MessagePage(props) {
             if (res?.data?.chat.users[0]._id === userId) {
                 setProfile1(res?.data?.chat.users[0].profileImage)
                 setProfile2(res?.data?.chat.users[1].profileImage)
+                setReciever(res?.data?.chat?.users[1])
             } else {
+                setReciever(res?.data?.chat?.users[0])
                 setProfile2(res?.data?.chat.users[0].profileImage)
                 setProfile1(res?.data?.chat.users[1].profileImage)
             }
@@ -103,7 +106,6 @@ function MessagePage(props) {
     useEffect(() => {
         socket.on('messageResponse', (msg, room) => {
             if (room == chat?._id && msg?.sender?.toString() !== userId?.toString()) {
-                console.log('response in');
                 let updMsg = [...messages, msg];
                 setMessages(updMsg)
             }
@@ -120,7 +122,8 @@ function MessagePage(props) {
                     <div className="flex sm:flex sm:flex-col py-8 pl-6 overflow-x-scroll sm:overflow-y-scroll pr-2 gap-2 sm:w-64 bg-white flex-shrink-0">
                         <button onClick={() => navigate(-1)} className='bg-black hidden sm:block text-white hover:bg-white hover:text-black py-2 rounded-md'>Back</button>
                         {userId != head?._id ?
-                            <div onClick={() => loadChat(userId, head._id)} className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
+                            <div onClick={() =>
+                            head?._id!=reciever?._id?loadChat(userId, head._id):''} className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
 
                                 <div className="h-20 w-20 rounded-full border overflow-hidden">
                                     <img
@@ -136,7 +139,8 @@ function MessagePage(props) {
 
                         {users.length !== 0 ? users.map((user) => (
                             <>
-                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() => loadChat(userId, user?.rider?._id)} className={`flex flex-col items-center ${chat?.users.some(friend => friend._id == user?.rider?._id) ? "bg-indigo-300" : "bg-indigo-100"} border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg`}>
+                                {user.rider._id !== userId ? <div key={user.rider._id} onClick={() =>
+                                    reciever?._id!=user?.rider?._id?loadChat(userId, user?.rider?._id):''} className={`flex flex-col items-center ${chat?.users.some(friend => friend._id == user?.rider?._id) ? "bg-indigo-300" : "bg-indigo-100"} border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg`}>
                                     <div className="h-20 w-20 rounded-full border overflow-hidden">
                                         <img
                                             src={user.rider?.profileImage ? user.rider?.profileImage : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}
