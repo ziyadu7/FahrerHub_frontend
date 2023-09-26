@@ -171,6 +171,7 @@ function BikesPage({ setEditBike }) {
                                         )}
                                 </tbody>
                             </table>
+                        </div>
                             <div className='flex justify-end'>
                                 <Pagination
                                 btLoading={btLoading}
@@ -180,7 +181,6 @@ function BikesPage({ setEditBike }) {
                                     setSkip={setSkip}
                                 />
                             </div>
-                        </div>
                     </div>
                 </div>}
         </>

@@ -145,6 +145,7 @@ function UserManagement() {
               </tbody>
               
             </table>
+          </div>
               <div className='flex justify-center'>
               <Pagination
           totalPage={totalPage}
@@ -154,7 +155,6 @@ function UserManagement() {
           setSkip={setSkip}
         />
               </div>
-          </div>
         </div>
       </div>
     </>
