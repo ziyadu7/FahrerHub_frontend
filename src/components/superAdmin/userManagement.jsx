@@ -14,29 +14,29 @@ function UserManagement() {
   const [users, setUsers] = useState([])
   const [reload, setReload] = useState(false)
   const [loader, setLoader] = useState(true)
-  const [skip,setSkip] = useState(0)
-  const [totalPage,setTotalPage] = useState(0)
-  const [calls,setCalls] = useState(0)
-  const [btLoading,setBtLoading] = useState(false)
+  const [skip, setSkip] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+  const [calls, setCalls] = useState(0)
+  const [btLoading, setBtLoading] = useState(false)
 
-  const navigate = useNavigate()  
-
-  useEffect(() => {
-      fetchData()
-  }, [reload,skip])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if(search.trim()==''){
+    fetchData()
+  }, [reload, skip])
+
+  useEffect(() => {
+    if (search.trim() == '') {
       setCalls(0)
     }
-      setSkip(0)
-      let timer = setTimeout(() => {
-        fetchData();
-      }, 1000);
+    setSkip(0)
+    let timer = setTimeout(() => {
+      fetchData();
+    }, 1000);
 
-      return () => {
-        clearTimeout(timer);
-      };
+    return () => {
+      clearTimeout(timer);
+    };
 
 
   }, [search])
@@ -48,14 +48,15 @@ function UserManagement() {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      if(calls==0||search.trim()!=''){
+      if (calls == 0 || search.trim() != '') {
         setTotalPage(res?.data?.length)
       }
-      setCalls(calls+1)
+      setCalls(calls + 1)
       setUsers(res?.data?.users)
       setLoader(false)
       setBtLoading(false)
     }).then((err) => {
+      setBtLoading(false)
       if (err?.response.status === 404) {
         navigate('/serverError')
       } else if (err?.response.status == 403) {
@@ -143,18 +144,18 @@ function UserManagement() {
                     </tr>
                   )}
               </tbody>
-              
+
             </table>
           </div>
-              <div className='flex justify-center'>
-              <Pagination
-          totalPage={totalPage}
-          btLoading={btLoading}
-          setBtLoading={setBtLoading}
-          skip={skip}
-          setSkip={setSkip}
-        />
-              </div>
+          <div className='flex justify-center'>
+            <Pagination
+              totalPage={totalPage}
+              btLoading={btLoading}
+              setBtLoading={setBtLoading}
+              skip={skip}
+              setSkip={setSkip}
+            />
+          </div>
         </div>
       </div>
     </>
