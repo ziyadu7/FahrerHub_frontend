@@ -107,6 +107,7 @@ function ProfilePage() {
     }
 
     const handleImageChange = (img) => {
+        setErr('')
         console.log(img?.target?.files[0], 'profile image');
         if (isValidImage(img?.target?.files[0].name)) {
             if (img?.target?.files[0]?.size > 1 * 1024 * 1024) {

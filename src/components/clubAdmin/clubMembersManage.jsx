@@ -101,13 +101,13 @@ function ClubMembersManage() {
                   ? members.filter((member) => member.member.name.toLowerCase().includes(search) || member.member.email.toLowerCase().includes(search)).map((member, index) =>
                     <tr key={member._id} className="border-b dark:border-neutral-500">
 
-                      <td className="whitespace-nowrap px-6 py-4 font-medium">{member.member.name}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{member.member.email}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{member.member.phone}</td>
+                      <td className="whitespace-nowrap px-6 py-4 font-medium">{member?.member?.name}</td>
+                      <td className="whitespace-nowrap px-6 py-4">{member?.member?.email}</td>
+                      <td className="whitespace-nowrap px-6 py-4">{member?.member?.phone||'Number Not Provided'}</td>
                       <td className="whitespace-nowrap flex justify-between px-6 py-4">
                         {member.isAccepted == false ? <div><span onClick={() => {
                           const accepted = false
-                          changeStatus(member.member._id, accepted)
+                          changeStatus(member?.member?._id, accepted)
                         }} className='text-red-700 me-2'>decline</span><span onClick={() => {
                           const accepted = true
                           changeStatus(member.member._id, accepted)

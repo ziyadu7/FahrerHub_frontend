@@ -15,6 +15,7 @@ function ClubAddImage() {
   const [reload, setReload] = useState(false)
   const { clubToken } = useSelector((state) => state.ClubMember)
   const [loader, setLoader] = useState(true)
+  const [btnLoader,setBtnLoader] = useState(false)
   const [currentIndex, manageIndex] = useState(0)
 
   const navigate = useNavigate()
@@ -59,6 +60,7 @@ function ClubAddImage() {
 
   const postImage = async () => {
     if (image != '') {
+      setBtnLoader(true)
       const formData = new FormData();
       formData.append('image',image)
       axiosInstance.post('/clubAdmin/addImage', formData, {
@@ -68,9 +70,13 @@ function ClubAddImage() {
         }
       }).then((res) => {
         toast.success(res.data.message)
+        setImage('')
+        setBtnLoader(false)
         setReload(!reload)
         setAddImage(false)
       }).catch((err) => {
+        setImage('')
+        setBtnLoader(false)
         if (err.response.status === 404) {
           navigate('/serverError')
         } else if (err.response.status == 403) {
@@ -115,7 +121,7 @@ function ClubAddImage() {
           <div>
             <div className='flex justify-between'>
               <button onClick={() => setAddImage(false)} className='bg-transparent border-2 hover:bg-red-600 border-red-700 text-black py-1 px-2 rounded-md'>Cancel</button>
-              <button onClick={() => postImage()} className='bg-black text-white py-1 px-2 rounded-md'>Confirm</button>
+              <button onClick={() => postImage()} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{btnLoader ? <div className='flex'><div className="h-5 w-5 border-t-transparent border-solid animate-spin rounded-full border-white border-4"></div><p className="ml-2"> Processing... </p></div> : 'Confirm'} </button>
             </div>
             <div className="mb-4 flex justify-center mx-auto">
               <div>

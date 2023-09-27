@@ -192,7 +192,7 @@ function SingleRide() {
             </div>
           </div>
           <div className='container backdrop-blur-sm -z-0 mx-auto px-5 py-2 lg:px-32 flex flex-col items-center lg:flex-row relative lg:pt-24  '>
-            <img src={ride?.image} className='w-full h-96 -z-0 rounded-lg object-cover' alt='' />
+            <img src={ride?.image} className='w-auto h-96 -z-0 rounded-lg object-cover' alt='' />
             <div className='bg-blue-500 absolute top-10 h-6 rounded-lg'>
               <div className='flex justify-between gap-1'>
                 <p className='text-white text-center'>
@@ -201,12 +201,12 @@ function SingleRide() {
 
               </div>
             </div>
-            <div className='justify-between mt-4 lg:mt-0 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8'>
+          </div>
+            <div className='justify-between backdrop-blur-sm mt-4 lg:mt-0 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8'>
               <p className='mb-2'>
                 <span className='font-semibold'>Description : </span> {ride.description}
               </p>
             </div>
-          </div>
 
           {isModalOpen && (
             <div tabIndex='-1' aria-hidden='true' className='fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50'>
