@@ -4,6 +4,8 @@ import { toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
 import { CgSpinner } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
+import isValidImage from '../../helpers/isValidImage'
+import ImageSlider from '../custom/imageSlider'
 
 function CreateClub(props) {
 
@@ -14,6 +16,7 @@ function CreateClub(props) {
     const [err, setErr] = useState('')
     const [isPrivate, setIsPrivate] = useState(true)
     const [submited, setSubmited] = useState(false)
+    const [currentIndex, manageIndex] = useState(0)
     const navigate = useNavigate()
 
     const setModal = props.setModal
@@ -23,22 +26,32 @@ function CreateClub(props) {
 
     const handleSubmit = async () => {
         if (clubName.trim().length == 0 || city.trim().length == 0 || logo == '' || year == '') {
+            setSubmited(false)
             setErr("Fill all the fields")
         } else if (new Date(year) >= new Date()) {
+            setSubmited(false)
             setErr("Enter correct date")
         } else {
-            axiosInstance.post('/user/createClub', { clubName, city, year, logo, isPrivate }, {
+            const formData = new FormData();
+            formData.append('image',logo)
+            formData.append('clubName',clubName)
+            formData.append('city',city)
+            formData.append('year',year)
+            formData.append('isPrivate',isPrivate)
+            axiosInstance.post('/user/createClub', formData, {
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             }).then((res) => {
+                setSubmited(false)
                 if (res.status == 200) {
-                    setSubmited(false)
                     toast.success(res.data.message)
                     setChange(!change)
                 }
                 setModal(false)
             }).catch((err) => {
+                setSubmited(false)
                 if (err.response.status === 404) {
                     navigate('/serverError')
                 } else if (err.response.status == 403) {
@@ -47,7 +60,6 @@ function CreateClub(props) {
                     setSubmited(false)
                     navigate('/serverError')
                 } else if (err?.response?.data) {
-                    setSubmited(false)
                     toast.error(err?.response?.data?.errMsg)
                 }
             })
@@ -55,31 +67,14 @@ function CreateClub(props) {
         }
     }
 
-    function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png',];
-
-        const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-        return validExtensions.includes(extension);
-    }
-
-    const handleImageChange = (img) => {
-        if (isValidImage(img?.target?.files[0].name)) {
-            if (img.target.files[0].size > 1 * 1024 * 1024) {
-                toast.error('Image size should be less than 1 MB');
-                return;
-            }
-            let reader = new FileReader()
-            reader.readAsDataURL(img.target.files[0])
-            reader.onload = () => {
-                setLogo(reader.result)
-            }
-            reader.onerror = (err) => {
-                console.log(err);
-            }
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        const imageFile = isValidImage(file)
+        if (imageFile) {
+          setLogo(file)
+          manageIndex(0)
         } else {
-
-            toast.error('Please add valid image')
+          toast.error('Add valid image')
         }
 
     }
@@ -162,13 +157,13 @@ function CreateClub(props) {
                                         </div>
                                         <div>
                                             <div className="">
-                                                <div className='md:flex'>
-                                                    <img
+                                                <div className=''>
+                                                {logo ? <ImageSlider images={[logo]} height={'h-26'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-42'} />:<img
                                                         src={
-                                                            logo ? logo : "https://www.lighting.philips.com/content/dam/b2b-philips-lighting/ecat-fallback.png?wid=855&qlt=82"}
+                                                             "https://www.lighting.philips.com/content/dam/b2b-philips-lighting/ecat-fallback.png?wid=855&qlt=82"
+                                                        }
                                                         alt="...."
-                                                        className="avatar"
-                                                    />
+                                                    />}
                                                 </div>
                                                 <div className="pt-5">
                                                     <input
