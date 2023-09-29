@@ -4,6 +4,7 @@ import LocationManage from './locationManage'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom';
 import ImageSlider from '../custom/imageSlider';
+import isValidImage from '../../helpers/isValidImage';
 
 function AddBikeForm(props) {
 
@@ -38,17 +39,12 @@ function AddBikeForm(props) {
         })
     }, [])
 
-    const isImage = (file) => {
-        const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/avif", "image/png", "image/gif", "image/webp"]; // Add more types if necessary
-        return acceptedImageTypes.includes(file.type);
-    };
-
     const handleImageChange = (event) => {
         const files = Array.from(event.target.files);
         if (files.length > 4) {
             toast.error('Maximum 4 images allowed')
         } else {
-            const imageFiles = files.filter(isImage);
+            const imageFiles = files.filter(isValidImage);
             if (imageFiles.length === files.length) {
                 setImages(files);
                 manageIndex(0)

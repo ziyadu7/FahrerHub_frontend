@@ -6,6 +6,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import Loader from '../user/loader';
 import { useNavigate } from 'react-router-dom';
 import ImageSlider from '../custom/imageSlider';
+import isValidImage from '../../helpers/isValidImage';
 
 function ClubAddImage() {
 
@@ -41,15 +42,11 @@ function ClubAddImage() {
     })
   }, [reload])
 
-  const isImage = (file) => {
-    const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/avif", "image/png", "image/gif", "image/webp"]
-    return acceptedImageTypes.includes(file.type);
-  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0]
 
-    const imageFile = isImage(file)
+    const imageFile = isValidImage(file)
     if (imageFile) {
       setImage(file);
       manageIndex(0)
