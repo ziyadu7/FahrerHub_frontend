@@ -6,6 +6,8 @@ import { FaUsers } from 'react-icons/fa'
 import { Toaster, toast } from 'react-hot-toast'
 import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
+import ImageSlider from '../custom/imageSlider'
+import isValidImage from '../../helpers/isValidImage'
 
 
 function ClubAdminHead(props) {
@@ -19,6 +21,7 @@ function ClubAdminHead(props) {
   const [startedYear, setStartedYear] = useState(club.startedYear)
   const [logo, setNewLogo] = useState(club.logo)
   const [err, setErr] = useState('')
+  const [currentIndex, manageIndex] = useState(0)
   const { clubToken } = useSelector((store) => store.ClubMember)
 
 
@@ -28,9 +31,15 @@ function ClubAdminHead(props) {
     if (clubName.trim().length == 0 || city.trim().length == 0 || logo == '' || startedYear == '') {
       setErr("Fill all the fields")
     } else {
-      axiosInstance.patch('/clubAdmin/editClub', { clubName, city, startedYear, logo }, {
+      const formData = new FormData();
+      formData.append('image',logo)
+      formData.append('clubName',clubName)
+      formData.append('city',city)
+      formData.append('startedYear',startedYear)
+      axiosInstance.patch('/clubAdmin/editClub', formData, {
         headers: {
-          authorization: `Bearer ${clubToken}`
+          authorization: `Bearer ${clubToken}`,
+          'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
         if (res.status == 200) {
@@ -51,26 +60,14 @@ function ClubAdminHead(props) {
     }
   }
 
-  function isValidImage(logo) {
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-
-    const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-    return validExtensions.includes(extension);
-  }
-
-  const handleImageChange = (img) => {
-    if (isValidImage(img.target.files[0].name)) {
-      let reader = new FileReader()
-      reader.readAsDataURL(img.target.files[0])
-      reader.onload = () => {
-        setNewLogo(reader.result)
-      }
-      reader.onerror = (err) => {
-        console.log(err);
-      }
+  const handleImageChange = (event) => {
+    const file = event.target.files[0]
+    const imageFile = isValidImage(file)
+    if (imageFile) {
+      setNewLogo(file)
+      manageIndex(0)
     } else {
-      setErr('Add valid image')
+      toast.error('Add valid image')
     }
   };
   return (
@@ -117,7 +114,7 @@ function ClubAdminHead(props) {
             </div>
             <div className="col-span-3">
               <label className="block text-sm font-medium leading-6 text-gray-900">Logo Image</label>
-              <img src={logo} alt="" />
+              <ImageSlider images={[logo]} height={'h-26'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-42'} />
               <div className="mt-2">
                 <input
                   type="file"

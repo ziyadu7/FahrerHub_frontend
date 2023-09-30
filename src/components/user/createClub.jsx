@@ -23,7 +23,7 @@ function CreateClub(props) {
     const setChange = props.setChange
     const change = props.change
     const token = props.token
-
+ 
     const handleSubmit = async () => {
         if (clubName.trim().length == 0 || city.trim().length == 0 || logo == '' || year == '') {
             setSubmited(false)
