@@ -4,6 +4,8 @@ import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import isValidImage from '../../helpers/isValidImage'
+import ImageSlider from '../custom/imageSlider'
 
 function CreateRideFrom(props) {
 
@@ -17,19 +19,56 @@ function CreateRideFrom(props) {
     const [fromLatitude, setFromLatitude] = useState('')
     const [toLongitude, setToLongitude] = useState('')
     const [toLatitude, setToLatitude] = useState('')
+    const [stop1Longitude, setStop1Longitude] = useState('')
+    const [stop2Longitude, setStop2Longitude] = useState('')
+    const [stop1Latitude, setStop1Latitude] = useState('')
+    const [stop2Latitude, setStop2Latitude] = useState('')
+    const [stop1, setStop1] = useState('')
+    const [stop2, setStop2] = useState('')
+    const [currentIndex, manageIndex] = useState(0)
+
     const [fromSug, setFromSug] = useState(false)
     const [toSug, setToSug] = useState(false)
+    const [stop1Sug, setStop1Sug] = useState(false)
+    const [stop2Sug, setStop2Sug] = useState(false)
 
     const [step, setStep] = useState(1);
 
 
     const handleNext = () => {
         setStep(step + 1);
-    };
+    }
+
+    const clearForm = () => {
+        setStartDate('')
+        setEndDate('')
+        setFromSug(false)
+        setFrom('');
+        setFromLatitude('')
+        setFromLongitude('')
+        setToSug(false)
+        setDestination('');
+        setToLatitude('')
+        setToLongitude('')
+        setDescription('')
+        setRidersCound('')
+        setStop1Sug(false)
+        setStop1('');
+        setStop1('')
+        setStop1Latitude('')
+        setStop1Longitude('')
+        setStop2Sug(false)
+        setStop2('');
+        setStop2('')
+        setStop2Latitude('')
+        setStop2Longitude('')
+        setImage('')
+
+    }
 
     const handlePrev = () => {
         setStep(step - 1);
-    };
+    }
 
     const navigate = useNavigate()
 
@@ -40,14 +79,38 @@ function CreateRideFrom(props) {
     const [maxRiders, setRidersCound] = useState(0)
 
     const handleSubmit = async () => {
-        if (from.trim().length == 0 || destination.trim().length == 0 || image == '' || fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
+        if (from.trim().length == 0 || destination.trim().length == 0 ||stop1.trim().length==0||stop2.trim().length==0||stop1Latitude==''||stop1Longitude==''||stop2Latitude==''||stop2Longitude==''|| image == '' || fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
             toast.error('Fill all the fiels')
         } else if (new Date() >= new Date(startDate) || startDate == endDate || new Date() >= new Date(endDate)) {
             toast.error('Enter correct dates')
         } else {
-            axiosInstance.post('/club/createRide', { startDate, endDate, from, image, destination, maxRiders, description, fromLatitude, fromLongitude, toLatitude, toLongitude }, {
+            if(!isValidImage(image)){
+                toast.error('Add valid image')
+                return 
+            }
+            const formData = new FormData();
+            formData.append('startDate',startDate)
+            formData.append('endDate',endDate)
+            formData.append('from',from)
+            formData.append('image',image)
+            formData.append('destination',destination)
+            formData.append('maxRiders',maxRiders)
+            formData.append('description',description)
+            formData.append('fromLatitude',fromLatitude)
+            formData.append('fromLongitude',fromLongitude)
+            formData.append('toLatitude',toLatitude)
+            formData.append('toLongitude',toLongitude)
+            formData.append('stop1',stop1)
+            formData.append('stop2',stop2)
+            formData.append('stop1Latitude',stop1Latitude)
+            formData.append('stop1Longitude',stop1Longitude)
+            formData.append('stop2Latitude',stop2Latitude)
+            formData.append('stop2Longitude',stop2Longitude)
+
+            axiosInstance.post('/club/createRide', formData, {
                 headers: {
-                    authorization: `Bearer ${clubToken}`
+                    authorization: `Bearer ${clubToken}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             }).then((res) => {
                 toast.success(res?.data?.message)
@@ -66,31 +129,16 @@ function CreateRideFrom(props) {
         }
     }
 
-    function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-
-        const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-        return validExtensions.includes(extension);
-    }
-
-    const handleImageChange = (img) => {
-        if (isValidImage(img?.target?.files[0]?.name)) {
-            if (img.target.files[0].size > 1 * 1024 * 1024) {
-                toast.error('Image size should be less than 1 MB');
-                return;
-            }
-            let reader = new FileReader()
-            reader.readAsDataURL(img.target.files[0])
-            reader.onload = () => {
-                setImage(reader.result)
-            }
-            reader.onerror = (err) => {
-                console.log(err);
-            }
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        const imageFile = isValidImage(file)
+        if (imageFile) {
+          setImage(file)
+          manageIndex(0)
         } else {
-            toast.error('Please add valid image')
+          toast.error('Add valid image')
         }
+
     }
 
     const [locationSuggestions, setLocationSuggestions] = useState([]);
@@ -256,9 +304,88 @@ function CreateRideFrom(props) {
             )}
             {step === 4 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Stop Location 1</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    setStop1Sug(true)
+                                    setStop1(e.target.value);
+                                    handleLocationSuggestion(e.target.value)
+                                }}
+                                value={stop1}
+                                placeholder={stop1 || 'Stop Location 1'}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+
+                            <ul>
+                                {stop1Sug && locationSuggestions.map((suggestion) => (
+                                    <li key={suggestion.id}>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setStop1Sug(false)
+                                                setStop1(suggestion.place_name)
+                                                setLocationSuggestions([])
+
+                                                const [long, lat] = suggestion?.geometry.coordinates;
+                                                setStop1Latitude(lat)
+                                                setStop1Longitude(long)
+                                            }}
+                                        >
+                                            {suggestion.place_name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Stop Location 2</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    setStop2Sug(true)
+                                    setStop2(e.target.value);
+                                    handleLocationSuggestion(e.target.value)
+                                }}
+                                value={stop2}
+                                placeholder={stop2 || 'Stop Location 2'}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                            <ul>
+                                {stop2Sug && locationSuggestions.map((suggestion) => (
+                                    <li key={suggestion.id}>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setStop2Sug(false)
+                                                setStop2(suggestion.place_name)
+                                                setLocationSuggestions([])
+                                                const [long, lat] = suggestion?.geometry.coordinates;
+                                                setStop2Latitude(lat)
+                                                setStop2Longitude(long)
+                                            }}
+                                        >
+                                            {suggestion.place_name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {step === 5 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="col-span-3">
                         <label className="block text-sm font-medium leading-6 text-gray-900">Location image</label>
-                        <img src={image} alt="" />
+                        <ImageSlider images={[image]} height={'h-26'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-42'} />
                         <div className="mt-2">
                             <input
                                 type="file"
@@ -272,7 +399,7 @@ function CreateRideFrom(props) {
             )}
 
             <div className="modal-action">
-               <button className="hover:bg-white py-2 px-4 border border-black-500 hover:border-black rounded mb-4">
+                <button className="hover:bg-white py-2 px-4 border border-black-500 hover:border-black rounded mb-4" onClick={clearForm}>
                     Close
                 </button>
                 {step > 1 && (
@@ -280,12 +407,12 @@ function CreateRideFrom(props) {
                         Previous
                     </button>
                 )}
-                {step < 4 ? (
+                {step < 5 ? (
                     <button type="button" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleNext}>
                         Next
                     </button>
                 ) : (
-                    <button type="button" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
+                    <button className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
                         Confirm
                     </button>
                 )}
