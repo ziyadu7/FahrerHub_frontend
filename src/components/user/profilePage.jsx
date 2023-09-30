@@ -8,6 +8,8 @@ import Loader from './loader'
 import '../../assets/css/club/upcomingRides.css'
 import { CgSpinner } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
+import ImageSlider from '../custom/imageSlider'
+import isValidImage from '../../helpers/isValidImage'
 
 
 function ProfilePage() {
@@ -28,6 +30,7 @@ function ProfilePage() {
     const [err, setErr] = useState('')
     const [showBike, setShowBike] = useState(false)
     const navigate = useNavigate()
+    const [currentIndex, manageIndex] = useState(0)
     const regex_mobile = /^\d{10}$/
 
 
@@ -74,9 +77,15 @@ function ProfilePage() {
             if (mobile == phone) {
                 mobile = false
             }
-            axiosInstance.patch('/user/editProfile', { name, profileImage, mobile }, {
+
+            const formData = new FormData();
+            formData.append('name',name)
+            formData.append('image',profileImage)
+            formData.append('mobile',mobile)
+            axiosInstance.patch('/user/editProfile', formData, {
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             }).then((res) => {
                 toast.success(res.data.message)
@@ -98,36 +107,17 @@ function ProfilePage() {
         }
     }
 
-    function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp','.avif'];
-
-        const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-        return validExtensions.includes(extension);
-    }
-
-    const handleImageChange = (img) => {
-        setErr('')
-        console.log(img?.target?.files[0], 'profile image');
-        if (isValidImage(img?.target?.files[0].name)) {
-            if (img?.target?.files[0]?.size > 1 * 1024 * 1024) {
-                setErr('Image size should be less than 1 MB');
-                setSubmitLoad(false)
-                return;
-            }
-            let reader = new FileReader()
-            reader.readAsDataURL(img.target.files[0])
-            reader.onload = () => {
-                setNewProfile(reader.result)
-            }
-            reader.onerror = (err) => {
-                console.log(err);
-            }
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        const imageFile = isValidImage(file)
+        if (imageFile) {
+          setNewProfile(file)
+          manageIndex(0)
         } else {
-            setErr('Add valid image')
-            setSubmitLoad(false)
+          toast.error('Add valid image')
         }
-    };
+
+    }
 
     const returnBike = (rentId, bikeId) => {
         axiosInstance.patch('/user/returnBike', { rentId, bikeId }, {
@@ -187,11 +177,11 @@ function ProfilePage() {
                                                         <div className=''>
                                                             <div>
                                                                 <div className='md:flex'>
-                                                                    <img
-                                                                        src={profileImage ? profileImage : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
+                                                                {profileImage ? <ImageSlider images={[profileImage]} height={'h-26'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-42'} /> :<img
+                                                                        src= "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                                                         alt="...."
                                                                         className="avatar"
-                                                                    />
+                                                                    />}
                                                                 </div>
                                                                 <div className="pt-5">
                                                                     <input

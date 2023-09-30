@@ -43,7 +43,7 @@ function CreateClub(props) {
                     authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
-            }).then((res) => {
+            }).then((res) => { 
                 setSubmited(false)
                 if (res.status == 200) {
                     toast.success(res.data.message)
