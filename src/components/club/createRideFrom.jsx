@@ -19,6 +19,18 @@ function CreateRideFrom(props) {
     const [toLatitude, setToLatitude] = useState('')
     const [fromSug, setFromSug] = useState(false)
     const [toSug, setToSug] = useState(false)
+
+    const [step, setStep] = useState(1);
+
+
+    const handleNext = () => {
+        setStep(step + 1);
+    };
+
+    const handlePrev = () => {
+        setStep(step - 1);
+    };
+
     const navigate = useNavigate()
 
 
@@ -27,7 +39,7 @@ function CreateRideFrom(props) {
     const [description, setDescription] = useState('')
     const [maxRiders, setRidersCound] = useState(0)
 
-    const handeSubmit = async () => {
+    const handleSubmit = async () => {
         if (from.trim().length == 0 || destination.trim().length == 0 || image == '' || fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
             toast.error('Fill all the fiels')
         } else if (new Date() >= new Date(startDate) || startDate == endDate || new Date() >= new Date(endDate)) {
@@ -41,9 +53,9 @@ function CreateRideFrom(props) {
                 toast.success(res?.data?.message)
                 setRefresh(!refresh)
             }).catch((err) => {
-                if(err.response.status === 404){
+                if (err.response.status === 404) {
                     navigate('/serverError')
-                }else if (err.response.status == 403) {
+                } else if (err.response.status == 403) {
                     navigate('/accessDenied')
                 } else if (err.response.status == 500) {
                     navigate('/serverError')
@@ -83,14 +95,13 @@ function CreateRideFrom(props) {
 
     const [locationSuggestions, setLocationSuggestions] = useState([]);
 
-    // Function to get location suggestions from Mapbox Geocoding API
     const getLocationSuggestions = async (query) => {
         const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOXTOKEN
         const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json`;
         const params = {
             access_token: MAPBOX_API_KEY,
-            types: 'place', // Limit results to places only
-            limit: 5, // Number of suggestions to retrieve
+            types: 'place',
+            limit: 5,
             country: "IN"
         };
 
@@ -101,165 +112,187 @@ function CreateRideFrom(props) {
             console.error('Error fetching location suggestions:', error);
             return [];
         }
-    };
+    }
 
-    // Function to handle location suggestion selection
     const handleLocationSuggestion = async (query) => {
-        // Get location suggestions when the user types
         const suggestions = await getLocationSuggestions(query);
         setLocationSuggestions(suggestions);
     };
 
-    return (
-        <form method="dialog" className="modal-box disableBar overflow-y-scroll bg-slate-300">
-            <h3 className="font-bold text-lg text-center">Create Ride</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">Start date</label>
-                    <div className="mt-2">
-                        <input
-                            type="date"
-                            min={new Date().toISOString().split('T')[0]}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
+    return (<>
+        <form method="dialog" className="modal-box disableBar overflow-y-auto bg-slate-300">
+            <h3 className="font-bold text-lg text-center">Create Ride - Step {step}</h3>
+            {step === 1 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Start date</label>
+                        <div className="mt-2">
+                            <input
+                                type="date"
+                                min={new Date().toISOString().split('T')[0]}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">End date</label>
+                        <div className="mt-2">
+                            <input
+                                type="date"
+                                min={new Date().toISOString().split('T')[0]}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">End date</label>
-                    <div className="mt-2">
-                        <input
-                            type="date"
-                            min={new Date().toISOString().split('T')[0]}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                    </div>
-                </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">From</label>
-                    <div className="mt-2">
-                        <input
-                            type="text"
-                            onChange={(e) => {
-                                setFromSug(true)
-                                setFrom(e.target.value);
-                                handleLocationSuggestion(e.target.value); // Fetch suggestions as the user types
-                            }}
-                            value={from}
-                            placeholder={from || 'Start location'}
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        {/* Display location suggestions */}
-                        <ul>
-                            {fromSug && locationSuggestions.map((suggestion) => (
-                                <li key={suggestion.id}>
-                                    {/* Assuming you want to display the place name as a suggestion */}
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setFromSug(false)
-                                            setFrom(suggestion.place_name); // Update the input field with the selected suggestion
-                                            setLocationSuggestions([]); // Clear the suggestions list
-                                            // Now you can also get the longitude and latitude from suggestion.geometry.coordinates
-                                            const [long, lat] = suggestion?.geometry.coordinates;
-                                            setFromLatitude(lat)
-                                            setFromLongitude(long)
-                                        }}
-                                    >
-                                        {suggestion.place_name}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">Destination</label>
-                    <div className="mt-2">
-                        <input
-                            type="text"
-                            onChange={(e) => {
-                                setToSug(true)
-                                setDestination(e.target.value);
-                                handleLocationSuggestion(e.target.value); // Fetch suggestions as the user types
-                            }}
-                            value={destination}
-                            placeholder={destination || 'destination'}
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        <ul>
-                            {toSug && locationSuggestions.map((suggestion) => (
-                                <li key={suggestion.id}>
-                                    {/* Assuming you want to display the place name as a suggestion */}
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setToSug(false)
-                                            console.log(suggestion, '][][]][][][][[][][');
-                                            setDestination(suggestion.place_name); // Update the input field with the selected suggestion
-                                            setLocationSuggestions([]); // Clear the suggestions list
-                                            // Now you can also get the longitude and latitude from suggestion.geometry.coordinates
-                                            const [long, lat] = suggestion?.geometry.coordinates;
-                                            setToLatitude(lat)
-                                            setToLongitude(long)
-                                        }}
-                                    >
-                                        {suggestion.place_name}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 p-1 text-gray-900">Description</label>
-                    <div className="mt-2">
-                        <textarea
-                            type="text"
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder='Description about basic requirements'
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                    </div>
-                </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">Max Count of rides</label>
-                    <div className="mt-2">
-                        <input
-                            type="number"
-                            onChange={(e) => setRidersCound(e.target.value)}
-                            placeholder='max riders'
-                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                    </div>
-                </div>
-                <div className="col-span-3">
-                    <label className="block text-sm font-medium leading-6 text-gray-900">Location image</label>
-                    <img src={image} alt="" />
-                    <div className="mt-2">
-                        <input
-                            type="file"
-                            onChange={handleImageChange}
-                            placeholder='max riders'
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                    </div>
-                </div>
+            )}
+            {step === 2 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-            </div>
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">From</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    setFromSug(true)
+                                    setFrom(e.target.value);
+                                    handleLocationSuggestion(e.target.value)
+                                }}
+                                value={from}
+                                placeholder={from || 'Start location'}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+
+                            <ul>
+                                {fromSug && locationSuggestions.map((suggestion) => (
+                                    <li key={suggestion.id}>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setFromSug(false)
+                                                setFrom(suggestion.place_name)
+                                                setLocationSuggestions([])
+
+                                                const [long, lat] = suggestion?.geometry.coordinates;
+                                                setFromLatitude(lat)
+                                                setFromLongitude(long)
+                                            }}
+                                        >
+                                            {suggestion.place_name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Destination</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    setToSug(true)
+                                    setDestination(e.target.value);
+                                    handleLocationSuggestion(e.target.value)
+                                }}
+                                value={destination}
+                                placeholder={destination || 'destination'}
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                            <ul>
+                                {toSug && locationSuggestions.map((suggestion) => (
+                                    <li key={suggestion.id}>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setToSug(false)
+                                                setDestination(suggestion.place_name)
+                                                setLocationSuggestions([])
+                                                const [long, lat] = suggestion?.geometry.coordinates;
+                                                setToLatitude(lat)
+                                                setToLongitude(long)
+                                            }}
+                                        >
+                                            {suggestion.place_name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {step === 3 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 p-1 text-gray-900">Description</label>
+                        <div className="mt-2">
+                            <textarea
+                                type="text"
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder='Description about basic requirements'
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Max Count of rides</label>
+                        <div className="mt-2">
+                            <input
+                                type="number"
+                                onChange={(e) => setRidersCound(e.target.value)}
+                                placeholder='max riders'
+                                className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {step === 4 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="col-span-3">
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Location image</label>
+                        <img src={image} alt="" />
+                        <div className="mt-2">
+                            <input
+                                type="file"
+                                onChange={handleImageChange}
+                                placeholder='max riders'
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="modal-action">
-                <button className="hover:bg-white py-2 px-4 border border-black-500 hover:border-black rounded mb-4">
+               <button className="hover:bg-white py-2 px-4 border border-black-500 hover:border-black rounded mb-4">
                     Close
                 </button>
-                <button
-                    onClick={() => handeSubmit()}
-                    className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4"
-                >
-                    Confirm
-                </button>
+                {step > 1 && (
+                    <button type="button" className="hover:bg-white py-2 px-4 border border-black-500 hover:border-black rounded mb-4" onClick={handlePrev}>
+                        Previous
+                    </button>
+                )}
+                {step < 4 ? (
+                    <button type="button" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleNext}>
+                        Next
+                    </button>
+                ) : (
+                    <button type="button" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
+                        Confirm
+                    </button>
+                )}
             </div>
         </form>
+    </>
+
     )
 }
 
