@@ -251,7 +251,7 @@ function SingleRide() {
               <h1 onClick={() => setMap(!map)} className='text-center hover:font-bold text-white mt-2'>{map ? 'Riders' : 'Route Map'}</h1>
             </div>
             {map ? <div>
-              <RouteMap startLatitude={ride?.fromLocation?.latitude} startLongitude={ride?.fromLocation?.longitude} endLatitude={ride?.destinationLocation?.latitude} endLongitude={ride?.destinationLocation?.longitude} />
+              <RouteMap stop1Latitude={ride?.stop1Location?.latitude} stop2Latitude={ride?.stop2Location?.latitude} stop2Longitude={ride?.stop2Location?.longitude} stop1Longitude={ride?.stop1Location?.longitude} startLatitude={ride?.fromLocation?.latitude} startLongitude={ride?.fromLocation?.longitude} endLatitude={ride?.destinationLocation?.latitude} endLongitude={ride?.destinationLocation?.longitude} />
             </div> : <div className='justify-center container px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 mx-auto lg:max-w-6xl md:items-center md:px-8'>
               {ride?.riders.map((rider) => (
                 <RiderCard userId={userId} ride={ride} rider={rider} removeRider={removeRider} />
