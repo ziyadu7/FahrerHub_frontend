@@ -412,7 +412,7 @@ function CreateRideFrom(props) {
                         Next
                     </button>
                 ) : (
-                    <button className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
+                    <button type="" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
                         Confirm
                     </button>
                 )}
