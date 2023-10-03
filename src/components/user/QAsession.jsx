@@ -19,21 +19,13 @@ function QAsession() {
 
 
   useEffect(() => {
-    const cachedData = localStorage.getItem('questions')
-    if (cachedData) {
-      setQuestions(JSON.parse(cachedData));
-      setLoader(false)
-    }
     axiosInstance.get('/user/getQuestions', {
       headers: {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      if (!cachedData || JSON.parse(cachedData).length !== res?.data?.questions?.length) {
         setQuestions(res?.data?.questions)
-        localStorage.setItem('questions', JSON.stringify(res?.data?.questions));
         setLoader(false)
-      }
     }).catch((err) => {
       errorFunction(err,navigate)
     })

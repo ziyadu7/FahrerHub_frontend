@@ -1,6 +1,7 @@
 import { toast } from 'react-hot-toast'
 
 function errorFunction(err,navigate){
+  console.log(err);
     if (err?.response?.status === 404) {
         navigate('/serverError')
       } else if (err?.response?.status == 403) {

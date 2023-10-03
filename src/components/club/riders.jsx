@@ -28,10 +28,10 @@ function RidersBody() {
       }
     }).then((res) => {
       if (!cachedData || JSON.parse(cachedData).length !== res?.data?.riders?.length) {
-        setRiders(res?.data?.rides)
         localStorage.setItem('riders', JSON.stringify(res?.data?.riders));
-        setLoader(false)
+        setRiders(res?.data?.riders)
       }
+      setLoader(false)
       // setRiders(res.data.riders)
       setAdmin(res?.data?.admin)
       // setLoader(false)
@@ -49,10 +49,11 @@ function RidersBody() {
         <div className="justify-between mt-2 sm:mt-5 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8">
           <div className="text-center container py-5">
             <div className="grid sm:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {loader ? '' : <RidersCard admin={admin} />}
-              {riders?.filter((rider) => admin?.admin?._id !== rider?.member?._id && rider?.member?.name.toLowerCase().includes(search)).map((rider) => (
+              {loader ? '' : <><RidersCard admin={admin} />
+             {riders?.filter((rider) => admin?.admin?._id !== rider?.member?._id && rider?.member?.name.toLowerCase().includes(search)).map((rider) => (
                 <RidersCard key={rider?._id} rider={rider} />
-              ))}
+              ))}</>
+}
             </div>
           </div>
         </div>

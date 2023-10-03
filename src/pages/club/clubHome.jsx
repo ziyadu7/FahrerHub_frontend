@@ -32,6 +32,12 @@ function ClubHome() {
     }).catch((err) => {
       errorFunction(err,navigate)
     })
+
+    return ()=>{
+      localStorage.removeItem('rides');
+      localStorage.removeItem('currentRides');
+      localStorage.removeItem('riders');
+    }
   }, [])
   return (
     <div><Toaster toastOptions={{ duration: 4000 }} />{club ? <div><ClubHead setPage={setPage} page={page} club={club} />{

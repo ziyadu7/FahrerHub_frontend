@@ -30,7 +30,6 @@ function QuestionAnswer(props) {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      console.log(res?.data?.answers);
       setQuestion((prevQuestion) => {
         return {
           ...prevQuestion,
