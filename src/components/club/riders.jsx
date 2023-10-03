@@ -11,19 +11,29 @@ function RidersBody() {
   const [search, setSearch] = useState('')
   const [loader, setLoader] = useState(true)
   const { clubToken } = useSelector((state) => state.ClubMember)
-  const [riders, setRdiers] = useState([])
+  const [riders, setRiders] = useState([])
   const [admin, setAdmin] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
+    const cachedData = localStorage.getItem('riders')
+    if (cachedData) {
+      setRiders(JSON.parse(cachedData));
+      setLoader(false)
+    }
     axiosInstance.get('/club/getRiders', {
       headers: {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      setRdiers(res.data.riders)
+      if (!cachedData || JSON.parse(cachedData).length !== res?.data?.riders?.length) {
+        setRiders(res?.data?.rides)
+        localStorage.setItem('riders', JSON.stringify(res?.data?.riders));
+        setLoader(false)
+      }
+      // setRiders(res.data.riders)
       setAdmin(res.data.admin)
-      setLoader(false)
+      // setLoader(false)
     }).catch((err) => {
       if (err.response.status === 404) {
         navigate('/serverError')
@@ -45,8 +55,8 @@ function RidersBody() {
           <div className="text-center container py-5">
             <div className="grid sm:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
               {loader ? '' : <RidersCard admin={admin} />}
-              {riders.filter((rider) => admin.admin._id !== rider.member._id && rider.member.name.toLowerCase().includes(search)).map((rider) => (
-                <RidersCard key={rider._id} rider={rider} />
+              {riders?.filter((rider) => admin?.admin?._id !== rider?.member?._id && rider?.member?.name.toLowerCase().includes(search)).map((rider) => (
+                <RidersCard key={rider?._id} rider={rider} />
               ))}
             </div>
           </div>

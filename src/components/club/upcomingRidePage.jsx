@@ -19,13 +19,25 @@ function UpcomingRides() {
   const navigate = useNavigate()
 
   useEffect(() => {
+
+    const cachedData = localStorage.getItem('currentRides')
+    if (cachedData) {
+      setRides(JSON.parse(cachedData));
+      setLoader(false)
+    }
+
     axiosInstance.get('/club/getRides', {
       headers: {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      setRides(res.data.rides)
-      setLoader(false)
+      if (!cachedData || JSON.parse(cachedData).length !== res?.data?.rides?.length) {
+        setRides(res?.data?.rides)
+        localStorage.setItem('currentRides', JSON.stringify(res?.data?.rides));
+        setLoader(false)
+      }
+      // setRides(res.data.rides)
+      // setLoader(false)
     }).catch((err) => {
       if (err.response.status === 404) {
         navigate('/serverError')
