@@ -8,6 +8,7 @@ import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
 import ImageSlider from '../custom/imageSlider'
 import isValidImage from '../../helpers/isValidImage'
+import errorFunction from '../../helpers/erroHandling'
 
 
 function ClubAdminHead(props) {
@@ -46,15 +47,7 @@ function ClubAdminHead(props) {
           toast.success(res.data.message)
         }
       }).catch((err) => {
-        if (err.response.status === 404) {
-          navigate('/serverError')
-        } else if (err.response.status == 403) {
-          navigate('/accessDenied')
-        } else if (err.response.status == 500) {
-          navigate('/serverError')
-        } else if (err.response.data.errMsg) {
-          toast.error(err.response.data.errMsg)
-        }
+        errorFunction(err,navigate)
       })
 
     }

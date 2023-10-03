@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import Loader from '../user/loader'
+import errorFunction from '../../helpers/erroHandling'
 
 function ClubShowRides() {
   const [rides, setRides] = useState([])
@@ -25,15 +26,7 @@ function ClubShowRides() {
       setLoader(false)
       setRides(res.data.rides)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [reload])
 
@@ -50,15 +43,7 @@ function ClubShowRides() {
       setName('')
       setBlockRideId('')
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -72,15 +57,7 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -94,15 +71,7 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
 
   }
@@ -116,15 +85,7 @@ function ClubShowRides() {
       setReload(!reload)
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
