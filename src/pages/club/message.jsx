@@ -3,7 +3,7 @@ import MessagePage from '../../components/club/messagePage'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import { useSelector } from 'react-redux'
-import { toast } from 'react-hot-toast'
+import errorFunction from '../../helpers/erroHandling'
 
 
 function Message() {
@@ -23,15 +23,7 @@ function Message() {
             setUsers(res.data.users)
             setHead(res.data.head)
         }).catch(() => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }, [])
 

@@ -9,6 +9,7 @@ import { clubMemberLogin } from '../../store/slice/clubMembers'
 import ClubHistoryPage from '../../components/club/clubHistoryPage'
 import UpcomingRidePage from '../../components/club/upcomingRidePage'
 import RidersBody from '../../components/club/riders'
+import errorFunction from '../../helpers/erroHandling'
 
 function ClubHome() {
   const { id } = useParams()
@@ -29,15 +30,7 @@ function ClubHome() {
       dispatch(clubMemberLogin({ role, clubToken, clubId }))
       setClub(res.data.club)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [])
   return (

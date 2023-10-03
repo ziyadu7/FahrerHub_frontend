@@ -7,6 +7,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../../components/user/loader'
 import { useNavigate } from 'react-router-dom'
+import errorFunction from '../../helpers/erroHandling'
 
 function Clubs() {
 
@@ -28,16 +29,7 @@ function Clubs() {
           setProtClubs(res.data.protClubs)
           setLoader(false)
       }).catch((err) => {
-        console.log(err);
-        if(err?.response?.status === 404){
-            navigate('/serverError')
-        }else if(err?.response?.status==403){
-            navigate('/accessDenied')
-        }else if(err?.response?.status==500){
-            navigate('/serverError')
-        }else if(err?.response?.data){
-            toast.error(err?.response?.data?.errMsg)
-        }
+        errorFunction(err,navigate)
       })
   }, [change])
   return (
