@@ -30,10 +30,11 @@ function SingleRide() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      setRide(res.data.ride)
+
+      setRide(res?.data?.ride)
       setReloader(false)
-      setSure(res.data.isSure)
-      if (res.data.isJoined) {
+      setSure(res?.data?.isSure)
+      if (res?.data?.isJoined) {
         setIsJoined(true)
       }
     }).catch((err) => {
@@ -55,7 +56,7 @@ function SingleRide() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      toast.success(res.data.message)
+      toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
       if (err.response.status === 404) {
@@ -77,7 +78,7 @@ function SingleRide() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      toast.success(res.data.message)
+      toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
       if (err.response.status === 404) {
@@ -99,7 +100,7 @@ function SingleRide() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      toast.success(res.data.message)
+      toast.success(res?.data?.message)
       setReload(!reload)
     }).catch(err => {
       if (err.response.status === 404) {
@@ -118,7 +119,7 @@ function SingleRide() {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      toast.success(res.data.message)
+      toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
       if (err.response.status === 404) {
@@ -195,18 +196,18 @@ function SingleRide() {
             <img src={ride?.image} className='w-full h-full -z-0 rounded-lg object-cover' alt='' />
             <div className='bg-blue-500 absolute top-10 h-6 rounded-lg'>
               <div className='flex justify-between gap-1'>
-                <p className='text-white text-center'>
+                <p className='text-white text-center px-2'>
                   {ride?.from.split(',')[0].trim() + '-' + ride?.destination.split(',')[0].trim()}
                 </p>
 
               </div>
             </div>
           </div>
-            <div className='justify-between backdrop-blur-sm mt-4 lg:mt-0 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8'>
-              <p className='mb-2'>
-                <span className='font-semibold'>Description : </span> {ride.description}
-              </p>
-            </div>
+          <div className='justify-between backdrop-blur-sm mt-4 lg:mt-0 text-white md:mt-10 px-4 mx-auto max-w-7xl md:items-center md:flex md:px-8'>
+            <p className='mb-2'>
+              <span className='font-semibold'>Description : </span> {ride.description}
+            </p>
+          </div>
 
           {isModalOpen && (
             <div tabIndex='-1' aria-hidden='true' className='fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50'>

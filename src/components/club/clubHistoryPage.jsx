@@ -15,13 +15,22 @@ function ClubHistoryPage() {
 
 
   useEffect(() => {
+    const cachedData = localStorage.getItem('rides')
+    if (cachedData) {
+      setRides(JSON.parse(cachedData));
+      setLoader(false)
+    }
     axiosInstance.get('/club/rideHistory', {
       headers: {
         authorization: `Bearer ${clubToken}`
       }
     }).then((res) => {
-      setRides(res.data.rides)
-      setLoader(false)
+      if (!cachedData || JSON.parse(cachedData).length !== res?.data?.rides?.length) {
+        setRides(res?.data?.rides)
+        localStorage.setItem('rides', JSON.stringify(res?.data?.rides));
+        setLoader(false)
+      }
+      // setRides(res?.data?.rides)
     }).catch((err) => {
       if (err.response.status === 404) {
         navigate('/serverError')

@@ -48,9 +48,7 @@ function ShowBikesPage() {
     };
   }, [search]);
 
-
   function fetchData() {
-
     axiosInstance.get(`/user/showBikes?limit=${limit}&location=${location}&search=${search}`, {
       headers: {
         authorization: `Bearer ${token}`
@@ -85,7 +83,7 @@ function ShowBikesPage() {
       }
     }).then((res) => {
       setWallet(res?.data?.wallet?.wallet)
-      setBike(res.data.bike)
+      setBike(res?.data?.bike)
       setUser(res.data?.currentUser)
       if (res.data.isBooked) {
         setBooked(true)
