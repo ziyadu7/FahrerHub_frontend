@@ -8,6 +8,7 @@ import '../../assets/css/club/upcomingRides.css'
 import Loader from '../user/loader'
 import CreateRideFrom from './createRideFrom'
 import { AlertIcon } from '../user/warning'
+import errorFunction from '../../helpers/erroHandling'
 
 function UpcomingRides() {
 
@@ -39,15 +40,7 @@ function UpcomingRides() {
       // setRides(res.data.rides)
       // setLoader(false)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [refresh])
 

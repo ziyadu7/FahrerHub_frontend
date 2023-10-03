@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import SearchBox from './search'
 import Loader from './loader'
 import { useNavigate } from 'react-router-dom'
+import errorFunction from '../../helpers/erroHandling'
 
 function QAsession() {
   const [search, setSearch] = useState('')
@@ -18,23 +19,23 @@ function QAsession() {
 
 
   useEffect(() => {
+    const cachedData = localStorage.getItem('questions')
+    if (cachedData) {
+      setQuestions(JSON.parse(cachedData));
+      setLoader(false)
+    }
     axiosInstance.get('/user/getQuestions', {
       headers: {
         authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      setLoader(false)
-      setQuestions(res.data.questions)
-    }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
+      if (!cachedData || JSON.parse(cachedData).length !== res?.data?.questions?.length) {
+        setQuestions(res?.data?.questions)
+        localStorage.setItem('questions', JSON.stringify(res?.data?.questions));
+        setLoader(false)
       }
+    }).catch((err) => {
+      errorFunction(err,navigate)
     })
   }, [reload])
 
@@ -50,15 +51,7 @@ function QAsession() {
         toast.success(res.data.message)
         setReload(!reload)
       }).catch((err) => {
-        if (err.response.status === 404) {
-          navigate('/serverError')
-        } else if (err.response.status == 403) {
-          navigate('/accessDenied')
-        } else if (err.response.status == 500) {
-          navigate('/serverError')
-        } else if (err?.response?.data) {
-          toast.error(err?.response?.data?.errMsg)
-        }
+        errorFunction(err,navigate)
       })
     }
 
@@ -78,7 +71,7 @@ function QAsession() {
             <button onClick={() => addQuestion()} className='bg-blue-700 rounded-e-md px-2 py-1'>Ask</button>
           </div>
           <div className='px-4 mx-auto lg:max-w-7xl pt-4 md:items-center bg-black bg-opacity-20 '>
-            {questions.filter(question => question.question.toLowerCase().includes(search.toLowerCase())).map((question) => (
+            {questions?.filter(question => question?.question?.toLowerCase().includes(search.toLowerCase())).map((question) => (
               <QuestionAnswer key={question._id} userId={userId} question={question} token={token} />
             ))}
           </div>

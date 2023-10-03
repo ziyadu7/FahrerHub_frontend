@@ -6,6 +6,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import io from 'socket.io-client'
 import '../../assets/css/club/upcomingRides.css'
 import Loader from '../user/loader'
+import errorFunction from '../../helpers/erroHandling'
 
 const END_POINT = import.meta.env.VITE_SERVERURL;
 let socket;
@@ -62,15 +63,7 @@ function MessagePage(props) {
             setMessage('')
             setLoader(false)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data?.errMsg) {
-                toast.error(err.response.data.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 
@@ -89,15 +82,7 @@ function MessagePage(props) {
                 setMessage('')
                 socket.emit('new message', res?.data?.msg, chatId)
             }).catch((err) => {
-                if (err.response.status === 404) {
-                    navigate('/serverError')
-                } else if (err.response.status == 403) {
-                    navigate('/accessDenied')
-                } else if (err.response.status == 500) {
-                    navigate('/serverError')
-                } else if (err?.response?.data?.errMsg) {
-                    toast.error(err.response.data.errMsg)
-                }
+                errorFunction(err,navigate)
             })
         }
 

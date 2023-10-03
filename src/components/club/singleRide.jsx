@@ -7,6 +7,7 @@ import RiderCard from './riderCard'
 import { BsFillQuestionOctagonFill } from 'react-icons/bs'
 import Loader from '../user/loader'
 import RouteMap from './map'
+import errorFunction from '../../helpers/erroHandling'
 
 function SingleRide() {
   const { rideId } = useParams()
@@ -38,15 +39,7 @@ function SingleRide() {
         setIsJoined(true)
       }
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [reload])
 
@@ -59,15 +52,7 @@ function SingleRide() {
       toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -81,15 +66,7 @@ function SingleRide() {
       toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err.response.data.errMsg) {
-        toast.error(err.response.data.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -103,13 +80,7 @@ function SingleRide() {
       toast.success(res?.data?.message)
       setReload(!reload)
     }).catch(err => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -122,13 +93,7 @@ function SingleRide() {
       toast.success(res?.data?.message)
       setReload(!reload)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      }
+      errorFunction(err,navigate)
     })
   }
 

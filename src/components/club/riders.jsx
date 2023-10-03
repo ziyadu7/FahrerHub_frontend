@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import axiosInstance from '../../api/axios'
 import Loader from '../user/loader'
 import { useNavigate } from 'react-router-dom'
+import errorFunction from '../../helpers/erroHandling'
 
 function RidersBody() {
 
@@ -32,16 +33,10 @@ function RidersBody() {
         setLoader(false)
       }
       // setRiders(res.data.riders)
-      setAdmin(res.data.admin)
+      setAdmin(res?.data?.admin)
       // setLoader(false)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      }
+      errorFunction(err,navigate)
     })
   }, [])
 

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import { Toaster, toast } from 'react-hot-toast'
 import '../../assets/css/club/upcomingRides.css'
+import errorFunction from '../../helpers/erroHandling'
 
 
 function ClubHead(props) {
@@ -28,15 +29,7 @@ function ClubHead(props) {
             toast.success(res.data.message)
             navigate('/')
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err.response.data.errMsg) {
-                toast.error(err.response.data.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 
