@@ -8,6 +8,7 @@ import SearchBox from '../user/search';
 import AddBikeForm from './addBikeForm';
 import Loader from '../user/loader'
 import Pagination from '../custom/pagination';
+import errorFunction from '../../helpers/erroHandling';
 
 
 function BikesPage({ setEditBike }) {
@@ -53,15 +54,7 @@ function BikesPage({ setEditBike }) {
             setBikes(res?.data?.bikes)
             setLoader(false)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 
@@ -74,15 +67,7 @@ function BikesPage({ setEditBike }) {
             toast.success(res.data.message)
             setBikeUpdation(!bikeUpdation)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 
@@ -99,15 +84,7 @@ function BikesPage({ setEditBike }) {
                 console.log(err);
             })
         } catch (err) {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         }
     }
 

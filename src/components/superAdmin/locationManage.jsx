@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import axiosInstance from '../../api/axios';
 import { toast } from 'react-hot-toast';
+import errorFunction from '../../helpers/erroHandling';
+import { useNavigate } from 'react-router-dom';
 
 
 function LocationManage(props) {
@@ -8,6 +10,7 @@ function LocationManage(props) {
     const [newLocation, setNewLocation] = useState('')
     const [removeLocation, setRemoveLocation] = useState('')
     const [err, setErr] = useState('')
+    const navigate = useNavigate()
     const locations = props.locations
     const token = props.token
 
@@ -24,13 +27,7 @@ function LocationManage(props) {
                 setShowModal(false)
                 setErr('')
             }).catch((err) => {
-                if(err.response.status === 404){
-                    navigate('/serverError')
-                }else if (err.response.status == 403) {
-                    navigate('/accessDenied')
-                } else if (err.response.status == 500) {
-                    navigate('/serverError')
-                }
+                errorFunction(err,navigate)
                 setErr(err?.response?.data?.errMsg)
             })
         }
@@ -50,13 +47,7 @@ function LocationManage(props) {
                 setShowModal(false)
                 setErr('')
             }).catch((err) => {
-                if(err.response.status === 404){
-                    navigate('/serverError')
-                }else if (err.response.status == 403) {
-                    navigate('/accessDenied')
-                } else if (err.response.status == 500) {
-                    navigate('/serverError')
-                }
+                errorFunction(err,navigate)
                 setErr(err?.response?.data?.errMsg)
             })
         }

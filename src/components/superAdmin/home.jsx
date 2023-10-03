@@ -7,6 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import DashCard from './dashCard';
 import Loader from '../user/loader';
 import { useNavigate } from 'react-router-dom';
+import errorFunction from '../../helpers/erroHandling';
 
 function Home() {
   const [rentDetails, setRentDetails] = useState([])
@@ -31,13 +32,7 @@ function Home() {
       setRentGraph(res?.data?.rentGrap)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [])
 

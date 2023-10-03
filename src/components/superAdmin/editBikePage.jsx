@@ -7,6 +7,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import LocationManage from './locationManage';
 import ImageSlider from '../custom/imageSlider';
 import isValidImage from '../../helpers/isValidImage';
+import errorFunction from '../../helpers/erroHandling';
 
 function EditBikePage({ editBike, setEditBike }) {
 
@@ -29,15 +30,7 @@ function EditBikePage({ editBike, setEditBike }) {
     axiosInstance.get('/admin/getLocations', { headers: { authorization: `Bearer ${token}` } }).then((res) => {
       setLocations(res?.data?.locations)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [])
 
@@ -72,15 +65,7 @@ function EditBikePage({ editBike, setEditBike }) {
         setTimeout(() => { navigate('/admin/rentBikes') }, 3000)
       }).catch((err) => {
         setLoading(false)
-        if (err.response.status === 404) {
-          navigate('/serverError')
-        } else if (err.response.status == 403) {
-          navigate('/accessDenied')
-        } else if (err.response.status == 500) {
-          navigate('/serverError')
-        } else if (err?.response?.data) {
-          toast.error(err?.response?.data?.errMsg)
-        }
+        errorFunction(err,navigate)
       })
     }
   }

@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import SearchBox from '../user/search'
 import Loader from '../user/loader'
 import { useNavigate } from 'react-router-dom'
+import errorFunction from '../../helpers/erroHandling'
 
 function RentsPage() {
 
@@ -24,15 +25,7 @@ function RentsPage() {
       setRents(res.data.rents)
       setLoader(false)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }, [])
 
@@ -44,15 +37,7 @@ function RentsPage() {
     }).then((res) => {
       toast.error(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
