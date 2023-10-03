@@ -7,6 +7,7 @@ import CreateClub from './createClub'
 import SearchBox from './search'
 import { useNavigate } from 'react-router-dom'
 import { AlertIcon } from './warning'
+import errorFunction from '../../helpers/erroHandling'
 
 function ShowClubsPage(props) {
 
@@ -31,15 +32,7 @@ function ShowClubsPage(props) {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if(err?.response?.status === 404){
-                navigate('/serverError')
-            }else if(err?.response?.status==403){
-                navigate('/accessDenied')
-            }else if(err?.response?.status==500){
-                navigate('/serverError')
-            }else if(err?.response?.data){
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 

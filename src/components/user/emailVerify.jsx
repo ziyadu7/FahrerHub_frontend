@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import { Toaster, toast } from 'react-hot-toast'
+import errorFunction from '../../helpers/erroHandling'
 
 function EmailVerify() {
     const { userId } = useParams()
@@ -14,13 +15,7 @@ function EmailVerify() {
             setSuccess(true)
         }).catch((err) => {
             setFail(true)
-            if(err.response.status === 404){
-                navigate('/serverError')
-            }else  if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     })
     return (

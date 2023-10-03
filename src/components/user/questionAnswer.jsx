@@ -5,10 +5,13 @@ import { toast } from 'react-hot-toast'
 import { AiOutlineLike, AiFillLike } from 'react-icons/ai'
 import { PiUserFill } from 'react-icons/pi'
 import { RiQuestionAnswerFill } from 'react-icons/ri'
+import errorFunction from '../../helpers/erroHandling'
+import { useNavigate } from 'react-router-dom'
 
 function QuestionAnswer(props) {
 
   const [question, setQuestion] = useState([])
+  const navigate = useNavigate()
 
   const token = props.token
   const userId = props.userId
@@ -36,15 +39,7 @@ function QuestionAnswer(props) {
       })
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err.response.status === 404) {
-        navigate('/serverError')
-      } else if (err.response.status == 403) {
-        navigate('/accessDenied')
-      } else if (err.response.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -73,15 +68,7 @@ function QuestionAnswer(props) {
         });
       })
       .catch((err) => {
-        if (err.response.status === 404) {
-          navigate('/serverError')
-        } else if (err.response.status == 403) {
-          navigate('/accessDenied')
-        } else if (err.response.status == 500) {
-          navigate('/serverError')
-        } else if (err?.response?.data) {
-          toast.error(err?.response?.data?.errMsg)
-        }
+        errorFunction(err,navigate)
       });
   };
 
@@ -110,15 +97,7 @@ function QuestionAnswer(props) {
         });
       })
       .catch((err) => {
-        if (err.response.status === 404) {
-          navigate('/serverError')
-        } else if (err.response.status == 403) {
-          navigate('/accessDenied')
-        } else if (err.response.status == 500) {
-          navigate('/serverError')
-        } else if (err?.response?.data) {
-          toast.error(err?.response?.data?.errMsg)
-        }
+        errorFunction(err,navigate)
       });
   };
 

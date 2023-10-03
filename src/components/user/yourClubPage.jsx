@@ -8,6 +8,7 @@ import SearchBox from './search'
 import Loader from './loader'
 import '../../assets/css/club/upcomingRides.css'
 import { AlertIcon } from './warning'
+import errorFunction from '../../helpers/erroHandling'
 
 function YourClubPage() {
 
@@ -29,15 +30,7 @@ function YourClubPage() {
             setClubs(res.data.clubs)
             setLoader(false)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }, [reload])
 
@@ -50,15 +43,7 @@ function YourClubPage() {
             toast.success(res.data.message)
             setReload(!reload)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 

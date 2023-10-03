@@ -9,6 +9,7 @@ import Loader from './loader';
 import { useNavigate } from 'react-router-dom';
 import { SlArrowDown } from 'react-icons/sl'
 import SingleBike from './singleBike';
+import errorFunction from '../../helpers/erroHandling';
 
 function ShowBikesPage() {
 
@@ -63,15 +64,7 @@ function ShowBikesPage() {
       setLoader(false)
     }).catch((err) => {
       setSeeMoreLoad(false)
-      if (err?.response?.status === 404) {
-        navigate('/serverError')
-      } else if (err?.response?.status == 403) {
-        navigate('/accessDenied')
-      } else if (err?.response?.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
 
     })
   }
@@ -92,15 +85,7 @@ function ShowBikesPage() {
         setIsReview(true)
       }
     }).catch((err) => {
-      if (err?.response?.status === 404) {
-        navigate('/serverError')
-      } else if (err?.response?.status == 403) {
-        navigate('/accessDenied')
-      } else if (err?.response?.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 
@@ -112,15 +97,7 @@ function ShowBikesPage() {
     }).then((res) => {
       toast.success(res.data.message)
     }).catch((err) => {
-      if (err?.response?.status === 404) {
-        navigate('/serverError')
-      } else if (err?.response?.status == 403) {
-        navigate('/accessDenied')
-      } else if (err?.response?.status == 500) {
-        navigate('/serverError')
-      } else if (err?.response?.data) {
-        toast.error(err?.response?.data?.errMsg)
-      }
+      errorFunction(err,navigate)
     })
   }
 

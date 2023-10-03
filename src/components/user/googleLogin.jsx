@@ -6,6 +6,7 @@ import axiosInstance from '../../api/axios';
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { userLogin } from '../../store/slice/user'
+import errorFunction from '../../helpers/erroHandling';
 
 
 function GoogleLoginComponent() {
@@ -44,11 +45,7 @@ function GoogleLoginComponent() {
             dispatch(userLogin({ name, token, role, userId }))
             navigate('/')
         }).catch((err) => {
-            if(err.response.status==500){
-                navigate('/serverError')
-            }else if(err?.response?.data){
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 

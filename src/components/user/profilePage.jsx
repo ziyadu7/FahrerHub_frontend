@@ -10,6 +10,7 @@ import { CgSpinner } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
 import ImageSlider from '../custom/imageSlider'
 import isValidImage from '../../helpers/isValidImage'
+import errorFunction from '../../helpers/erroHandling'
 
 
 function ProfilePage() {
@@ -50,15 +51,7 @@ function ProfilePage() {
             setNewProfile(res?.data?.user?.profileImage)
             setRides(res?.data?.rides)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }, [change])
 
@@ -94,15 +87,7 @@ function ProfilePage() {
                 setSubmitLoad(false)
             }).catch((err) => {
                 setSubmitLoad(false)
-                if (err.response.status === 404) {
-                    navigate('/serverError')
-                } else if (err.response.status == 403) {
-                    navigate('/accessDenied')
-                } else if (err.response.status == 500) {
-                    navigate('/serverError')
-                } else if (err?.response?.data) {
-                    toast.error(err?.response?.data?.errMsg)
-                }
+                errorFunction(err,navigate)
             })
         }
     }
@@ -128,15 +113,7 @@ function ProfilePage() {
             toast.success(res.data.message)
             setChange(!change)
         }).catch((err) => {
-            if (err.response.status === 404) {
-                navigate('/serverError')
-            } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-            } else if (err.response.status == 500) {
-                navigate('/serverError')
-            } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-            }
+            errorFunction(err,navigate)
         })
     }
 

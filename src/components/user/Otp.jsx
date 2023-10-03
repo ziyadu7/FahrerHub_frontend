@@ -10,6 +10,7 @@ import Otp from './Otp'
 import { useDispatch } from 'react-redux'
 import { userLogin } from '../../store/slice/user'
 import { useNavigate } from 'react-router-dom'
+import errorFunction from '../../helpers/erroHandling'
 
 function OtpPage() {
 
@@ -41,15 +42,7 @@ function OtpPage() {
               setShowOTP(true)
               toast.success('OTP send')
             }).catch((err) => {
-              if (err.response.status === 404) {
-                navigate('/serverError')
-              } else if (err.response.status == 403) {
-                navigate('/accessDenied')
-              } else if (err.response.status == 500) {
-                navigate('/serverError')
-              } else if (err?.response?.data) {
-                toast.error(err?.response?.data?.errMsg)
-              }
+              errorFunction(err,navigate)
             });
         }
       })

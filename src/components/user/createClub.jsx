@@ -6,6 +6,7 @@ import { CgSpinner } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
 import isValidImage from '../../helpers/isValidImage'
 import ImageSlider from '../custom/imageSlider'
+import errorFunction from '../../helpers/erroHandling'
 
 function CreateClub(props) {
 
@@ -52,16 +53,7 @@ function CreateClub(props) {
                 setModal(false)
             }).catch((err) => {
                 setSubmited(false)
-                if (err.response.status === 404) {
-                    navigate('/serverError')
-                } else if (err.response.status == 403) {
-                    navigate('/accessDenied')
-                } else if (err.response.status == 500) {
-                    setSubmited(false)
-                    navigate('/serverError')
-                } else if (err?.response?.data) {
-                    toast.error(err?.response?.data?.errMsg)
-                }
+                errorFunction(err,navigate)
             })
 
         }

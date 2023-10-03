@@ -49,10 +49,8 @@ function Login() {
     }else{
       axiosInstance.post('/user/forgottPassword', { email }).then((res) => {
         toast.success(res.data.messasge)
-      }).catch((error) => {
-        if (error.response.data.errMsg) {
-          toast.error(error.response.data.errMsg)
-        }
+      }).catch((err) => {
+        errorFunction(err,navigate)
       })
     }
   }
