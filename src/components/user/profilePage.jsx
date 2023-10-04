@@ -188,7 +188,6 @@ function ProfilePage() {
                                             onClick={() => {
                                                 setEdit(false)
                                                 setSubmitLoad(false)
-                                                removeEdits()
                                             }
                                             }
                                         >

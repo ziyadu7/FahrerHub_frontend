@@ -4,6 +4,8 @@ import axiosInstance from '../../api/axios'
 import '../../assets/css/club/upcomingRides.css'
 import { useNavigate } from 'react-router-dom'
 import errorFunction from '../../helpers/erroHandling'
+import isValidImage from '../../helpers/isValidImage'
+import ImageSlider from '../custom/imageSlider'
 
 function UserBikeDetail(props) {
 
@@ -20,15 +22,24 @@ function UserBikeDetail(props) {
     const [image, setImage] = useState('')
     const [form, setForm] = useState(false)
     const [edit, setEdit] = useState(false)
+    const [currentIndex, manageIndex] = useState(0)
     const navigate = useNavigate()
 
     const editBike = () => {
-        if (make.trim().length == 0 || model.trim().length == 0 || cc == 0 || category.trim().length == 0 || image.trim().length == 0) {
+        console.log(image);
+        if (make.trim().length == 0 || model.trim().length == 0 || cc == 0 || category.trim().length == 0 || image == '') {
             toast.error('Fill all the fields')
         } else {
-            axiosInstance.post('/user/editBike', { make, model, category, cc, image }, {
+            const formData = new FormData();
+            formData.append('make',make)
+            formData.append('model',model)
+            formData.append('category',category)
+            formData.append('cc',cc)
+            formData.append('image',image)
+            axiosInstance.post('/user/editBike', formData, {
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             }).then((res) => {
                 toast.success(res.data.message)
@@ -42,12 +53,19 @@ function UserBikeDetail(props) {
     }
 
     const addBike = () => {
-        if (make.trim().length == 0 || model.trim().length == 0 || cc == 0 || category.trim().length == 0 || image.trim().length == 0) {
+        if (make.trim().length == 0 || model.trim().length == 0 || cc == 0 || category.trim().length == 0 || image == '') {
             toast.error('Fill all the fields')
         } else {
-            axiosInstance.post('/user/addBike', { make, model, category, cc, image }, {
+            const formData = new FormData();
+            formData.append('make',make)
+            formData.append('model',model)
+            formData.append('category',category)
+            formData.append('cc',cc)
+            formData.append('image',image)
+            axiosInstance.post('/user/addBike', formData, {
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             }).then((res) => {
                 toast.success(res.data.message)
@@ -59,32 +77,15 @@ function UserBikeDetail(props) {
         }
     }
 
-    function isValidImage(logo) {
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-
-        const extension = logo.substr(logo.lastIndexOf('.')).toLowerCase();
-
-        return validExtensions.includes(extension);
-    }
-
-    const addImage = (img) => {
-        if (isValidImage(img?.target?.files[0]?.name)) {
-
-            if (img.target.files[0].size > 1 * 1024 * 1024) {
-                toast.error('Image size should be less than 1 MB');
-                return;
+    const addImage = (event) => {
+            const file = event.target.files[0]
+            const imageFile = isValidImage(file)
+            if (imageFile) {
+              setImage(file)
+              manageIndex(0)
+            } else {
+              toast.error('Add valid image')
             }
-            let reader = new FileReader()
-            reader.readAsDataURL(img.target.files[0])
-            reader.onload = () => {
-                setImage(reader.result)
-            }
-            reader.onerror = (err) => {
-                console.log(err);
-            }
-        } else {
-            toast.error('Add valid image')
-        }
     };
 
     return (
@@ -121,9 +122,9 @@ function UserBikeDetail(props) {
                                     </div>
                                 </div>
                                 <div className="sm:col-span-1">
-                                    <label className="block text-sm font-medium leading-6 text-white">Category</label>
+                                    <label className="block text-sm font-medium leading-6 h- text-white">Category</label>
                                     <div className="mt-2">
-                                        <input placeholder={category} onChange={(e) => setCategory(e.target.value)} type="text" className="block p-1 w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                        <input placeholder={category} onChange={(e) => setCategory(e.target.value)} type="text" className="block p-1 w- w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                     </div>
                                 </div>
                                 <div>
@@ -131,13 +132,13 @@ function UserBikeDetail(props) {
 
                                     <div className="">
                                         <div className='md:flex'>
-                                            <img style={{ height: '100px', width: '100px' }}
+                                          {image? <ImageSlider images={[image]} height={'h-28'} currentIndex={currentIndex} manageIndex={manageIndex} width={'w-40'} />:  <img style={{ height: '100px', width: '100px' }}
                                                 src={
-                                                    image || "https://www.lighting.philips.com/content/dam/b2b-philips-lighting/ecat-fallback.png?wid=855&qlt=82"
+                                                     "https://www.lighting.philips.com/content/dam/b2b-philips-lighting/ecat-fallback.png?wid=855&qlt=82"
                                                 }
                                                 alt="...."
                                                 className="avatar"
-                                            />
+                                            />}
 
                                         </div>
                                         <div className="pt-5">
@@ -158,10 +159,9 @@ function UserBikeDetail(props) {
 
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                         {edit ? <button type="button" onClick={() => {
-                            addBike()
-
+                            editBike()
                         }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button> : <button type="button" onClick={() => {
-                            editBike();
+                            addBike()
                         }} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Confirm</button>}
 
                     </div>
