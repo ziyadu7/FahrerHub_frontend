@@ -193,7 +193,7 @@ function UserBikeDetail(props) {
                                 <img
                                     src={bike?.image ? bike?.image : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
                                     alt="avatar"
-                                    className="mx-auto object-cover"
+                                    className="mx-auto w-screen object-cover"
                                 />
 
                             </div>
