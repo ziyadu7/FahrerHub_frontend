@@ -46,7 +46,7 @@ function UserDetail(props) {
             <div className=''>
               <div className="card rounded-md bg-opacity-80 bg-white mb-4">
                 <div className='flex justify-end p-2'>
-                  <a onClick={() => setEdit(true)} className='bg-transparen text-blue-500 font-semibold hover:text-blue-700'>Edit Profile</a>
+                  <a onClick={() => setEdit(true)} className='bg-transparen cursor-pointer text-blue-500 font-semibold hover:text-blue-700'>Edit Profile</a>
                 </div>
                 <div className="card-body text-center">
                   <img src={user.profileImage ? user.profileImage : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"} alt="avatar" className="rounded-md h-40 w-40 mx-auto" />
@@ -143,7 +143,7 @@ function UserDetail(props) {
                     }
 
                   })}
-                  <h1 className='text-end pe-3 text-blue-700 hover:text-blue-900' onClick={()=>setShowRent(true)}>Rent History</h1>
+                  <h1 className='text-end pe-3 text-blue-700 cursor-pointer hover:text-blue-900' onClick={()=>setShowRent(true)}>Rent History</h1>
                 </div>
               </div>
             </div>}

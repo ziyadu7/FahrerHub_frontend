@@ -111,11 +111,11 @@ function ShowBikesPage() {
               onChange={(e) => {
                 setLocationSearch(e.target.value)
               }}
-              className="block w-full py-2 px-4 leading-tight bg-black border border-gray-300 dark:bg-gray-700 dark:border-gray-600 rounded shadow-sm focus:outline-none focus:bg-black focus:border-gray-500 dark:focus:border-gray-400"
+              className="block cursor-pointer w-full py-2 px-4 leading-tight bg-black border border-gray-300 dark:bg-gray-700 dark:border-gray-600 rounded shadow-sm focus:outline-none focus:bg-black focus:border-gray-500 dark:focus:border-gray-400"
             >
-              <option value={0}>All</option>
+              <option className='cursor-pointer' value={0}>All</option>
               {locations?.map((location) => (
-                <option key={location._id} value={location._id}>
+                <option className='cursor-pointer' key={location._id} value={location._id}>
                   {location.location}
                 </option>
               ))}
@@ -150,7 +150,7 @@ function ShowBikesPage() {
                   </svg>
                   <span class="sr-only">Loading...</span>
                 </div>
-              </div> : <><p>See More</p><div className='pt-1 ps-2'><SlArrowDown /></div></>}
+              </div> : <><p className='cursor-pointer'>See More</p><div className='pt-1 cursor-pointer ps-2'><SlArrowDown /></div></>}
               </div>}
             </div>
           </div>
