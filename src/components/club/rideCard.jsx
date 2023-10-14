@@ -12,7 +12,7 @@ function RideCard(props) {
           <p className='text-white text-center'>{ride.from.split(',')[0] + '-' + ride.destination.split(',')[0] }</p>
         </div>
       </div>
-      <p className='text-slate-400 mt-1 min-h-[2.5rem] line-clamp-2'>{ride.description}</p>
+      <p className='text-slate-400 mt-1 min-h-[1.5rem] line-clamp-1'>{ride.description}</p>
       <div className='flex justify-between mt-1'>
         <p className='text-white mt-1'>Organizer : {ride.head.name}</p>
         <h1 className='text-white'>{new Date(ride.startDate).toLocaleDateString()}</h1>
