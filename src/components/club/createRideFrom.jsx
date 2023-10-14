@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import isValidImage from '../../helpers/isValidImage'
 import ImageSlider from '../custom/imageSlider'
 import errorFunction from '../../helpers/erroHandling'
+import '../../assets/css/club/upcomingRides.css'
 
 function CreateRideFrom(props) {
 
@@ -76,6 +77,7 @@ function CreateRideFrom(props) {
     
 
     const clearForm = () => {
+        setErr('')
         setStartDate('')
         setEndDate('')
         setFromSug(false)
@@ -196,7 +198,7 @@ function CreateRideFrom(props) {
     };
 
     return (<>
-        <form method="dialog" className={`modal-box disableBar h-96 overflow-y-auto bg-slate-300`}>
+        <form method="dialog" className={`modal-box disableBar min-h-full overflow-y-auto bg-slate-300`}>
             <h3 className="font-bold text-lg text-center">Create Ride - Step {step}</h3>
             {step === 1 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -314,7 +316,7 @@ function CreateRideFrom(props) {
                         </div>
                     </div>
                     <div className="col-span-3">
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Max Count of rides</label>
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Max Count of riders</label>
                         <div className="mt-2">
                             <input
                                 type="number"
