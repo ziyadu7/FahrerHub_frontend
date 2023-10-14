@@ -9,7 +9,7 @@ function RideCard(props) {
       <div className='relative '>
         <img className='h-44 w-full' src={ride.image} alt="" />
         <div className='bg-blue-500 absolute -bottom-1 h-6 w-3/4'>
-          <p className='text-white text-center'>{ride.from.split(',')[0] + '-' + ride.destination.split(',')[0] }</p>
+          <p className='text-white text-center line-clamp-1'>{ride.from.split(',')[0] + '-' + ride.destination.split(',')[0] }</p>
         </div>
       </div>
       <p className='text-slate-400 mt-1 min-h-[1.5rem] line-clamp-1'>{ride.description}</p>

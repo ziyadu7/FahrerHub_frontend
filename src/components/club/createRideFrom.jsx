@@ -15,7 +15,7 @@ function CreateRideFrom(props) {
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
     const [from, setFrom] = useState('')
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState('https://cdn.vectorstock.com/i/preview-1x/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg')
     const [fromLongitude, setFromLongitude] = useState('')
     const [fromLatitude, setFromLatitude] = useState('')
     const [toLongitude, setToLongitude] = useState('')
@@ -28,17 +28,52 @@ function CreateRideFrom(props) {
     const [stop2, setStop2] = useState('')
     const [currentIndex, manageIndex] = useState(0)
 
+    const [err,setErr] = useState('')
+
     const [fromSug, setFromSug] = useState(false)
     const [toSug, setToSug] = useState(false)
     const [stop1Sug, setStop1Sug] = useState(false)
     const [stop2Sug, setStop2Sug] = useState(false)
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(1)
 
 
     const handleNext = () => {
-        setStep(step + 1);
-    }
+        if (step === 1) {
+          if (
+            from.trim() === '' ||
+            destination.trim() === '' ||
+            fromLongitude === '' ||
+            toLongitude === '' ||
+            fromLatitude === '' ||
+            toLatitude === '' ||
+            startDate === undefined ||
+            endDate === undefined
+          ) {
+            setErr('Fill all the fields')
+          } else if (new Date() >= new Date(startDate) || startDate === endDate || new Date() >= new Date(endDate)) {
+            setErr('Enter correct dates')
+          } else {
+            setErr('')
+            setStep(step + 1);
+          }
+        } else if (step === 2) {
+          if (stop1.trim() === '' || stop2.trim() === '' || stop1Longitude === '' || stop1Latitude === '' || stop2Longitude === '' || stop2Latitude === ''||   description.trim() === '' ||
+          maxRiders === 0 ) {
+            setErr('Fill all the fields')
+          } else {
+            setErr('')
+            setStep(step + 1);
+          }
+        }
+      };
+    
+      const handlePrev = () => {
+        if (step > 1) {
+          setStep(step - 1);
+        }
+      };
+    
 
     const clearForm = () => {
         setStartDate('')
@@ -67,10 +102,6 @@ function CreateRideFrom(props) {
 
     }
 
-    const handlePrev = () => {
-        setStep(step - 1);
-    }
-
     const navigate = useNavigate()
 
 
@@ -80,33 +111,33 @@ function CreateRideFrom(props) {
     const [maxRiders, setRidersCound] = useState(0)
 
     const handleSubmit = async () => {
-        if (from.trim().length == 0 || destination.trim().length == 0 ||stop1.trim().length==0||stop2.trim().length==0||stop1Latitude==''||stop1Longitude==''||stop2Latitude==''||stop2Longitude==''|| image == '' || fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
+        if (from.trim().length == 0 || destination.trim().length == 0 || stop1.trim().length == 0 || stop2.trim().length == 0 || stop1Latitude == '' || stop1Longitude == '' || stop2Latitude == '' || stop2Longitude == '' || image == 'https://cdn.vectorstock.com/i/preview-1x/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg'|| fromLongitude == '' || toLongitude == '' || fromLatitude == '' || toLatitude == '' || description.trim().length == 0 || maxRiders == 0 || startDate == undefined || endDate == undefined) {
             toast.error('Fill all the fiels')
         } else if (new Date() >= new Date(startDate) || startDate == endDate || new Date() >= new Date(endDate)) {
             toast.error('Enter correct dates')
         } else {
-            if(!isValidImage(image)){
+            if (!isValidImage(image)) {
                 toast.error('Add valid image')
-                return 
+                return
             }
             const formData = new FormData();
-            formData.append('startDate',startDate)
-            formData.append('endDate',endDate)
-            formData.append('from',from)
-            formData.append('image',image)
-            formData.append('destination',destination)
-            formData.append('maxRiders',maxRiders)
-            formData.append('description',description)
-            formData.append('fromLatitude',fromLatitude)
-            formData.append('fromLongitude',fromLongitude)
-            formData.append('toLatitude',toLatitude)
-            formData.append('toLongitude',toLongitude)
-            formData.append('stop1',stop1)
-            formData.append('stop2',stop2)
-            formData.append('stop1Latitude',stop1Latitude)
-            formData.append('stop1Longitude',stop1Longitude)
-            formData.append('stop2Latitude',stop2Latitude)
-            formData.append('stop2Longitude',stop2Longitude)
+            formData.append('startDate', startDate)
+            formData.append('endDate', endDate)
+            formData.append('from', from)
+            formData.append('image', image)
+            formData.append('destination', destination)
+            formData.append('maxRiders', maxRiders)
+            formData.append('description', description)
+            formData.append('fromLatitude', fromLatitude)
+            formData.append('fromLongitude', fromLongitude)
+            formData.append('toLatitude', toLatitude)
+            formData.append('toLongitude', toLongitude)
+            formData.append('stop1', stop1)
+            formData.append('stop2', stop2)
+            formData.append('stop1Latitude', stop1Latitude)
+            formData.append('stop1Longitude', stop1Longitude)
+            formData.append('stop2Latitude', stop2Latitude)
+            formData.append('stop2Longitude', stop2Longitude)
 
             axiosInstance.post('/club/createRide', formData, {
                 headers: {
@@ -117,7 +148,7 @@ function CreateRideFrom(props) {
                 toast.success(res?.data?.message)
                 setRefresh(!refresh)
             }).catch((err) => {
-                errorFunction(err,navigate)
+                errorFunction(err, navigate)
             })
         }
     }
@@ -125,13 +156,17 @@ function CreateRideFrom(props) {
     const handleImageChange = (event) => {
         const file = event.target.files[0]
         const imageFile = isValidImage(file)
-        if (imageFile) {
-          setImage(file)
-          manageIndex(0)
-        } else {
-          toast.error('Add valid image')
+        if(!file){
+            setErr('Add image')
+        }else{
+            if (imageFile) {
+                setErr('')
+                setImage(file)
+                manageIndex(0)
+            } else {
+                setErr('Add valid image')
+            }
         }
-
     }
 
     const [locationSuggestions, setLocationSuggestions] = useState([]);
@@ -161,7 +196,7 @@ function CreateRideFrom(props) {
     };
 
     return (<>
-        <form method="dialog" className="modal-box disableBar overflow-y-auto bg-slate-300">
+        <form method="dialog" className={`modal-box disableBar h-96 overflow-y-auto bg-slate-300`}>
             <h3 className="font-bold text-lg text-center">Create Ride - Step {step}</h3>
             {step === 1 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -187,10 +222,6 @@ function CreateRideFrom(props) {
                             />
                         </div>
                     </div>
-                </div>
-            )}
-            {step === 2 && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
                     <div className="col-span-3">
                         <label className="block text-sm font-medium leading-6 text-gray-900">From</label>
@@ -266,11 +297,11 @@ function CreateRideFrom(props) {
                             </ul>
                         </div>
                     </div>
+                    <p className='text-red-600'>{err}</p>
                 </div>
             )}
-            {step === 3 && (
+            {step === 2 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
                     <div className="col-span-3">
                         <label className="block text-sm font-medium leading-6 p-1 text-gray-900">Description</label>
                         <div className="mt-2">
@@ -293,11 +324,6 @@ function CreateRideFrom(props) {
                             />
                         </div>
                     </div>
-                </div>
-            )}
-            {step === 4 && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
                     <div className="col-span-3">
                         <label className="block text-sm font-medium leading-6 text-gray-900">Stop Location 1</label>
                         <div className="mt-2">
@@ -372,9 +398,11 @@ function CreateRideFrom(props) {
                             </ul>
                         </div>
                     </div>
+                    <p className='text-red-600'>{err}</p>
                 </div>
+
             )}
-            {step === 5 && (
+            {step === 3 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="col-span-3">
                         <label className="block text-sm font-medium leading-6 text-gray-900">Location image</label>
@@ -388,6 +416,7 @@ function CreateRideFrom(props) {
                             />
                         </div>
                     </div>
+                    <p className='text-red-600'>{err}</p>
                 </div>
             )}
 
@@ -400,15 +429,15 @@ function CreateRideFrom(props) {
                         Previous
                     </button>
                 )}
-                {step < 5 ? (
+                {step < 3 ? (
                     <button type="button" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleNext}>
                         Next
                     </button>
                 ) : (
                     <div>
-                    <button type="" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
-                        Confirm
-                    </button>
+                        <button type="" className="bg-transparent hover:bg-black text-black-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded mb-4" onClick={handleSubmit}>
+                            Confirm
+                        </button>
                     </div>
                 )}
             </div>
