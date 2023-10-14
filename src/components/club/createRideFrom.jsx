@@ -8,6 +8,9 @@ import isValidImage from '../../helpers/isValidImage'
 import ImageSlider from '../custom/imageSlider'
 import errorFunction from '../../helpers/erroHandling'
 import '../../assets/css/club/upcomingRides.css'
+import { CSSTransition } from 'react-transition-group';
+import '../../assets/css/club/transform.css'
+
 
 function CreateRideFrom(props) {
 
@@ -198,8 +201,30 @@ function CreateRideFrom(props) {
     };
 
     return (<>
-        <form method="dialog" className={`modal-box disableBar min-h-full overflow-y-auto bg-slate-300`}>
-            <h3 className="font-bold text-lg text-center">Create Ride - Step {step}</h3>
+        <form method="dialog" className={`modal-box disableBar min-h-full overflow-x-hidden overflow-y-auto bg-slate-300`}>
+         <div className='max-h-9 overflow-hidden'>
+         <CSSTransition
+                in={step === 1}
+                timeout={300}
+                classNames="step-transition"
+                unmountOnExit
+            >
+                 <div className="step-content">
+      <h3 className="font-bold text-lg text-center">Step 1</h3>
+    </div>
+            </CSSTransition>
+
+            <CSSTransition
+                in={step === 2}
+                timeout={300}
+                classNames="step-transition"
+                unmountOnExit
+            >
+                <div className="step-content">
+      <h3 className="font-bold text-lg text-center">Step 2</h3>
+    </div>
+            </CSSTransition>
+         </div>
             {step === 1 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="col-span-3">

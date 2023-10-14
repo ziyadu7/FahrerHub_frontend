@@ -1,0 +1,25 @@
+/* YourCSSFile.css */
+
+/* Define the enter transition */
+.step-transition-enter {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.step-transition-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 500ms, transform 500ms;
+}
+
+/* Define the exit transition */
+.step-transition-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.step-transition-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 500ms, transform 500ms;
+}
